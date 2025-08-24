@@ -22,6 +22,7 @@ import {
   ClipboardPaste,
   Printer,
   Edit,
+  TestTube2,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,67 @@ import { extractResumeTextAction, extractResumeDataAction } from './actions';
 import { resumeSchema } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
+
+const testData: ResumeData = {
+  name: 'E Akash Goud',
+  email: 'letsmail.akashgoud@gmail.com',
+  mobileNumber: '8125824741',
+  githubLink: 'https://github.com/akashgoud2121',
+  linkedinLink: 'https://linkedin.com/in/akashgoud',
+  professionalSummary:
+    'Results-driven AI/ML Engineer and Python Software Developer with experience in building and deploying machine learning models, full-stack applications, and automation solutions. Skilled in developing end-to-end projects across healthcare, finance, and productivity domains, achieving measurable accuracy improvements and performance optimization. Proficient in Python, ML/DL frameworks, APIs, Django and cloud platforms (AWS).',
+  coreSkills: [
+    'Programming & Development: Python, Java, SQL, Jupyter Notebooks (.ipynb), Django, FastAPI, Streamlit',
+    'Machine Learning, AI & Deep Learning: Kaggle, Scikit-learn, TensorFlow, PyTorch, Keras, Transformers (e.g., ChatGPT, Gemini)',
+    'Research & Publications: Conference & Scopus Papers, Research Thesis, Paper & Code Explanation',
+    'Cloud: AWS, Git, Vercel',
+    'Additional Skills: Word, Excel (for data analysis, documentation, and reporting)',
+  ],
+  education: [
+    {
+      institution: 'Malla Reddy College of Engineering and Technology',
+      degree: 'Bachelor of Technology, Computer Science (AI&ML)',
+      dates: 'Jun 2025',
+    },
+    {
+      institution: 'SriGayatri Junior College',
+      degree: 'Telangana Board of Intermediate Education (XII)',
+      dates: 'Jun 2019 - Nov 2021',
+    },
+  ],
+  experience: [
+    {
+      title: 'Python AI&ML Engineer',
+      company: 'Incline Inventions',
+      dates: 'May 2025 - Present',
+      description:
+        '• Developed 10+ machine learning and deep learning models for real-world datasets, enhancing baseline Kaggle codes for higher accuracy and originality.\n• Contributed to 4 Conference Papers, 2 Scopus Papers, and 6+ SCI/other papers, handling dataset curation, plagiarism reduction (<10%), and drafting complete documentation.\n• Delivered 15+ explanatory videos explaining code and paper pipelines for clients and internal teams.\n• Built a Speech Analysis Assistant evaluating speech on 15+ criteria, providing actionable insights for improvement.\n• Supported the delivery of AI training modules to partner institutes.\n• Strengthened skills in Python, TensorFlow, PyTorch, NLP, data preprocessing, and model optimization, while improving ability to communicate technical work effectively.',
+    },
+  ],
+  projects: [
+    {
+      name: 'Speech Analysis Assistant – Internal Project / Startup',
+      description:
+        '• Built an Al-powered speech analysis tool evaluating 15+ metrics including fluency, filler words, clarity, pace, and grammar.\n• Provided actionable insights for improving communication skills.\n• Developed ML/NLP pipelines and interactive UI for seamless user experience.\n• Skills: Python, NLP, SpeechRecognition, Streamlit, Machine Learning, Data Visualization',
+    },
+    {
+      name: 'OfficeZenith – Workplace Wellness Assistant – Internal Project / Startup',
+      description:
+        '• Developed a Django-based web app enabling reminders for water intake, screen breaks, exercises, meditation, and custom alerts.\n• Implemented backend models, database logging, and a clean front-end UI to improve employee productivity and wellness.\n• Skills Used: Django, Python, HTML, CSS, JavaScript, SQLite, Full-Stack Development',
+    },
+    {
+      name: 'Beverage Detection App (YOLOv8) – Internal Project / Startup',
+      description:
+        '• Developed a computer vision application to detect beverages (Pepsi, Coca-Cola, Mirinda, Mountain Dew) and display nutritional facts.\n• Integrated WHO sugar limit checks, health alerts, and personalized tips for users.\n• Deployed on Streamlit Cloud with model upload/download functionality for real-world usability.\n• Skills: Python, YOLOv8, Streamlit, Pandas, Matplotlib, Computer Vision, Full-Stack Deployment',
+    },
+  ],
+  achievements: [],
+  certifications: [
+      { value: 'Salesforce Developer Virtual Internship May 2024 – Jun 2024' },
+      { value: 'Salesforce Super Badges: Apex Specialist, Process Automation Specialist, Developer Super Set' },
+      { value: 'Smart India Hackathon- Internal Hackathon Aug 2023 - Sep 2023' },
+  ]
+};
 
 type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing';
 
@@ -136,6 +198,11 @@ export default function Home() {
     });
     setStep('editor');
   };
+
+  const handleUseTestData = () => {
+    form.reset(testData);
+    setStep('editor');
+  };
   
   const handleProceedToEditor = () => {
     setLoadingState('extracting-data');
@@ -227,6 +294,12 @@ export default function Home() {
           <FilePenLine />
           Enter Manually
           <ArrowRight className="ml-2" />
+        </Button>
+      </div>
+       <div className="mt-4">
+        <Button size="sm" variant="secondary" onClick={handleUseTestData} disabled={loadingState !== 'idle'}>
+          <TestTube2 className="mr-2" />
+          Use Test Data
         </Button>
       </div>
       <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".pdf,.doc,.docx" />
@@ -429,7 +502,7 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="w-full aspect-video overflow-hidden rounded-lg border bg-white shadow-inner relative">
+                  <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-white shadow-inner relative">
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
