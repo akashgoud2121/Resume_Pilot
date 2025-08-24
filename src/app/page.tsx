@@ -3,7 +3,6 @@
 import { useState, useRef, useTransition } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import {
   FileText,
   Upload,
@@ -19,10 +18,6 @@ import {
   Lightbulb,
   Trophy,
   Award,
-  Github,
-  Linkedin,
-  Mail,
-  Phone,
   User,
   ClipboardPaste,
   Printer,
@@ -34,7 +29,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ResumePreview } from '@/components/resume-preview';
 import { templates } from '@/lib/templates';
@@ -57,7 +51,7 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof resumeSchema>>({
+  const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
     defaultValues: {
       name: '',
@@ -126,8 +120,20 @@ export default function Home() {
   };
 
   const handleManualEntry = () => {
-    setResumeData(null);
-    form.reset();
+    form.reset({
+      name: '',
+      email: '',
+      mobileNumber: '',
+      githubLink: '',
+      linkedinLink: '',
+      professionalSummary: '',
+      coreSkills: [],
+      education: [{ institution: '', degree: '', dates: '' }],
+      experience: [{ title: '', company: '', dates: '', description: '' }],
+      projects: [{ name: '', description: '' }],
+      achievements: [{ value: '' }],
+      certifications: [{ value: '' }],
+    });
     setStep('editor');
   };
   
@@ -157,6 +163,7 @@ export default function Home() {
       try {
         const extractedData = await extractResumeDataAction(extractedText);
         setResumeData(extractedData);
+        form.reset(extractedData);
         setStep('results');
       } catch (error) {
         toast({
@@ -170,12 +177,11 @@ export default function Home() {
     });
   }
 
-  const onSubmit = (values: z.infer<typeof resumeSchema>) => {
+  const onSubmit = (values: ResumeData) => {
     setLoadingState('processing');
     startTransition(async () => {
       try {
-        const fullResumeData = values as ResumeData;
-        setResumeData(fullResumeData);
+        setResumeData(values);
         setStep('results');
       } catch (error) {
         toast({
@@ -433,7 +439,7 @@ export default function Home() {
                   <div 
                     className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-gray-200 shadow-lg"
                   >
-                    <div className="transform origin-top-left scale-[0.35] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.35] xl:scale-[0.45]">
+                    <div className="transform origin-top-left scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.4] xl:scale-[0.5]">
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                     </div>
                   </div>
@@ -465,3 +471,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
