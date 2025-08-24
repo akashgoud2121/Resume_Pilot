@@ -435,8 +435,8 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-white shadow-inner">
-                    <div className="w-[794px] h-[1123px] origin-top-left -translate-x-[42.5%] -translate-y-[42.5%] scale-[0.15]">
+                  <div className="w-full aspect-[1/1.4142] overflow-hidden rounded-lg border bg-white shadow-inner">
+                    <div className="w-full h-full scale-[0.2] sm:scale-[0.3] md:scale-[0.4] origin-top-left">
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                     </div>
                   </div>
