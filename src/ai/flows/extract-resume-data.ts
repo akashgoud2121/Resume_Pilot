@@ -15,7 +15,7 @@ const ExtractResumeDataInputSchema = z.object({
   resumeDataUri: z
     .string()
     .describe(
-      "The resume data, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "The resume data, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'"
     ),
 });
 export type ExtractResumeDataInput = z.infer<typeof ExtractResumeDataInputSchema>;
@@ -72,7 +72,7 @@ const prompt = ai.definePrompt({
   output: {schema: ExtractResumeDataOutputSchema},
   prompt: `You are an expert resume parser. Extract the information from the provided resume.
 
-Analyze the document carefully and populate the fields in the requested JSON format. If a section is not present in the resume, return an empty string or an empty array for the corresponding field.
+Analyze the document carefully and populate the fields in the requested JSON format. If a section or field (like githubLink, achievements, etc.) is not present in the resume, you must return an empty string for string fields or an empty array for array fields. Do not omit any fields from the JSON output.
 
 Resume: {{media url=resumeDataUri}}
   `,
