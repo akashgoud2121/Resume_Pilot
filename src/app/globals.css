@@ -58,6 +58,10 @@
 }
 
 @media print {
+  .no-print {
+    display: none !important;
+  }
+  
   body * {
     visibility: hidden;
   }
@@ -78,4 +82,9 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+}
+
+@page {
+  size: A4;
+  margin: 0;
 }
