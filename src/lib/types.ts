@@ -4,8 +4,8 @@ export const resumeSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   mobileNumber: z.string().optional(),
-  githubLink: z.string().url().optional().or(z.literal('')),
-  linkedinLink: z.string().url().optional().or(z.literal('')),
+  githubLink: z.string().optional(),
+  linkedinLink: z.string().optional(),
   professionalSummary: z.string().optional(),
   coreSkills: z.array(z.string()).optional(),
   education: z.array(z.object({

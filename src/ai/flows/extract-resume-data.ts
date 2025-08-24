@@ -72,6 +72,9 @@ const prompt = ai.definePrompt({
 
 Analyze the entire text carefully and populate the fields in the requested JSON format. It is critical that you adhere to the provided schema. If a section or a specific field (like githubLink, achievements, etc.) is not present in the resume, you must return an empty string for string fields or an empty array for array fields. Do not omit any fields from the JSON output, even if they are empty.
 
+- For githubLink, if you find a username but not a full URL, construct the full URL like 'https://github.com/username'. If no username is found, return an empty string.
+- For linkedinLink, if you find a partial path like 'in/username', construct the full URL like 'https://linkedin.com/in/username'. If nothing is found, return an empty string.
+
 Resume Text:
 {{{resumeText}}}
   `,
