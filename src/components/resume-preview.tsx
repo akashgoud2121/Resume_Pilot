@@ -10,6 +10,7 @@ import { DoubleColumnTemplate } from './resume-templates/double-column-template'
 import { StylishTemplate } from './resume-templates/stylish-template';
 import { TimelineTemplate } from './resume-templates/timeline-template';
 import { ContemporaryTemplate } from './resume-templates/contemporary-template';
+import { cn } from '@/lib/utils';
 
 interface ResumePreviewProps {
   resumeData: ResumeData;
@@ -39,18 +40,22 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
         return <DefaultTemplate data={resumeData} />;
     }
   };
+  
+  const a4AspectRatio = 1 / 1.4142;
 
   if (isPreview) {
     return (
-      <div 
-        className="relative bg-white shadow-lg overflow-hidden w-full h-full"
+      <div
+        className="relative w-full h-full"
+        style={{ aspectRatio: '1 / 1.4142' }}
       >
-        <div 
-          className="absolute origin-top-left"
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
-            transform: 'scale(0.35)', // Adjust scale as needed
             width: '210mm',
             height: '297mm',
+            transform: 'scale(0.3) translate(-50%, -50%)',
+            transformOrigin: 'center center',
           }}
           >
           {renderTemplate()}
