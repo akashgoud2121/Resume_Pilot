@@ -28,9 +28,3 @@ export const resumeSchema = z.object({
 });
 
 export type ResumeData = z.infer<typeof resumeSchema>;
-
-export type AtsResult = {
-  atsScore: number;
-  feedback?: string;
-  detailedFeedback?: string;
-};

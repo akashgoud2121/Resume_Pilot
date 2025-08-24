@@ -24,7 +24,6 @@ import {
   Mail,
   Phone,
   User,
-  ExternalLink,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -33,24 +32,21 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ResumePreview } from '@/components/resume-preview';
 import { templates } from '@/lib/templates';
-import type { ResumeData, AtsResult } from '@/lib/types';
-import { extractResumeTextAction, extractResumeDataAction, calculateAtsScoreAction, getDetailedFeedbackAction } from './actions';
+import type { ResumeData } from '@/lib/types';
+import { extractResumeTextAction, extractResumeDataAction } from './actions';
 import { resumeSchema } from '@/lib/types';
 
-type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'analyzing' | 'feedback';
+type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing';
 
 export default function Home() {
   const [step, setStep] = useState<'landing' | 'text-review' | 'editor' | 'results'>('landing');
   const [loadingState, setLoadingState] = useState<LoadingState>('idle');
-  const [resumeData, setResumeData] = useState<Partial<ResumeData> | null>(null);
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [extractedText, setExtractedText] = useState('');
-  const [atsResult, setAtsResult] = useState<AtsResult | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -125,7 +121,7 @@ export default function Home() {
   };
 
   const handleManualEntry = () => {
-    setResumeData({});
+    setResumeData(null);
     form.reset();
     setStep('editor');
   };
@@ -135,7 +131,6 @@ export default function Home() {
     startTransition(async () => {
       try {
         const extractedData = await extractResumeDataAction(extractedText);
-        setResumeData(extractedData);
         form.reset(extractedData);
         setStep('editor');
       } catch (error) {
@@ -152,39 +147,17 @@ export default function Home() {
   };
 
   const onSubmit = (values: z.infer<typeof resumeSchema>) => {
-    setLoadingState('analyzing');
+    setLoadingState('processing');
     startTransition(async () => {
       try {
         const fullResumeData = values as ResumeData;
-        const result = await calculateAtsScoreAction(fullResumeData);
-        setAtsResult(result);
         setResumeData(fullResumeData);
         setStep('results');
       } catch (error) {
         toast({
           variant: 'destructive',
-          title: 'Analysis Failed',
-          description: 'Could not analyze your resume. Please check the details and try again.',
-        });
-      } finally {
-        setLoadingState('idle');
-      }
-    });
-  };
-
-  const handleGetDetailedFeedback = () => {
-    if (!resumeData || !atsResult) return;
-    setLoadingState('feedback');
-    startTransition(async () => {
-      try {
-        const resumeText = Object.values(resumeData).flat().join(' ');
-        const { feedback } = await getDetailedFeedbackAction(resumeText, atsResult.atsScore);
-        setAtsResult(prev => prev ? { ...prev, detailedFeedback: feedback } : null);
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Feedback Failed',
-          description: 'Could not generate detailed feedback. Please try again later.',
+          title: 'Processing Failed',
+          description: 'Could not process your resume. Please check the details and try again.',
         });
       } finally {
         setLoadingState('idle');
@@ -199,7 +172,7 @@ export default function Home() {
         ResumePilot
       </h1>
       <p className="mt-6 text-lg leading-8 text-muted-foreground">
-        Craft your perfect resume with AI-powered ATS scoring and professional templates.
+        Craft your perfect resume with professional templates.
       </p>
       <div className="mt-10 flex items-center justify-center gap-x-6">
         <Button size="lg" onClick={() => fileInputRef.current?.click()} disabled={loadingState !== 'idle'}>
@@ -224,7 +197,7 @@ export default function Home() {
            Review Extracted Text
         </CardTitle>
         <CardDescription>
-          We've extracted the text from your resume. Please review it below and make any necessary corrections before we analyze it.
+          We've extracted the text from your resume. Please review it below and make any necessary corrections before we parse it.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -250,7 +223,7 @@ export default function Home() {
             <Button variant="ghost" size="icon" onClick={() => extractedText ? setStep('text-review') : setStep('landing')}><ChevronLeft /></Button>
             Resume Editor
           </CardTitle>
-          <CardDescription>Fill in your details to get started. All fields are optional but recommended.</CardDescription>
+          <CardDescription>Fill in your details to generate your resume. All fields are optional but recommended.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -352,10 +325,9 @@ export default function Home() {
                   </div>
               </div>
 
-
               <Button type="submit" size="lg" className="w-full" disabled={loadingState !== 'idle'}>
-                {loadingState === 'analyzing' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
-                Analyze My Resume
+                {loadingState === 'processing' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
+                Generate Resume
               </Button>
             </form>
           </Form>
@@ -365,8 +337,7 @@ export default function Home() {
   };
 
   const renderResultsPage = () => {
-    if (!atsResult || !resumeData) return null;
-    const scoreColor = atsResult.atsScore >= 80 ? 'text-green-500' : atsResult.atsScore >= 50 ? 'text-yellow-500' : 'text-red-500';
+    if (!resumeData) return null;
   
     return (
       <div className="w-full max-w-6xl mx-auto space-y-8">
@@ -375,72 +346,11 @@ export default function Home() {
                 <ChevronLeft className="mr-2" />
                 Back to Editor
             </Button>
-            <h1 className="text-3xl font-bold text-center">Your Results</h1>
+            <h1 className="text-3xl font-bold text-center">Choose Your Template</h1>
             <div className="w-36"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-1 shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle>ATS Score</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center gap-4">
-              <div className="relative h-40 w-40">
-                <svg className="h-full w-full" viewBox="0 0 100 100">
-                  <circle className="text-border" strokeWidth="10" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" />
-                  <circle
-                    className={scoreColor}
-                    strokeWidth="10"
-                    strokeDasharray={2 * Math.PI * 45}
-                    strokeDashoffset={2 * Math.PI * 45 * (1 - atsResult.atsScore / 100)}
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="transparent"
-                    r="45"
-                    cx="50"
-                    cy="50"
-                    style={{ transform: 'rotate(-90deg)', transformOrigin: 'center' }}
-                  />
-                </svg>
-                <div className={`absolute inset-0 flex items-center justify-center text-4xl font-bold ${scoreColor}`}>
-                  {atsResult.atsScore}
-                </div>
-              </div>
-              <Progress value={atsResult.atsScore} className="w-full" />
-              <p className="text-muted-foreground text-center">This score predicts how well your resume will pass through automated screening systems.</p>
-            </CardContent>
-          </Card>
-  
-          <Card className="lg:col-span-2 shadow-lg">
-            <CardHeader>
-              <CardTitle>AI Feedback</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <h4 className="font-semibold">Initial Suggestions</h4>
-                <p className="text-muted-foreground">{atsResult.feedback}</p>
-              </div>
-              {atsResult.atsScore < 80 && (
-                <div>
-                  {atsResult.detailedFeedback ? (
-                    <div className="p-4 bg-muted/50 rounded-lg space-y-2">
-                       <h4 className="font-semibold">Detailed Improvements</h4>
-                       <p className="text-muted-foreground whitespace-pre-wrap">{atsResult.detailedFeedback}</p>
-                    </div>
-                  ) : (
-                    <Button onClick={handleGetDetailedFeedback} disabled={loadingState !== 'idle'}>
-                      {loadingState === 'feedback' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
-                      Get Detailed Improvement Plan
-                    </Button>
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-  
         <div>
-          <h2 className="text-2xl font-bold text-center mb-6">Choose Your Template</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {templates.map(template => (
               <Dialog key={template.id}>
@@ -467,7 +377,7 @@ export default function Home() {
                     <DialogTitle>{template.name} Template Preview</DialogTitle>
                   </DialogHeader>
                   <div className="flex-grow overflow-auto bg-gray-200 p-4 rounded-md">
-                    <ResumePreview resumeData={resumeData as ResumeData} templateId={template.id} />
+                    <ResumePreview resumeData={resumeData} templateId={template.id} />
                   </div>
                 </DialogContent>
               </Dialog>
