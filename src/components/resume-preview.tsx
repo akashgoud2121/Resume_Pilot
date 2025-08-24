@@ -42,16 +42,18 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
 
   if (isPreview) {
     return (
-        <div className="w-full h-full origin-top-left scale-[0.3] sm:scale-[0.35] md:scale-[0.45] lg:scale-[0.35] xl:scale-[0.45]">
-            <div className="bg-white w-[794px] h-[1123px]">
-                {renderTemplate()}
-            </div>
+      <div className="w-full h-full bg-white relative">
+        <div className="absolute inset-0 origin-top-left" style={{ transform: 'scale(0.3)', transformOrigin: 'top left' }}>
+          <div className="w-[794px] h-[1123px] overflow-hidden">
+            {renderTemplate()}
+          </div>
         </div>
+      </div>
     );
   }
 
   return (
-    <div className="printable-resume bg-white" style={{ width: '210mm', height: '297mm', minHeight: '297mm' }}>
+    <div className="printable-resume bg-white shadow-lg" style={{ width: '210mm', height: '297mm', minHeight: '297mm' }}>
       {renderTemplate()}
     </div>
   );

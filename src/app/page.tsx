@@ -21,6 +21,7 @@ import {
   User,
   ClipboardPaste,
   Printer,
+  Edit,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -40,11 +41,11 @@ import { cn } from '@/lib/utils';
 type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing';
 
 export default function Home() {
-  const [step, setStep] = useState<'landing' | 'text-review' | 'paste-text' | 'editor' | 'results'>('landing');
+  const [step, setStep] = useState<'landing' | 'text-review' | 'paste-text' | 'editor' | 'results' | 'preview'>('landing');
   const [loadingState, setLoadingState] = useState<LoadingState>('idle');
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [extractedText, setExtractedText] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('default');
   const [isPending, startTransition] = useTransition();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -194,12 +195,13 @@ export default function Home() {
     });
   };
 
-  const handlePrint = (templateId: string) => {
+  const handleSelectTemplate = (templateId: string) => {
     setSelectedTemplate(templateId);
-    setTimeout(() => {
-        window.print();
-        setSelectedTemplate(null);
-    }, 100);
+    setStep('preview');
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
 
@@ -406,14 +408,6 @@ export default function Home() {
 
   const renderResultsPage = () => {
     if (!resumeData) return null;
-
-    if (selectedTemplate) {
-      return (
-          <div id="printable-area" className="w-full h-full">
-              <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
-          </div>
-      );
-    }
   
     return (
       <div className="w-full max-w-7xl mx-auto space-y-8">
@@ -435,12 +429,12 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="w-full aspect-video overflow-hidden rounded-lg border bg-white shadow-inner">
+                  <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-white shadow-inner">
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
                 <div className="p-6 pt-0">
-                  <Button className="w-full" onClick={() => handlePrint(template.id)}>
+                  <Button className="w-full" onClick={() => handleSelectTemplate(template.id)}>
                     <Printer className="mr-2" />
                     Use This Template & Print
                   </Button>
@@ -452,17 +446,43 @@ export default function Home() {
       </div>
     );
   };
+  
+  const renderPreviewPage = () => {
+    if (!resumeData) return null;
+
+    return (
+        <div className="w-full max-w-4xl mx-auto">
+            <div className="flex justify-between items-center mb-8 no-print">
+                <Button variant="outline" onClick={() => setStep('results')}>
+                    <ChevronLeft className="mr-2" />
+                    Back to Templates
+                </Button>
+                <div className="flex gap-4">
+                    <Button variant="outline" onClick={() => setStep('editor')}>
+                        <Edit className="mr-2" />
+                        Edit Details
+                    </Button>
+                    <Button onClick={handlePrint}>
+                        <Printer className="mr-2" />
+                        Print Resume
+                    </Button>
+                </div>
+            </div>
+            <div id="printable-area">
+                <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
+            </div>
+        </div>
+    );
+  }
 
   return (
-    <main className={cn(
-        "flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24",
-        selectedTemplate && "p-0 bg-transparent shadow-none"
-    )}>
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24">
       {step === 'landing' && <div className="no-print">{renderLandingPage()}</div>}
       {step === 'text-review' && <div className="no-print">{renderTextReviewPage()}</div>}
       {step === 'paste-text' && <div className="no-print">{renderPasteTextPage()}</div>}
       {step === 'editor' && <div className="no-print">{renderEditorPage()}</div>}
-      {step === 'results' && renderResultsPage()}
+      {step === 'results' && <div className="no-print">{renderResultsPage()}</div>}
+      {step === 'preview' && renderPreviewPage()}
     </main>
   );
 }
