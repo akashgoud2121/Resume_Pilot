@@ -43,15 +43,22 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
   if (isPreview) {
     return (
       <div 
-        className="relative bg-white shadow-lg" 
+        className="relative bg-white shadow-lg overflow-hidden" 
         style={{ 
-          width: '210mm', 
-          height: '297mm', 
-          transform: 'scale(0.3)', 
-          transformOrigin: 'top center' 
+          width: '100%', 
+          height: '100%',
         }}
       >
-        {renderTemplate()}
+        <div 
+          className="absolute top-1/2 left-1/2"
+          style={{
+            transform: 'scale(0.4) translate(-125%, -125%)', // Scale down and re-center
+            width: '210mm',
+            height: '297mm',
+          }}
+          >
+          {renderTemplate()}
+        </div>
       </div>
     );
   }

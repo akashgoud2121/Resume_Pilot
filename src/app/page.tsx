@@ -493,20 +493,20 @@ export default function Home() {
             <div className="w-36"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {templates.map(template => (
-            <div key={template.id} className="space-y-4">
-              <Card className="transform-gpu transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl">
+            <div key={template.id} className="space-y-4 flex flex-col">
+              <Card className="flex-grow flex flex-col transform-gpu transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                  <CardHeader>
                     <CardTitle>{template.name}</CardTitle>
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
-                <CardContent className="p-0">
-                   <div className="w-full aspect-[1/1.414] overflow-hidden rounded-b-lg border-t bg-secondary flex justify-center items-center">
+                <CardContent className="p-0 flex-grow">
+                   <div className="w-full h-full overflow-hidden rounded-b-lg border-t bg-secondary flex justify-center items-center">
                     <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
-                <div className="p-6 pt-2">
+                <div className="p-4 border-t">
                   <Button className="w-full" onClick={() => handleSelectTemplate(template.id)}>
                     <Printer className="mr-2" />
                     Use This Template & Print
