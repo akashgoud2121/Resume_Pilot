@@ -62,6 +62,11 @@
     display: none !important;
   }
   
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   body * {
     visibility: hidden;
   }
@@ -79,8 +84,22 @@
     transform: scale(1);
     background: white;
     color: black;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+  }
+
+  /* Page break control */
+  #printable-area section, 
+  #printable-area div, 
+  #printable-area ul, 
+  #printable-area li,
+  #printable-area p {
+    page-break-inside: avoid;
+  }
+
+  #printable-area h1,
+  #printable-area h2,
+  #printable-area h3,
+  #printable-area h4 {
+    page-break-after: avoid;
   }
 }
 
