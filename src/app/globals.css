@@ -60,42 +60,36 @@
 @media print {
   body {
     background: white !important;
+    color: black !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .no-print {
+
+  .no-print, .no-print * {
     display: none !important;
   }
-  #printable-area {
-    display: block !important;
+
+  .printable-wrapper {
     position: absolute;
-    left: 0;
     top: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
+    left: 0;
     width: 100%;
-    visibility: visible !important;
+    height: 100%;
+    display: block !important;
   }
-  .printable-resume {
+  
+  #printable-area, .printable-resume {
     visibility: visible !important;
     display: block !important;
-    transform: scale(1) !important;
-    box-shadow: none !important;
-    border: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    page-break-before: auto;
-    page-break-after: auto;
-    page-break-inside: avoid;
-  }
-  /* Hide everything that is not the printable area */
-  body > *:not(.printable-wrapper) {
-    display: none !important;
-  }
-  .printable-wrapper > *:not(#printable-area) {
-     display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    transform: scale(1) !important;
   }
 }
