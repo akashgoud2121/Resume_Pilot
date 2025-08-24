@@ -436,10 +436,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-white shadow-inner">
-                    <div 
-                      className="w-[800px] h-[1128px] transform origin-top-left"
-                      style={{ scale: '0.4' }} // This scale will need to be adjusted based on the parent container size
-                    >
+                    <div className="w-[794px] h-[1123px] origin-top-left -translate-x-[42.5%] -translate-y-[42.5%] scale-[0.15]">
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                     </div>
                   </div>
