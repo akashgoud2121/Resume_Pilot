@@ -29,7 +29,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ResumePreview } from '@/components/resume-preview';
 import { templates } from '@/lib/templates';
 import type { ResumeData } from '@/lib/types';
@@ -436,10 +435,11 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div 
-                    className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-gray-200 shadow-lg"
-                  >
-                    <div className="transform origin-top-left scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.4] xl:scale-[0.5]">
+                  <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-white shadow-inner">
+                    <div 
+                      className="w-[800px] h-[1128px] transform origin-top-left"
+                      style={{ scale: '0.4' }} // This scale will need to be adjusted based on the parent container size
+                    >
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                     </div>
                   </div>
@@ -461,7 +461,7 @@ export default function Home() {
   return (
     <main className={cn(
         "flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24",
-        selectedTemplate && "p-0 md:p-0 lg:p-0"
+        selectedTemplate && "p-0 bg-transparent shadow-none"
     )}>
       {step === 'landing' && <div className="no-print">{renderLandingPage()}</div>}
       {step === 'text-review' && <div className="no-print">{renderTextReviewPage()}</div>}
@@ -471,5 +471,3 @@ export default function Home() {
     </main>
   );
 }
-
-    

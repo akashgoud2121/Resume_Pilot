@@ -41,7 +41,7 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
   };
 
   return (
-    <div className="printable-resume bg-white" style={{ width: '210mm', minHeight: isPreview ? undefined : '297mm' }}>
+    <div className="printable-resume bg-white" style={{ width: '210mm', height: isPreview ? undefined : '297mm', minHeight: isPreview ? undefined : '297mm' }}>
       {renderTemplate()}
     </div>
   );
