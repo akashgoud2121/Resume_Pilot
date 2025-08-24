@@ -59,33 +59,43 @@
 
 @media print {
   body {
-    background: white;
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
-  body * {
-    visibility: hidden;
-  }
-  #printable-area, #printable-area * {
-    visibility: visible;
+  .no-print {
+    display: none !important;
   }
   #printable-area {
+    display: block !important;
     position: absolute;
     left: 0;
     top: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
     width: 100%;
-    height: auto;
-    padding: 0;
-    margin: 0;
+    visibility: visible !important;
   }
   .printable-resume {
+    visibility: visible !important;
+    display: block !important;
     transform: scale(1) !important;
     box-shadow: none !important;
     border: none !important;
     margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
+    page-break-before: auto;
+    page-break-after: auto;
+    page-break-inside: avoid;
   }
-  .no-print {
+  /* Hide everything that is not the printable area */
+  body > *:not(.printable-wrapper) {
     display: none !important;
+  }
+  .printable-wrapper > *:not(#printable-area) {
+     display: none !important;
   }
 }
