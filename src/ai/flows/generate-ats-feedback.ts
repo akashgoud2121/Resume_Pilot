@@ -45,7 +45,7 @@ Here is the resume text:
 
 The current ATS score is: {{{atsScore}}}
 
-Provide specific and concise feedback to improve the resume's ATS score. Suggest relevant keywords to incorporate, formatting adjustments, and structural improvements. Focus on the areas where the resume is lacking to meet industry standards. Be direct, critical, and encouraging.
+Provide a detailed, step-by-step improvement plan. Suggest relevant keywords, formatting adjustments, and structural improvements. Be direct, critical, and encouraging. Focus on creating a clear, impactful, and ATS-friendly resume.
 `,
 });
 

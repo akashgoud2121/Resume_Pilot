@@ -70,9 +70,11 @@ const prompt = ai.definePrompt({
   name: 'extractResumeDataPrompt',
   input: {schema: ExtractResumeDataInputSchema},
   output: {schema: ExtractResumeDataOutputSchema},
-  prompt: `You are an expert resume parser. Extract the information from the resume.
+  prompt: `You are an expert resume parser. Extract the information from the provided resume.
 
-  Resume: {{media url=resumeDataUri}}
+Analyze the document carefully and populate the fields in the requested JSON format. If a section is not present in the resume, return an empty string or an empty array for the corresponding field.
+
+Resume: {{media url=resumeDataUri}}
   `,
 });
 

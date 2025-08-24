@@ -44,7 +44,7 @@ const calculateAtsScorePrompt = ai.definePrompt({
   prompt: `You are an expert in evaluating resumes for Applicant Tracking System (ATS) compatibility.
 
   Analyze the provided resume text and calculate an ATS score based on factors like keyword matching, formatting, structure, and relevance to common industry standards. The score should be a number between 0 and 100.
-  Also provide feedback on how to improve the ATS score, including suggestions for relevant keywords and formatting adjustments. Provide specific and actionable advice.
+  Also provide concise, actionable feedback on how to improve the ATS score.
 
   Resume Text: {{{resumeText}}}
 
