@@ -24,6 +24,7 @@ import {
   Mail,
   Phone,
   User,
+  ClipboardPaste,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -43,7 +44,7 @@ import { resumeSchema } from '@/lib/types';
 type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing';
 
 export default function Home() {
-  const [step, setStep] = useState<'landing' | 'text-review' | 'editor' | 'results'>('landing');
+  const [step, setStep] = useState<'landing' | 'text-review' | 'paste-text' | 'editor' | 'results'>('landing');
   const [loadingState, setLoadingState] = useState<LoadingState>('idle');
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [extractedText, setExtractedText] = useState('');
@@ -146,6 +147,25 @@ export default function Home() {
     });
   };
 
+  const handlePasteAndParse = () => {
+    setLoadingState('extracting-data');
+    startTransition(async () => {
+      try {
+        const extractedData = await extractResumeDataAction(extractedText);
+        setResumeData(extractedData);
+        setStep('results');
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Data Parsing Failed',
+          description: 'Could not parse structured data from the text. Please check the format or try manual entry.',
+        });
+      } finally {
+        setLoadingState('idle');
+      }
+    });
+  }
+
   const onSubmit = (values: z.infer<typeof resumeSchema>) => {
     setLoadingState('processing');
     startTransition(async () => {
@@ -179,6 +199,10 @@ export default function Home() {
           {loadingState === 'extracting-text' ? <Loader2 className="animate-spin" /> : <Upload />}
           Upload Resume
         </Button>
+        <Button size="lg" variant="outline" onClick={() => setStep('paste-text')} disabled={loadingState !== 'idle'}>
+          <ClipboardPaste />
+          Paste Raw Text
+        </Button>
         <Button size="lg" variant="outline" onClick={handleManualEntry} disabled={loadingState !== 'idle'}>
           <FilePenLine />
           Enter Manually
@@ -210,6 +234,32 @@ export default function Home() {
         <Button onClick={handleProceedToEditor} size="lg" className="w-full" disabled={loadingState !== 'idle' || !extractedText}>
           {loadingState === 'extracting-data' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
           Proceed to Editor
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
+  const renderPasteTextPage = () => (
+    <Card className="w-full max-w-4xl mx-auto shadow-2xl">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-2xl">
+           <Button variant="ghost" size="icon" onClick={() => setStep('landing')}><ChevronLeft /></Button>
+           Paste Raw Resume Text
+        </CardTitle>
+        <CardDescription>
+          Paste the entire content of your resume below. We'll parse it and generate your templates.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Textarea 
+          value={extractedText}
+          onChange={(e) => setExtractedText(e.target.value)}
+          className="h-96 text-sm"
+          placeholder="Paste your resume content here..."
+        />
+        <Button onClick={handlePasteAndParse} size="lg" className="w-full" disabled={loadingState !== 'idle' || !extractedText}>
+          {loadingState === 'extracting-data' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
+          Parse and Generate Templates
         </Button>
       </CardContent>
     </Card>
@@ -392,8 +442,11 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24">
       {step === 'landing' && renderLandingPage()}
       {step === 'text-review' && renderTextReviewPage()}
+      {step === 'paste-text' && renderPasteTextPage()}
       {step === 'editor' && renderEditorPage()}
       {step === 'results' && renderResultsPage()}
     </main>
   );
 }
+
+    
