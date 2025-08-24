@@ -20,6 +20,14 @@ const Section: React.FC<{ title: string; icon: React.ReactNode; children: React.
 );
 
 export function DefaultTemplate({ data }: TemplateProps) {
+  const getSkills = () => {
+    if (!data.coreSkills) return [];
+    return data.coreSkills.flatMap(s => {
+        const parts = s.split(/:(.*)/s);
+        return parts.length > 1 ? parts[1].split(',').map(sk => sk.trim()) : parts;
+    }).filter(Boolean);
+  }
+
   return (
     <div className="p-6 bg-white text-gray-800 font-sans">
       {/* Header */}
@@ -46,7 +54,7 @@ export function DefaultTemplate({ data }: TemplateProps) {
         {data.coreSkills && data.coreSkills.length > 0 && (
           <Section title="Core Skills" icon={<Sparkles size={16} />}>
             <div className="flex flex-wrap gap-1.5">
-              {data.coreSkills.flatMap(s => s.split(/, |: /).slice(1)).map((skill, index) => (
+              {getSkills().map((skill, index) => (
                 <span key={index} className="bg-primary/10 text-primary text-[10px] font-medium px-2 py-0.5 rounded-full">{skill}</span>
               ))}
             </div>
@@ -115,5 +123,3 @@ export function DefaultTemplate({ data }: TemplateProps) {
     </div>
   );
 }
-
-    
