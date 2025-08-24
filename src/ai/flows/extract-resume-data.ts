@@ -70,9 +70,9 @@ const prompt = ai.definePrompt({
   name: 'extractResumeDataPrompt',
   input: {schema: ExtractResumeDataInputSchema},
   output: {schema: ExtractResumeDataOutputSchema},
-  prompt: `You are an expert resume parser. Extract the information from the provided resume.
+  prompt: `You are an expert resume parser. Extract the information from the provided resume, which may span multiple pages.
 
-Analyze the document carefully and populate the fields in the requested JSON format. If a section or field (like githubLink, achievements, etc.) is not present in the resume, you must return an empty string for string fields or an empty array for array fields. Do not omit any fields from the JSON output.
+Analyze the entire document carefully and populate the fields in the requested JSON format. It is critical that you adhere to the provided schema. If a section or a specific field (like githubLink, achievements, etc.) is not present in the resume, you must return an empty string for string fields or an empty array for array fields. Do not omit any fields from the JSON output, even if they are empty.
 
 Resume: {{media url=resumeDataUri}}
   `,
@@ -86,6 +86,9 @@ const extractResumeDataFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('AI failed to extract resume data. The output was empty.');
+    }
+    return output;
   }
 );
