@@ -502,7 +502,7 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0 flex-grow">
-                   <div className="w-full h-full overflow-hidden rounded-b-lg border-t bg-secondary flex justify-center items-center">
+                   <div className="w-full h-96 overflow-hidden rounded-b-lg border-t bg-secondary flex justify-center items-center p-4">
                     <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
