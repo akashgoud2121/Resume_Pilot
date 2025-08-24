@@ -25,6 +25,7 @@ import {
   Phone,
   User,
   ClipboardPaste,
+  Printer,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,8 @@ import { templates } from '@/lib/templates';
 import type { ResumeData } from '@/lib/types';
 import { extractResumeTextAction, extractResumeDataAction } from './actions';
 import { resumeSchema } from '@/lib/types';
+import { cn } from '@/lib/utils';
+
 
 type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing';
 
@@ -48,6 +51,7 @@ export default function Home() {
   const [loadingState, setLoadingState] = useState<LoadingState>('idle');
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [extractedText, setExtractedText] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -184,6 +188,15 @@ export default function Home() {
       }
     });
   };
+
+  const handlePrint = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    setTimeout(() => {
+        window.print();
+        setSelectedTemplate(null);
+    }, 100);
+  };
+
 
   const renderLandingPage = () => (
     <div className="text-center">
@@ -388,10 +401,18 @@ export default function Home() {
 
   const renderResultsPage = () => {
     if (!resumeData) return null;
+
+    if (selectedTemplate) {
+      return (
+          <div id="printable-area" className="w-full h-full">
+              <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
+          </div>
+      );
+    }
   
     return (
-      <div className="w-full max-w-6xl mx-auto space-y-8">
-        <div className="flex justify-between items-center">
+      <div className="w-full max-w-7xl mx-auto space-y-8">
+        <div className="flex justify-between items-center no-print">
             <Button variant="outline" onClick={() => setStep('editor')}>
                 <ChevronLeft className="mr-2" />
                 Back to Editor
@@ -400,53 +421,47 @@ export default function Home() {
             <div className="w-36"></div>
         </div>
 
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {templates.map(template => (
-              <Dialog key={template.id}>
-                <DialogTrigger asChild>
-                  <Card className="cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-transform duration-300 group">
-                    <CardContent className="p-0">
-                      <img
-                        src={template.image}
-                        alt={template.name}
-                        width={400}
-                        height={565}
-                        className="rounded-t-lg aspect-[1/1.414] object-cover"
-                        data-ai-hint="resume template"
-                      />
-                    </CardContent>
-                    <CardHeader>
-                      <CardTitle>{template.name}</CardTitle>
-                      <Badge variant="outline">{template.category}</Badge>
-                    </CardHeader>
-                  </Card>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
-                  <DialogHeader>
-                    <DialogTitle>{template.name} Template Preview</DialogTitle>
-                  </DialogHeader>
-                  <div className="flex-grow overflow-auto bg-gray-200 p-4 rounded-md">
-                    <ResumePreview resumeData={resumeData} templateId={template.id} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {templates.map(template => (
+            <div key={template.id} className="space-y-4">
+              <Card className="transform-gpu transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl">
+                 <CardHeader>
+                    <CardTitle>{template.name}</CardTitle>
+                    <CardDescription>{template.category}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-gray-200 shadow-lg"
+                  >
+                    <div className="transform origin-top-left scale-[0.35] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.35] xl:scale-[0.45]">
+                      <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
+                    </div>
                   </div>
-                </DialogContent>
-              </Dialog>
-            ))}
-          </div>
+                </CardContent>
+                <div className="p-6 pt-0">
+                  <Button className="w-full" onClick={() => handlePrint(template.id)}>
+                    <Printer className="mr-2" />
+                    Use This Template & Print
+                  </Button>
+                </div>
+              </Card>
+            </div>
+          ))}
         </div>
       </div>
     );
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24">
-      {step === 'landing' && renderLandingPage()}
-      {step === 'text-review' && renderTextReviewPage()}
-      {step === 'paste-text' && renderPasteTextPage()}
-      {step === 'editor' && renderEditorPage()}
+    <main className={cn(
+        "flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24",
+        selectedTemplate && "p-0 md:p-0 lg:p-0"
+    )}>
+      {step === 'landing' && <div className="no-print">{renderLandingPage()}</div>}
+      {step === 'text-review' && <div className="no-print">{renderTextReviewPage()}</div>}
+      {step === 'paste-text' && <div className="no-print">{renderPasteTextPage()}</div>}
+      {step === 'editor' && <div className="no-print">{renderEditorPage()}</div>}
       {step === 'results' && renderResultsPage()}
     </main>
   );
 }
-
-    

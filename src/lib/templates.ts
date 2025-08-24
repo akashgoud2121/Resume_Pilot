@@ -2,50 +2,56 @@ export type Template = {
   id: string;
   name: string;
   category: string;
-  image: string;
+  image: string; // This can be a placeholder, as we are doing live previews now
 };
 
 export const templates: Template[] = [
   {
-    id: 'modern',
-    name: 'Modern',
-    category: 'Modern',
+    id: 'default',
+    name: 'Classic',
+    category: 'Professional',
     image: 'https://placehold.co/400x565.png',
   },
   {
+    id: 'modern',
+    name: 'Modern',
+    category: 'Modern & Clean',
+    image: 'https://placehold.co/400x565.png',
+  },
+    {
     id: 'double-column',
     name: 'Double Column',
-    category: 'Double Column',
+    category: 'Structured',
     image: 'https://placehold.co/400x565.png',
   },
   {
     id: 'stylish',
     name: 'Stylish',
-    category: 'Stylish',
+    category: 'Elegant & Stylish',
     image: 'https://placehold.co/400x565.png',
   },
   {
     id: 'minimal',
     name: 'Minimal',
-    category: 'Minimal',
+    category: 'Simple & To-the-point',
     image: 'https://placehold.co/400x565.png',
   },
   {
     id: 'creative',
     name: 'Creative',
-    category: 'Creative',
+    category: 'Bold & Visual',
     image: 'https://placehold.co/400x565.png',
   },
   {
     id: 'timeline',
     name: 'Timeline',
-    category: 'Timeline',
+    category: 'Experience-focused',
     image: 'https://placehold.co/400x565.png',
   },
-    {
+  {
     id: 'contemporary',
     name: 'Contemporary',
-    category: 'Contemporary',
+    category: 'Fresh & Contemporary',
     image: 'https://placehold.co/400x565.png',
   },
 ];
