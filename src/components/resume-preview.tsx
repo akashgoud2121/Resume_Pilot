@@ -42,16 +42,18 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
 
   if (isPreview) {
     return (
-      <div className="w-full h-full bg-white relative overflow-hidden">
+      <div 
+        className="w-full h-full relative overflow-hidden bg-white"
+        // This container clips the scaled-down resume
+      >
         <div 
-          className="origin-top-left" 
-          style={{ 
-            width: '210mm', 
+          className="origin-top-left absolute"
+          style={{
+            width: '210mm',
             height: '297mm',
-            transform: 'scale(0.35)', // Adjust scale to fit container
-            transformOrigin: 'top left',
-            position: 'absolute',
-          }}>
+            transform: 'scale(0.5)', // Increased scale for better readability
+          }}
+        >
           {renderTemplate()}
         </div>
       </div>
