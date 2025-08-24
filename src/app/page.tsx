@@ -501,12 +501,12 @@ export default function Home() {
                     <CardTitle>{template.name}</CardTitle>
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
-                <CardContent className="p-2">
-                   <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-secondary shadow-inner flex justify-center items-center">
+                <CardContent className="p-0">
+                   <div className="w-full aspect-[1/1.414] overflow-hidden rounded-b-lg border-t bg-secondary flex justify-center items-center">
                     <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
-                <div className="p-6 pt-0">
+                <div className="p-6 pt-2">
                   <Button className="w-full" onClick={() => handleSelectTemplate(template.id)}>
                     <Printer className="mr-2" />
                     Use This Template & Print

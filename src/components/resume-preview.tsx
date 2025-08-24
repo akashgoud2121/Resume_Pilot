@@ -42,20 +42,16 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
 
   if (isPreview) {
     return (
-      <div className="relative w-full h-full overflow-hidden bg-white shadow-lg">
-        <div 
-          className="absolute inset-0"
-          style={{ 
-            width: '100%', 
-            height: '100%',
-            transform: 'scale(0.3)',
-            transformOrigin: 'top left',
-           }}
-        >
-          <div style={{width: '210mm', height: '297mm'}}>
-             {renderTemplate()}
-          </div>
-        </div>
+      <div 
+        className="relative bg-white shadow-lg" 
+        style={{ 
+          width: '210mm', 
+          height: '297mm', 
+          transform: 'scale(0.3)', 
+          transformOrigin: 'top center' 
+        }}
+      >
+        {renderTemplate()}
       </div>
     );
   }
