@@ -12,11 +12,9 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const ExtractResumeDataInputSchema = z.object({
-  resumeDataUri: z
+  resumeText: z
     .string()
-    .describe(
-      "The resume data, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'"
-    ),
+    .describe('The text content of the resume to be parsed.'),
 });
 export type ExtractResumeDataInput = z.infer<typeof ExtractResumeDataInputSchema>;
 
@@ -70,11 +68,12 @@ const prompt = ai.definePrompt({
   name: 'extractResumeDataPrompt',
   input: {schema: ExtractResumeDataInputSchema},
   output: {schema: ExtractResumeDataOutputSchema},
-  prompt: `You are an expert resume parser. Extract the information from the provided resume, which may span multiple pages.
+  prompt: `You are an expert resume parser. Extract the information from the provided resume text, which may be from a multi-page document.
 
-Analyze the entire document carefully and populate the fields in the requested JSON format. It is critical that you adhere to the provided schema. If a section or a specific field (like githubLink, achievements, etc.) is not present in the resume, you must return an empty string for string fields or an empty array for array fields. Do not omit any fields from the JSON output, even if they are empty.
+Analyze the entire text carefully and populate the fields in the requested JSON format. It is critical that you adhere to the provided schema. If a section or a specific field (like githubLink, achievements, etc.) is not present in the resume, you must return an empty string for string fields or an empty array for array fields. Do not omit any fields from the JSON output, even if they are empty.
 
-Resume: {{media url=resumeDataUri}}
+Resume Text:
+{{{resumeText}}}
   `,
 });
 

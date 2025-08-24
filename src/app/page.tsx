@@ -40,15 +40,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ResumePreview } from '@/components/resume-preview';
 import { templates } from '@/lib/templates';
 import type { ResumeData, AtsResult } from '@/lib/types';
-import { extractResumeDataAction, calculateAtsScoreAction, getDetailedFeedbackAction } from './actions';
+import { extractResumeTextAction, extractResumeDataAction, calculateAtsScoreAction, getDetailedFeedbackAction } from './actions';
 import { resumeSchema } from '@/lib/types';
 
-type LoadingState = 'idle' | 'extracting' | 'analyzing' | 'feedback';
+type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'analyzing' | 'feedback';
 
 export default function Home() {
-  const [step, setStep] = useState<'landing' | 'editor' | 'results'>('landing');
+  const [step, setStep] = useState<'landing' | 'text-review' | 'editor' | 'results'>('landing');
   const [loadingState, setLoadingState] = useState<LoadingState>('idle');
   const [resumeData, setResumeData] = useState<Partial<ResumeData> | null>(null);
+  const [extractedText, setExtractedText] = useState('');
   const [atsResult, setAtsResult] = useState<AtsResult | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -79,6 +80,7 @@ export default function Home() {
   const { fields: achieveFields, append: appendAchieve, remove: removeAchieve } = useFieldArray({ control: form.control, name: 'achievements' });
   const { fields: certFields, append: appendCert, remove: removeCert } = useFieldArray({ control: form.control, name: 'certifications' });
 
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -90,22 +92,21 @@ export default function Home() {
         });
         return;
       }
-      setLoadingState('extracting');
+      setLoadingState('extracting-text');
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
         startTransition(async () => {
           try {
             const dataUri = reader.result as string;
-            const extractedData = await extractResumeDataAction(dataUri);
-            setResumeData(extractedData);
-            form.reset(extractedData);
-            setStep('editor');
+            const text = await extractResumeTextAction(dataUri);
+            setExtractedText(text);
+            setStep('text-review');
           } catch (error) {
             toast({
               variant: 'destructive',
               title: 'Extraction Failed',
-              description: 'Could not extract data from the resume. Please try again or enter details manually.',
+              description: 'Could not extract text from the resume. Please try again or enter details manually.',
             });
           } finally {
             setLoadingState('idle');
@@ -127,6 +128,27 @@ export default function Home() {
     setResumeData({});
     form.reset();
     setStep('editor');
+  };
+  
+  const handleProceedToEditor = () => {
+    setLoadingState('extracting-data');
+    startTransition(async () => {
+      try {
+        const extractedData = await extractResumeDataAction(extractedText);
+        setResumeData(extractedData);
+        form.reset(extractedData);
+        setStep('editor');
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Data Parsing Failed',
+          description: 'Could not parse structured data from the text. Please proceed with manual entry.',
+        });
+        handleManualEntry(); // Fallback to manual entry
+      } finally {
+        setLoadingState('idle');
+      }
+    });
   };
 
   const onSubmit = (values: z.infer<typeof resumeSchema>) => {
@@ -181,7 +203,7 @@ export default function Home() {
       </p>
       <div className="mt-10 flex items-center justify-center gap-x-6">
         <Button size="lg" onClick={() => fileInputRef.current?.click()} disabled={loadingState !== 'idle'}>
-          {loadingState === 'extracting' ? <Loader2 className="animate-spin" /> : <Upload />}
+          {loadingState === 'extracting-text' ? <Loader2 className="animate-spin" /> : <Upload />}
           Upload Resume
         </Button>
         <Button size="lg" variant="outline" onClick={handleManualEntry} disabled={loadingState !== 'idle'}>
@@ -194,12 +216,38 @@ export default function Home() {
     </div>
   );
 
+  const renderTextReviewPage = () => (
+    <Card className="w-full max-w-4xl mx-auto shadow-2xl">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-2xl">
+           <Button variant="ghost" size="icon" onClick={() => setStep('landing')}><ChevronLeft /></Button>
+           Review Extracted Text
+        </CardTitle>
+        <CardDescription>
+          We've extracted the text from your resume. Please review it below and make any necessary corrections before we analyze it.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Textarea 
+          value={extractedText}
+          onChange={(e) => setExtractedText(e.target.value)}
+          className="h-96 text-sm"
+          placeholder="Extracted text will appear here..."
+        />
+        <Button onClick={handleProceedToEditor} size="lg" className="w-full" disabled={loadingState !== 'idle' || !extractedText}>
+          {loadingState === 'extracting-data' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
+          Proceed to Editor
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
   const renderEditorPage = () => {
     return (
       <Card className="w-full max-w-4xl mx-auto shadow-2xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Button variant="ghost" size="icon" onClick={() => setStep('landing')}><ChevronLeft /></Button>
+            <Button variant="ghost" size="icon" onClick={() => extractedText ? setStep('text-review') : setStep('landing')}><ChevronLeft /></Button>
             Resume Editor
           </CardTitle>
           <CardDescription>Fill in your details to get started. All fields are optional but recommended.</CardDescription>
@@ -433,6 +481,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24">
       {step === 'landing' && renderLandingPage()}
+      {step === 'text-review' && renderTextReviewPage()}
       {step === 'editor' && renderEditorPage()}
       {step === 'results' && renderResultsPage()}
     </main>
