@@ -501,10 +501,8 @@ export default function Home() {
                     <CardTitle>{template.name}</CardTitle>
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
-                <CardContent className="p-0 flex-grow relative">
-                   <div className="absolute inset-0 bg-secondary rounded-b-lg overflow-hidden flex justify-center items-center">
+                <CardContent className="p-4 flex-grow flex justify-center items-center bg-secondary rounded-b-lg overflow-hidden">
                     <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
-                  </div>
                 </CardContent>
                 <div className="p-4 border-t">
                   <Button className="w-full" onClick={() => handleSelectTemplate(template.id)}>

@@ -41,21 +41,17 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
     }
   };
   
-  const a4AspectRatio = 1 / 1.4142;
-
   if (isPreview) {
     return (
       <div
-        className="relative w-full h-full"
-        style={{ aspectRatio: '1 / 1.4142' }}
+        className="w-[280px] h-[396px] overflow-hidden bg-white shadow-lg"
       >
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="origin-top-left"
           style={{
+            transform: 'scale(0.333)',
             width: '210mm',
             height: '297mm',
-            transform: 'scale(0.3) translate(-50%, -50%)',
-            transformOrigin: 'center center',
           }}
           >
           {renderTemplate()}
