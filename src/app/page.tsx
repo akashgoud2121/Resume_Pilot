@@ -411,7 +411,7 @@ export default function Home() {
   
     return (
       <div className="w-full max-w-7xl mx-auto space-y-8">
-        <div className="flex justify-between items-center no-print">
+        <div className="flex justify-between items-center">
             <Button variant="outline" onClick={() => setStep('editor')}>
                 <ChevronLeft className="mr-2" />
                 Back to Editor
@@ -429,7 +429,7 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-white shadow-inner">
+                  <div className="w-full aspect-video overflow-hidden rounded-lg border bg-white shadow-inner relative">
                       <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
@@ -451,8 +451,8 @@ export default function Home() {
     if (!resumeData) return null;
 
     return (
-        <div className="w-full max-w-4xl mx-auto">
-            <div className="flex justify-between items-center mb-8 no-print">
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+            <div className="w-full flex justify-between items-center mb-8 no-print">
                 <Button variant="outline" onClick={() => setStep('results')}>
                     <ChevronLeft className="mr-2" />
                     Back to Templates
@@ -476,12 +476,14 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24">
-      {step === 'landing' && <div className="no-print">{renderLandingPage()}</div>}
-      {step === 'text-review' && <div className="no-print">{renderTextReviewPage()}</div>}
-      {step === 'paste-text' && <div className="no-print">{renderPasteTextPage()}</div>}
-      {step === 'editor' && <div className="no-print">{renderEditorPage()}</div>}
-      {step === 'results' && <div className="no-print">{renderResultsPage()}</div>}
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24 bg-background">
+      <div className={cn("w-full", { 'no-print': step === 'preview'})}>
+        {step === 'landing' && renderLandingPage()}
+        {step === 'text-review' && renderTextReviewPage()}
+        {step === 'paste-text' && renderPasteTextPage()}
+        {step === 'editor' && renderEditorPage()}
+        {step === 'results' && renderResultsPage()}
+      </div>
       {step === 'preview' && renderPreviewPage()}
     </main>
   );

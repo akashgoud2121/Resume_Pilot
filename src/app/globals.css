@@ -64,31 +64,28 @@
   body * {
     visibility: hidden;
   }
-  .printable-resume, .printable-resume * {
-    visibility: visible;
-  }
   #printable-area, #printable-area * {
-      visibility: visible;
+    visibility: visible;
   }
   #printable-area {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: auto;
     padding: 0;
     margin: 0;
   }
   .printable-resume {
     transform: scale(1) !important;
-    box-shadow: none;
-    border: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: auto;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
   }
   .no-print {
-    display: none;
+    display: none !important;
   }
 }
