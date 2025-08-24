@@ -522,7 +522,7 @@ export default function Home() {
     if (!resumeData) return null;
 
     return (
-        <div className="w-full h-full flex flex-col items-center printable-wrapper">
+        <div className="w-full h-full flex flex-col items-center">
             <div className="w-full max-w-4xl flex justify-between items-center my-8 no-print">
                 <Button variant="outline" onClick={() => setStep('results')}>
                     <ChevronLeft className="mr-2" />
@@ -548,14 +548,12 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24 bg-background">
-      <div className={cn("w-full", { 'no-print': step !== 'preview'})}>
         {step === 'landing' && renderLandingPage()}
         {step === 'text-review' && renderTextReviewPage()}
         {step === 'paste-text' && renderPasteTextPage()}
         {step === 'editor' && renderEditorPage()}
         {step === 'results' && renderResultsPage()}
-      </div>
-      {step === 'preview' && renderPreviewPage()}
+        {step === 'preview' && renderPreviewPage()}
     </main>
   );
 }
