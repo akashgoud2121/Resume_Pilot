@@ -502,7 +502,7 @@ export default function Home() {
                     <CardDescription>{template.category}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                   <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-secondary shadow-inner flex justify-center items-center">
+                   <div className="w-full aspect-[1/1.414] overflow-hidden rounded-lg border bg-secondary shadow-inner flex justify-center items-center p-4">
                     <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
                   </div>
                 </CardContent>
@@ -524,8 +524,8 @@ export default function Home() {
     if (!resumeData) return null;
 
     return (
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
-            <div className="w-full flex justify-between items-center mb-8 no-print">
+        <div className="w-full flex flex-col items-center">
+            <div className="w-full max-w-4xl flex justify-between items-center mb-8 no-print">
                 <Button variant="outline" onClick={() => setStep('results')}>
                     <ChevronLeft className="mr-2" />
                     Back to Templates

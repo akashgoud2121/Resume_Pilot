@@ -42,14 +42,18 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
 
   if (isPreview) {
     return (
-      <div className="bg-white shadow-lg" style={{ 
-        width: '210mm', 
-        height: '297mm', 
-        transform: 'scale(0.23)', // Adjust scale to fit in the preview box
-        transformOrigin: 'top left',
-        minHeight: '0',
-      }}>
-        {renderTemplate()}
+      <div className="bg-white shadow-lg w-full h-full">
+        <div 
+          className="origin-top-left"
+          style={{ 
+            width: '210mm', 
+            height: '297mm',
+            transform: 'scale(var(--scale-factor, 0.25))',
+            transformOrigin: '0 0',
+           }}
+        >
+          {renderTemplate()}
+        </div>
       </div>
     );
   }
