@@ -12,8 +12,9 @@ export async function generateDocxAction(htmlContent: string) {
         right: 720,
       },
     });
-
-    return { buffer: fileBuffer as Buffer };
+    
+    // Return the buffer as a Base64 encoded string to avoid passing raw buffers to client components.
+    return { base64: (fileBuffer as Buffer).toString('base64') };
   } catch (error) {
     console.error('Error generating DOCX:', error);
     return { error: (error as Error).message };

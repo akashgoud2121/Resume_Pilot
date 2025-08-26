@@ -282,16 +282,21 @@ export default function Home() {
       return;
     }
 
-    // Temporarily apply a white background for Word conversion
     printableArea.classList.add('bg-white', 'text-black');
 
     try {
-      // Pass the outerHTML to the server action
-      const { buffer, error } = await generateDocxAction(printableArea.outerHTML);
+      const { base64, error } = await generateDocxAction(printableArea.outerHTML);
       if (error) throw new Error(error);
-      if (!buffer) throw new Error('No buffer returned from server');
+      if (!base64) throw new Error('No data returned from server');
       
-      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const byteCharacters = atob(base64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+
       saveAs(blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
     } catch (error) {
       console.error("Error generating DOCX:", error);
@@ -301,7 +306,6 @@ export default function Home() {
         description: 'Could not generate the Word document. Please try again.',
       });
     } finally {
-      // Clean up the temporary class
       printableArea.classList.remove('bg-white', 'text-black');
       setLoadingState('idle');
     }
