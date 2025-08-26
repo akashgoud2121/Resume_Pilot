@@ -8,10 +8,10 @@ interface TemplateProps {
 }
 
 const Section: React.FC<{ title: string; children: React.ReactNode; icon?: React.ReactNode }> = ({ title, icon, children }) => (
-    <section className="mb-5">
-      <h2 className="flex items-center gap-3 text-lg font-bold text-gray-800 uppercase tracking-wider border-b-2 border-gray-200 pb-1 mb-3">
+    <section className="mb-6">
+      <h2 className="flex items-center text-lg font-bold text-gray-800 uppercase tracking-wider mb-2 border-b-2 border-gray-200 pb-1">
         {icon}
-        <span>{title}</span>
+        <span className="ml-2">{title}</span>
       </h2>
       <div className="text-sm text-gray-700">
         {children}
@@ -21,12 +21,12 @@ const Section: React.FC<{ title: string; children: React.ReactNode; icon?: React
 
 export function DefaultTemplate({ data }: TemplateProps) {
   return (
-    <div className="p-8 bg-white text-gray-800 font-sans text-[11pt] leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div id="printable-area" className="p-8 bg-white text-gray-800 font-sans text-[11pt] leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
-      <header className="text-center mb-6">
+      <header className="text-center mb-6 border-b-2 border-gray-200 pb-4">
         <h1 className="text-4xl font-bold text-gray-900 tracking-tight">{data.name}</h1>
         {data.experience?.[0]?.title && <p className="text-lg text-blue-600 mt-1">{data.experience[0].title}</p>}
-        <div className="text-xs text-gray-600 mt-4 flex justify-center items-center gap-x-6 flex-wrap">
+        <div className="text-xs text-gray-600 mt-4 flex justify-center items-center gap-x-4 gap-y-1 flex-wrap">
             {data.email && <a href={`mailto:${data.email}`} className="flex items-center gap-1.5 hover:text-blue-600"><Mail size={12} /> {data.email}</a>}
             {data.mobileNumber && <span className="flex items-center gap-1.5"><Phone size={12} /> {data.mobileNumber}</span>}
             {data.linkedinLink && <a href={data.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-600"><Linkedin size={12} /> LinkedIn</a>}
