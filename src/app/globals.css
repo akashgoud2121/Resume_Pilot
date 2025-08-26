@@ -63,6 +63,7 @@
   }
   
   body {
+    background-color: #fff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -73,6 +74,8 @@
   
   #printable-area, #printable-area * {
     visibility: visible;
+    box-shadow: none !important;
+    color: #000 !important;
   }
   
   #printable-area {
@@ -82,8 +85,7 @@
     width: 100%;
     height: auto;
     transform: scale(1);
-    background: white;
-    color: black;
+    background: white !important;
   }
 
   /* Page break control */
