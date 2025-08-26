@@ -25,7 +25,6 @@ import {
   TestTube2,
   FileDown,
 } from 'lucide-react';
-import htmlToDocx from 'html-to-docx';
 import { saveAs } from 'file-saver';
 
 import { Button } from '@/components/ui/button';
@@ -37,7 +36,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ResumePreview } from '@/components/resume-preview';
 import { templates } from '@/lib/templates';
 import type { ResumeData } from '@/lib/types';
-import { extractResumeTextAction, extractResumeDataAction } from './actions';
+import { extractResumeTextAction, extractResumeDataAction, generateDocxAction } from './actions';
 import { resumeSchema } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -103,7 +102,7 @@ const testData: ResumeData = {
   ]
 };
 
-type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing';
+type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing' | 'downloading';
 
 export default function Home() {
   const [step, setStep] = useState<'landing' | 'text-review' | 'paste-text' | 'editor' | 'results' | 'preview'>('landing');
@@ -275,23 +274,22 @@ export default function Home() {
   };
 
   const handleDownloadWord = async () => {
+    setLoadingState('downloading');
     const printableArea = document.getElementById('printable-area');
-    if (!printableArea || !resumeData) return;
-  
+    if (!printableArea || !resumeData) {
+      setLoadingState('idle');
+      return;
+    }
+
     // Temporarily apply a white background for Word conversion
-    printableArea.classList.add('bg-white');
+    printableArea.classList.add('bg-white', 'text-black');
 
     try {
-      const fileBuffer = await htmlToDocx(printableArea.outerHTML, undefined, {
-        margins: {
-          top: 720,
-          bottom: 720,
-          left: 720,
-          right: 720,
-        },
-      });
-  
-      saveAs(fileBuffer as Blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
+      // Pass the outerHTML to the server action
+      const fileBuffer = await generateDocxAction(printableArea.outerHTML);
+      
+      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      saveAs(blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
     } catch (error) {
       console.error("Error generating DOCX:", error);
       toast({
@@ -300,8 +298,9 @@ export default function Home() {
         description: 'Could not generate the Word document. Please try again.',
       });
     } finally {
-       // Clean up the temporary class
-      printableArea.classList.remove('bg-white');
+      // Clean up the temporary class
+      printableArea.classList.remove('bg-white', 'text-black');
+      setLoadingState('idle');
     }
   };
 
@@ -567,8 +566,8 @@ export default function Home() {
                         <Edit className="mr-2" />
                         Edit Details
                     </Button>
-                    <Button variant="secondary" onClick={handleDownloadWord}>
-                        <FileDown className="mr-2" />
+                    <Button variant="secondary" onClick={handleDownloadWord} disabled={loadingState === 'downloading'}>
+                       {loadingState === 'downloading' ? <Loader2 className="animate-spin" /> : <FileDown className="mr-2" />}
                         Download as Word
                     </Button>
                     <Button onClick={handlePrint}>
