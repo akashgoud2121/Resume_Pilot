@@ -283,6 +283,7 @@ export default function Home() {
     }
 
     try {
+      // Ensure the entire HTML content is passed, including the root element
       const { dataUri, error } = await generateDocxAction(printableArea.outerHTML);
       if (error) throw new Error(error);
       if (!dataUri) throw new Error('No data returned from server');
