@@ -282,8 +282,6 @@ export default function Home() {
       return;
     }
 
-    printableArea.classList.add('bg-white', 'text-black');
-
     try {
       const { base64, error } = await generateDocxAction(printableArea.outerHTML);
       if (error) throw new Error(error);
@@ -306,7 +304,6 @@ export default function Home() {
         description: 'Could not generate the Word document. Please try again.',
       });
     } finally {
-      printableArea.classList.remove('bg-white', 'text-black');
       setLoadingState('idle');
     }
   };
@@ -583,7 +580,7 @@ export default function Home() {
                     </Button>
                 </div>
             </div>
-            <div id="printable-area" className="bg-white">
+            <div id="printable-area" className="bg-background shadow-lg">
                 <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
             </div>
         </div>
