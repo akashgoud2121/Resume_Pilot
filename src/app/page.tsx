@@ -36,8 +36,9 @@ import { useToast } from '@/hooks/use-toast';
 import { ResumePreview } from '@/components/resume-preview';
 import { templates } from '@/lib/templates';
 import type { ResumeData } from '@/lib/types';
-import { extractResumeTextAction, extractResumeDataAction, generateDocxAction } from './actions';
+import { extractResumeTextAction, extractResumeDataAction } from './actions';
 import { resumeSchema } from '@/lib/types';
+import { generateDocxAction } from './generate-docx-action';
 import { cn } from '@/lib/utils';
 
 
@@ -286,9 +287,11 @@ export default function Home() {
 
     try {
       // Pass the outerHTML to the server action
-      const fileBuffer = await generateDocxAction(printableArea.outerHTML);
+      const { buffer, error } = await generateDocxAction(printableArea.outerHTML);
+      if (error) throw new Error(error);
+      if (!buffer) throw new Error('No buffer returned from server');
       
-      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const blob = new Blob([Buffer.from(buffer)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       saveAs(blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
     } catch (error) {
       console.error("Error generating DOCX:", error);
