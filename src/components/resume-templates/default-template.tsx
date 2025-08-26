@@ -1,90 +1,86 @@
 'use client';
 
 import type { ResumeData } from '@/lib/types';
-import { Github, Linkedin, Mail, Phone, GraduationCap, Briefcase, Lightbulb, Trophy, Award, User, Sparkles } from 'lucide-react';
+import { Github, Linkedin, Mail, Phone, Briefcase, GraduationCap, Lightbulb, Sparkles, Trophy, Award, User } from 'lucide-react';
 
 interface TemplateProps {
   data: ResumeData;
 }
 
 const Section: React.FC<{ title: string; children: React.ReactNode; icon?: React.ReactNode }> = ({ title, icon, children }) => (
-    <div className="mb-4">
-      <h2 className="text-sm font-bold uppercase tracking-widest text-gray-600 mb-2 flex items-center gap-2">
+    <section className="mb-5">
+      <h2 className="flex items-center gap-3 text-lg font-bold text-gray-800 uppercase tracking-wider border-b-2 border-gray-200 pb-1 mb-3">
         {icon}
-        {title}
+        <span>{title}</span>
       </h2>
-      <div className="text-xs text-gray-800">
+      <div className="text-sm text-gray-700">
         {children}
       </div>
-      <hr className="mt-4 border-gray-200" />
-    </div>
+    </section>
   );
 
 export function DefaultTemplate({ data }: TemplateProps) {
-    
   return (
-    <div className="p-8 bg-white text-gray-800 font-sans text-sm" style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
+    <div className="p-8 bg-white text-gray-800 font-sans text-[11pt] leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
       <header className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-gray-800 tracking-tight">{data.name}</h1>
-        {data.experience?.[0]?.title && <p className="text-lg text-gray-500 mt-1">{data.experience[0].title}</p>}
-        <div className="text-xs text-gray-600 mt-3 flex justify-center items-center gap-x-4">
+        <h1 className="text-4xl font-bold text-gray-900 tracking-tight">{data.name}</h1>
+        {data.experience?.[0]?.title && <p className="text-lg text-blue-600 mt-1">{data.experience[0].title}</p>}
+        <div className="text-xs text-gray-600 mt-4 flex justify-center items-center gap-x-6 flex-wrap">
+            {data.email && <a href={`mailto:${data.email}`} className="flex items-center gap-1.5 hover:text-blue-600"><Mail size={12} /> {data.email}</a>}
             {data.mobileNumber && <span className="flex items-center gap-1.5"><Phone size={12} /> {data.mobileNumber}</span>}
-            {data.email && <span className="flex items-center gap-1.5"><Mail size={12} /> {data.email}</span>}
-            {data.linkedinLink && <span className="flex items-center gap-1.5"><Linkedin size={12} /> {data.linkedinLink.replace('https://', '')}</span>}
-            {data.githubLink && <span className="flex items-center gap-1.5"><Github size={12} /> {data.githubLink.replace('https://', '')}</span>}
+            {data.linkedinLink && <a href={data.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-600"><Linkedin size={12} /> LinkedIn</a>}
+            {data.githubLink && <a href={data.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-600"><Github size={12} /> GitHub</a>}
         </div>
       </header>
-      
-      <hr className="mb-6 border-gray-200"/>
 
       {/* Main Content */}
       <main>
         {data.professionalSummary && (
-          <Section title="Summary" icon={<User size={14}/>}>
-            <p className="leading-normal">{data.professionalSummary}</p>
+          <Section title="Summary" icon={<User size={18}/>}>
+            <p className="text-justify">{data.professionalSummary}</p>
           </Section>
         )}
 
         {data.coreSkills && data.coreSkills.length > 0 && (
-          <Section title="Core Skills" icon={<Sparkles size={14}/>}>
-            <p className="leading-normal">{data.coreSkills.join(' • ')}</p>
+          <Section title="Skills" icon={<Sparkles size={18}/>}>
+            <p className="leading-relaxed">{data.coreSkills.join(' • ')}</p>
           </Section>
         )}
 
         {data.experience && data.experience.length > 0 && (
-          <Section title="Experience" icon={<Briefcase size={14}/>}>
+          <Section title="Experience" icon={<Briefcase size={18}/>}>
             {data.experience.map((exp, index) => (
-              <div key={index} className="mb-3 last:mb-0">
+              <div key={index} className="mb-4 last:mb-0">
                 <div className="flex justify-between items-baseline">
-                  <h3 className="font-bold text-sm text-gray-800">{exp.title}</h3>
-                  <p className="text-xs font-mono text-gray-500">{exp.dates}</p>
+                  <h3 className="font-bold text-base text-gray-800">{exp.title}</h3>
+                  <p className="text-xs font-medium text-gray-500">{exp.dates}</p>
                 </div>
-                <h4 className="text-sm font-medium text-gray-600">{exp.company}</h4>
-                <div className="mt-1 text-xs text-gray-700 whitespace-pre-wrap leading-normal" dangerouslySetInnerHTML={{ __html: exp.description.replace(/\n/g, '<br />') }} />
+                <h4 className="text-sm font-semibold text-blue-600">{exp.company}</h4>
+                <p className="mt-1.5 text-gray-700 whitespace-pre-wrap">{exp.description}</p>
               </div>
             ))}
           </Section>
         )}
         
         {data.projects && data.projects.length > 0 && (
-          <Section title="Projects" icon={<Lightbulb size={14}/>}>
+          <Section title="Projects" icon={<Lightbulb size={18}/>}>
             {data.projects.map((proj, index) => (
-              <div key={index} className="mb-3 last:mb-0">
-                <h3 className="font-bold text-sm text-gray-800">{proj.name}</h3>
-                <p className="mt-0.5 text-xs text-gray-700 leading-normal">{proj.description}</p>
+              <div key={index} className="mb-4 last:mb-0">
+                <h3 className="font-bold text-base text-gray-800">{proj.name}</h3>
+                <p className="mt-1 text-gray-700">{proj.description}</p>
               </div>
             ))}
           </Section>
         )}
 
         {data.education && data.education.length > 0 && (
-          <Section title="Education" icon={<GraduationCap size={14}/>}>
+          <Section title="Education" icon={<GraduationCap size={18}/>}>
             {data.education.map((edu, index) => (
-              <div key={index} className="mb-2 last:mb-0">
+              <div key={index} className="mb-3 last:mb-0">
                  <div className="flex justify-between items-baseline">
-                   <h3 className="font-bold text-sm text-gray-800">{edu.institution}</h3>
-                   <p className="text-xs font-mono text-gray-500">{edu.dates}</p>
+                   <h3 className="font-bold text-base text-gray-800">{edu.institution}</h3>
+                   <p className="text-xs font-medium text-gray-500">{edu.dates}</p>
                  </div>
                  <p className="text-sm text-gray-600">{edu.degree}</p>
               </div>
@@ -92,23 +88,21 @@ export function DefaultTemplate({ data }: TemplateProps) {
           </Section>
         )}
         
-        <div className="grid grid-cols-2 gap-x-6">
-            {data.achievements && data.achievements.length > 0 && (
-                <Section title="Achievements" icon={<Trophy size={14}/>}>
-                <ul className="list-disc list-outside ml-3.5 space-y-1">
-                    {data.achievements.map((ach, index) => ach.value && <li key={index} className="text-xs leading-normal">{ach.value}</li>)}
+        {data.achievements && data.achievements.length > 0 && data.achievements[0].value && (
+            <Section title="Achievements" icon={<Trophy size={18}/>}>
+                <ul className="list-disc list-outside ml-4 space-y-1">
+                    {data.achievements.map((ach, index) => ach.value && <li key={index}>{ach.value}</li>)}
                 </ul>
-                </Section>
-            )}
+            </Section>
+        )}
 
-            {data.certifications && data.certifications.length > 0 && (
-                <Section title="Certifications" icon={<Award size={14}/>}>
-                <ul className="list-disc list-outside ml-3.5 space-y-1">
-                    {data.certifications.map((cert, index) => cert.value && <li key={index} className="text-xs leading-normal">{cert.value}</li>)}
+        {data.certifications && data.certifications.length > 0 && data.certifications[0].value && (
+            <Section title="Certifications" icon={<Award size={18}/>}>
+                <ul className="list-disc list-outside ml-4 space-y-1">
+                    {data.certifications.map((cert, index) => cert.value && <li key={index}>{cert.value}</li>)}
                 </ul>
-                </Section>
-            )}
-        </div>
+            </Section>
+        )}
       </main>
     </div>
   );
