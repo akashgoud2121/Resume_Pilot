@@ -13,7 +13,8 @@ export async function generateDocxAction(htmlContent: string) {
       },
     });
 
-    const buffer = Buffer.isBuffer(fileBuffer) ? fileBuffer : Buffer.from(fileBuffer as any);
+    // Ensure we have a proper Buffer object before encoding
+    const buffer = Buffer.isBuffer(fileBuffer) ? fileBuffer : Buffer.from(fileBuffer as ArrayBuffer);
     const base64 = buffer.toString('base64');
     
     const dataUri = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${base64}`;

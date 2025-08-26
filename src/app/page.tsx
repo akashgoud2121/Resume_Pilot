@@ -287,7 +287,7 @@ export default function Home() {
       if (error) throw new Error(error);
       if (!dataUri) throw new Error('No data returned from server');
       
-      saveAs(dataUri, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
+      saveAs(dataUri, `${resumeData.name.replace(/ /g, '_')}_Resume.docx`);
     } catch (error) {
       console.error("Error generating DOCX:", error);
       toast({
