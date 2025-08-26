@@ -13,11 +13,12 @@ export async function generateDocxAction(htmlContent: string) {
       },
     });
 
-    // Ensure we have a Buffer before converting to Base64
     const buffer = Buffer.isBuffer(fileBuffer) ? fileBuffer : Buffer.from(fileBuffer as any);
+    const base64 = buffer.toString('base64');
     
-    // Return the buffer as a Base64 encoded string
-    return { base64: buffer.toString('base64') };
+    const dataUri = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${base64}`;
+
+    return { dataUri };
   } catch (error) {
     console.error('Error generating DOCX:', error);
     return { error: (error as Error).message };

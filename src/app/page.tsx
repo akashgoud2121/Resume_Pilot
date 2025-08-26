@@ -283,19 +283,11 @@ export default function Home() {
     }
 
     try {
-      const { base64, error } = await generateDocxAction(printableArea.outerHTML);
+      const { dataUri, error } = await generateDocxAction(printableArea.outerHTML);
       if (error) throw new Error(error);
-      if (!base64) throw new Error('No data returned from server');
+      if (!dataUri) throw new Error('No data returned from server');
       
-      const byteCharacters = atob(base64);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-
-      saveAs(blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
+      saveAs(dataUri, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
     } catch (error) {
       console.error("Error generating DOCX:", error);
       toast({
