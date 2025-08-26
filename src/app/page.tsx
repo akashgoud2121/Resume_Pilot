@@ -23,7 +23,10 @@ import {
   Printer,
   Edit,
   TestTube2,
+  FileDown,
 } from 'lucide-react';
+import htmlToDocx from 'html-to-docx';
+import { saveAs } from 'file-saver';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -269,6 +272,37 @@ export default function Home() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownloadWord = async () => {
+    const printableArea = document.getElementById('printable-area');
+    if (!printableArea || !resumeData) return;
+  
+    // Temporarily apply a white background for Word conversion
+    printableArea.classList.add('bg-white');
+
+    try {
+      const fileBuffer = await htmlToDocx(printableArea.outerHTML, undefined, {
+        margins: {
+          top: 720,
+          bottom: 720,
+          left: 720,
+          right: 720,
+        },
+      });
+  
+      saveAs(fileBuffer as Blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
+    } catch (error) {
+      console.error("Error generating DOCX:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Download Failed',
+        description: 'Could not generate the Word document. Please try again.',
+      });
+    } finally {
+       // Clean up the temporary class
+      printableArea.classList.remove('bg-white');
+    }
   };
 
 
@@ -532,6 +566,10 @@ export default function Home() {
                     <Button variant="outline" onClick={() => setStep('editor')}>
                         <Edit className="mr-2" />
                         Edit Details
+                    </Button>
+                    <Button variant="secondary" onClick={handleDownloadWord}>
+                        <FileDown className="mr-2" />
+                        Download as Word
                     </Button>
                     <Button onClick={handlePrint}>
                         <Printer className="mr-2" />
