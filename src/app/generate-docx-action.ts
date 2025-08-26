@@ -13,7 +13,7 @@ export async function generateDocxAction(htmlContent: string) {
       },
     });
 
-    return { buffer: (fileBuffer as Buffer).toJSON().data };
+    return { buffer: fileBuffer as Buffer };
   } catch (error) {
     console.error('Error generating DOCX:', error);
     return { error: (error as Error).message };

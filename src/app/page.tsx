@@ -291,7 +291,7 @@ export default function Home() {
       if (error) throw new Error(error);
       if (!buffer) throw new Error('No buffer returned from server');
       
-      const blob = new Blob([Buffer.from(buffer)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       saveAs(blob, `${resumeData.name.replace(' ', '_')}_Resume.docx`);
     } catch (error) {
       console.error("Error generating DOCX:", error);
@@ -579,7 +579,7 @@ export default function Home() {
                     </Button>
                 </div>
             </div>
-            <div id="printable-area">
+            <div id="printable-area" className="bg-white">
                 <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
             </div>
         </div>
