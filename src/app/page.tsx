@@ -538,9 +538,7 @@ export default function Home() {
                     </Button>
                 </div>
             </div>
-            <div id="printable-area" className="bg-background shadow-lg">
-                <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
-            </div>
+            <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
         </div>
     );
   }

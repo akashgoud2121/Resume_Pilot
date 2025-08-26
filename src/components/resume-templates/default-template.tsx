@@ -21,7 +21,7 @@ const Section: React.FC<{ title: string; children: React.ReactNode; icon?: React
 
 export function DefaultTemplate({ data }: TemplateProps) {
   return (
-    <div id="printable-area" className="p-8 bg-white text-gray-800 font-sans text-[11pt] leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="p-8 bg-white text-gray-800 font-sans text-[11pt] leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
       <header className="text-center mb-6 border-b-2 border-gray-200 pb-4">
         <h1 className="text-4xl font-bold text-gray-900 tracking-tight">{data.name}</h1>
