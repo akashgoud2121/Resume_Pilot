@@ -494,7 +494,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {templates.map(template => (
-            <div key={template.id} className="space-y-4 flex flex-col">
+            <div key={template.id} className="flex flex-col">
               <Card className="flex-grow flex flex-col transform-gpu transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
                  <CardHeader>
                     <CardTitle>{template.name}</CardTitle>
