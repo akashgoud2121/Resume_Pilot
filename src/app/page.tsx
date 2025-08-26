@@ -23,9 +23,7 @@ import {
   Printer,
   Edit,
   TestTube2,
-  FileDown,
 } from 'lucide-react';
-import { saveAs } from 'file-saver';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,7 +36,6 @@ import { templates } from '@/lib/templates';
 import type { ResumeData } from '@/lib/types';
 import { extractResumeTextAction, extractResumeDataAction } from './actions';
 import { resumeSchema } from '@/lib/types';
-import { generateDocxAction } from './generate-docx-action';
 import { cn } from '@/lib/utils';
 
 
@@ -273,34 +270,6 @@ export default function Home() {
   const handlePrint = () => {
     window.print();
   };
-
-  const handleDownloadWord = async () => {
-    setLoadingState('downloading');
-    const printableArea = document.getElementById('printable-area');
-    if (!printableArea || !resumeData) {
-      setLoadingState('idle');
-      return;
-    }
-
-    try {
-      // Ensure the entire HTML content is passed, including the root element
-      const { dataUri, error } = await generateDocxAction(printableArea.outerHTML);
-      if (error) throw new Error(error);
-      if (!dataUri) throw new Error('No data returned from server');
-      
-      saveAs(dataUri, `${resumeData.name.replace(/ /g, '_')}_Resume.docx`);
-    } catch (error) {
-      console.error("Error generating DOCX:", error);
-      toast({
-        variant: 'destructive',
-        title: 'Download Failed',
-        description: 'Could not generate the Word document. Please try again.',
-      });
-    } finally {
-      setLoadingState('idle');
-    }
-  };
-
 
   const renderLandingPage = () => (
     <div className="text-center">
@@ -562,10 +531,6 @@ export default function Home() {
                     <Button variant="outline" onClick={() => setStep('editor')}>
                         <Edit className="mr-2" />
                         Edit Details
-                    </Button>
-                    <Button variant="secondary" onClick={handleDownloadWord} disabled={loadingState === 'downloading'}>
-                       {loadingState === 'downloading' ? <Loader2 className="animate-spin" /> : <FileDown className="mr-2" />}
-                        Download as Word
                     </Button>
                     <Button onClick={handlePrint}>
                         <Printer className="mr-2" />
