@@ -42,10 +42,25 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, class
         return <DefaultTemplate data={resumeData} />;
     }
   };
+  
+  if (isPreview) {
+    return (
+      <div 
+        className={cn(
+          "absolute inset-0 transform scale-[0.3] origin-top-left",
+          className
+        )}
+      >
+        <div id={!isPreview ? "printable-area" : undefined} className="bg-white shadow-lg w-[210mm] min-h-[297mm]">
+          {renderTemplate()}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
-      id={!isPreview ? "printable-area" : undefined}
+      id="printable-area"
       className={cn(
         "bg-white shadow-lg w-[210mm] min-h-[297mm]",
         className

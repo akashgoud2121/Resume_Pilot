@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -24,7 +25,6 @@ import {
   Mail,
   Phone,
   GraduationCap,
-  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -37,6 +37,7 @@ import ScrollAnimation from '@/components/ui/scroll-animation';
 import { Header3d } from '@/components/header-3d';
 import type { ResumeData } from '@/lib/types';
 import { ResumePreview } from '@/components/resume-preview';
+import { User } from 'lucide-react';
 
 
 const testimonials = [
@@ -101,31 +102,6 @@ export default function Home() {
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
   const previewContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      for (let entry of entries) {
-        const container = entry.target as HTMLElement;
-        const preview = container.firstChild as HTMLElement;
-        if (preview) {
-          const scale = container.offsetWidth / preview.offsetWidth;
-          container.style.setProperty('--tw-scale-x', scale.toString());
-          container.style.setProperty('--tw-scale-y', scale.toString());
-        }
-      }
-    });
-
-    const container = previewContainerRef.current;
-    if (container) {
-      document.querySelectorAll('.preview-container').forEach(el => {
-        resizeObserver.observe(el);
-      });
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
 
   
   const filteredTemplates = templates.filter(
@@ -339,23 +315,22 @@ export default function Home() {
               </div>
             </ScrollAnimation>
 
-            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
               {filteredTemplates.map((template, index) => (
                  <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: index * 100 }} key={template.id}>
-                    <div className="group relative overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
-                      <div ref={previewContainerRef} className="preview-container aspect-[1/1.414] w-full overflow-hidden bg-white transform-gpu origin-top-left transition-transform ease-in-out">
+                    <div className="group relative">
+                      <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
                          <ResumePreview
                             resumeData={sampleResumeData}
                             templateId={template.id}
                             isPreview={true}
                          />
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                      <div className="absolute bottom-0 left-0 p-4">
+                      <div className="mt-4 text-center">
                         <h3 className="font-bold text-white">{template.name}</h3>
-                        <p className="text-xs text-muted-foreground">{template.category}</p>
+                        <p className="text-sm text-muted-foreground">{template.category}</p>
                       </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
                         <Button variant="secondary">
                           Preview <ChevronRight className="ml-2" />
                         </Button>
