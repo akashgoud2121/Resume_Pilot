@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -81,14 +82,14 @@ export function MinimalTemplate({ data }: TemplateProps) {
         <div className="grid grid-cols-2 gap-x-8">
           {data.coreSkills && data.coreSkills.length > 0 && (
             <Section title="Skills">
-                <p>{data.coreSkills.join(', ')}</p>
+                <p>{data.coreSkills.map(s => s.value).join(', ')}</p>
             </Section>
           )}
 
           {data.certifications && data.certifications.length > 0 && (
             <Section title="Certifications">
               <ul className="list-none space-y-1">
-                {data.certifications.map((cert, index) => <li key={index}>{cert.value}</li>)}
+                {data.certifications.map((cert) => <li key={cert.id}>{cert.value}</li>)}
               </ul>
             </Section>
           )}
@@ -97,7 +98,7 @@ export function MinimalTemplate({ data }: TemplateProps) {
         {data.achievements && data.achievements.length > 0 && (
           <Section title="Achievements">
             <ul className="list-none space-y-1">
-              {data.achievements.map((ach, index) => <li key={index}>{ach.value}</li>)}
+              {data.achievements.map((ach) => <li key={ach.id}>{ach.value}</li>)}
             </ul>
           </Section>
         )}

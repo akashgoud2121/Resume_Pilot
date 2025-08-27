@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -74,8 +75,8 @@ export function DoubleColumnTemplate({ data }: TemplateProps) {
             {data.coreSkills && data.coreSkills.length > 0 && (
                 <Section title="Skills" icon={<Sparkles className="w-[1em] h-[1em]" />}>
                     <div className="flex flex-wrap gap-[0.4em]">
-                    {data.coreSkills.map((skill, index) => (
-                        <span key={index} className="bg-indigo-100 text-indigo-800 text-[0.8em] font-medium px-[0.75em] py-[0.25em] rounded-full">{skill}</span>
+                    {data.coreSkills.map((skill) => (
+                        <span key={skill.id} className="bg-indigo-100 text-indigo-800 text-[0.8em] font-medium px-[0.75em] py-[0.25em] rounded-full">{skill.value}</span>
                     ))}
                     </div>
                 </Section>
@@ -96,7 +97,7 @@ export function DoubleColumnTemplate({ data }: TemplateProps) {
             {data.achievements && data.achievements.length > 0 && (
                 <Section title="Achievements" icon={<Trophy className="w-[1em] h-[1em]" />}>
                 <ul className="list-disc list-inside space-y-[0.25em]">
-                    {data.achievements.map((ach, index) => <li key={index}>{ach.value}</li>)}
+                    {data.achievements.map((ach) => <li key={ach.id}>{ach.value}</li>)}
                 </ul>
                 </Section>
             )}
@@ -104,7 +105,7 @@ export function DoubleColumnTemplate({ data }: TemplateProps) {
             {data.certifications && data.certifications.length > 0 && (
                 <Section title="Certifications" icon={<Award className="w-[1em] h-[1em]" />}>
                 <ul className="list-disc list-inside space-y-[0.25em]">
-                    {data.certifications.map((cert, index) => <li key={index}>{cert.value}</li>)}
+                    {data.certifications.map((cert) => <li key={cert.id}>{cert.value}</li>)}
                 </ul>
                 </Section>
             )}

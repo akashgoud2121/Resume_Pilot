@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -54,8 +55,8 @@ export function TimelineTemplate({ data }: TemplateProps) {
             <section className="mb-6">
               <h2 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-2">Skills</h2>
               <div className="flex flex-wrap gap-1.5">
-                {data.coreSkills.map((skill, index) => (
-                  <span key={index} className="bg-gray-200 text-gray-800 text-[10px] font-medium px-2 py-1 rounded">{skill}</span>
+                {data.coreSkills.map((skill) => (
+                  <span key={skill.id} className="bg-gray-200 text-gray-800 text-[10px] font-medium px-2 py-1 rounded">{skill.value}</span>
                 ))}
               </div>
             </section>

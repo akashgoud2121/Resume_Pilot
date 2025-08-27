@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -48,8 +49,8 @@ export function CreativeTemplate({ data }: TemplateProps) {
                 <section>
                     <h2 className="text-xl font-black uppercase tracking-wider text-teal-500 mb-3">Toolkit</h2>
                     <div className="flex flex-wrap gap-1.5">
-                    {data.coreSkills.map((skill, index) => (
-                        <span key={index} className="bg-gray-700 text-teal-300 text-[10px] font-bold px-2 py-1 rounded-sm">{skill}</span>
+                    {data.coreSkills.map((skill) => (
+                        <span key={skill.id} className="bg-gray-700 text-teal-300 text-[10px] font-bold px-2 py-1 rounded-sm">{skill.value}</span>
                     ))}
                     </div>
                 </section>
@@ -100,7 +101,7 @@ export function CreativeTemplate({ data }: TemplateProps) {
                  {data.achievements && data.achievements.length > 0 && (
                     <Section title="Trophies" className="w-1/2">
                         <ul className="space-y-1.5">
-                            {data.achievements.map((ach, index) => <li key={index} className="flex items-start gap-2"><Trophy size={12} className="text-teal-400 mt-0.5" />{ach.value}</li>)}
+                            {data.achievements.map((ach) => <li key={ach.id} className="flex items-start gap-2"><Trophy size={12} className="text-teal-400 mt-0.5" />{ach.value}</li>)}
                         </ul>
                     </Section>
                 )}
@@ -108,7 +109,7 @@ export function CreativeTemplate({ data }: TemplateProps) {
                 {data.certifications && data.certifications.length > 0 && (
                     <Section title="Badges" className="w-1/2">
                         <ul className="space-y-1.5">
-                            {data.certifications.map((cert, index) => <li key={index} className="flex items-start gap-2"><Award size={12} className="text-teal-400 mt-0.5"/>{cert.value}</li>)}
+                            {data.certifications.map((cert) => <li key={cert.id} className="flex items-start gap-2"><Award size={12} className="text-teal-400 mt-0.5"/>{cert.value}</li>)}
                         </ul>
                     </Section>
                 )}

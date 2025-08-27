@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -31,8 +32,8 @@ export function ModernTemplate({ data }: TemplateProps) {
             <h2 className="text-[1em] font-bold uppercase tracking-widest text-gray-600 mb-[0.75em]">Skills</h2>
              {data.coreSkills && data.coreSkills.length > 0 && (
                 <div className="flex flex-wrap gap-[0.4em]">
-                    {data.coreSkills.map((skill, index) => (
-                        <span key={index} className="bg-blue-100 text-blue-800 text-[0.75em] font-medium px-[0.75em] py-[0.25em] rounded-full">{skill}</span>
+                    {data.coreSkills.map((skill) => (
+                        <span key={skill.id} className="bg-blue-100 text-blue-800 text-[0.75em] font-medium px-[0.75em] py-[0.25em] rounded-full">{skill.value}</span>
                     ))}
                 </div>
             )}
@@ -53,7 +54,7 @@ export function ModernTemplate({ data }: TemplateProps) {
             <div className="mt-[1.5em]">
                 <h2 className="text-[1em] font-bold uppercase tracking-widest text-gray-600 mb-[0.75em]">Certifications</h2>
                 <ul className="space-y-[0.4em] text-[0.8em] list-inside">
-                    {data.certifications.map((cert, index) => <li key={index} className="text-gray-700">{cert.value}</li>)}
+                    {data.certifications.map((cert) => <li key={cert.id} className="text-gray-700">{cert.value}</li>)}
                 </ul>
             </div>
         )}
@@ -104,7 +105,7 @@ export function ModernTemplate({ data }: TemplateProps) {
              <section>
                 <h2 className="text-[1.5em] font-bold text-gray-800 border-b-2 border-blue-500 pb-[0.4em] mb-[0.75em] flex items-center gap-[0.5em]"><Trophy className="w-[1em] h-[1em]"/> Achievements</h2>
                 <ul className="list-disc list-outside ml-[1.2em] space-y-[0.25em] text-[1em] text-gray-700">
-                    {data.achievements.map((ach, index) => <li key={index}>{ach.value}</li>)}
+                    {data.achievements.map((ach) => <li key={ach.id}>{ach.value}</li>)}
                 </ul>
             </section>
         )}

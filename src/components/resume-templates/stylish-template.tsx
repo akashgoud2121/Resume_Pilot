@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -43,8 +44,8 @@ export function StylishTemplate({ data }: TemplateProps) {
             <Section title="Skills">
                 {data.coreSkills && data.coreSkills.length > 0 && (
                     <ul className="space-y-[0.25em]">
-                        {data.coreSkills.map((skill, index) => (
-                            <li key={index} className="text-[1em]">{skill}</li>
+                        {data.coreSkills.map((skill) => (
+                            <li key={skill.id} className="text-[1em]">{skill.value}</li>
                         ))}
                     </ul>
                 )}
@@ -97,14 +98,14 @@ export function StylishTemplate({ data }: TemplateProps) {
                 {data.certifications && data.certifications.length > 0 && (
                     <Section title="Certifications">
                     <ul className="list-none space-y-[0.25em]">
-                        {data.certifications.map((cert, index) => <li key={index} className="text-[1em]">{cert.value}</li>)}
+                        {data.certifications.map((cert) => <li key={cert.id} className="text-[1em]">{cert.value}</li>)}
                     </ul>
                     </Section>
                 )}
                 {data.achievements && data.achievements.length > 0 && (
                     <Section title="Achievements">
                     <ul className="list-none space-y-[0.25em]">
-                        {data.achievements.map((ach, index) => <li key={index} className="text-[1em]">{ach.value}</li>)}
+                        {data.achievements.map((ach) => <li key={ach.id} className="text-[1em]">{ach.value}</li>)}
                     </ul>
                     </Section>
                 )}

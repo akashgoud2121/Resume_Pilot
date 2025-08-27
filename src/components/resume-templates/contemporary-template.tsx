@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -44,8 +45,8 @@ export function ContemporaryTemplate({ data }: TemplateProps) {
                     <h2 className="text-sm font-bold uppercase tracking-widest text-green-700 mb-3">Skills</h2>
                     {data.coreSkills && data.coreSkills.length > 0 && (
                         <div className="flex flex-wrap gap-1.5">
-                            {data.coreSkills.map((skill, index) => (
-                                <span key={index} className="bg-green-100 text-green-800 text-[10px] font-semibold px-2 py-1 rounded">{skill}</span>
+                            {data.coreSkills.map((skill) => (
+                                <span key={skill.id} className="bg-green-100 text-green-800 text-[10px] font-semibold px-2 py-1 rounded">{skill.value}</span>
                             ))}
                         </div>
                     )}
@@ -102,7 +103,7 @@ export function ContemporaryTemplate({ data }: TemplateProps) {
                     {data.achievements && data.achievements.length > 0 && (
                         <Section title="Achievements">
                         <ul className="list-none space-y-1 text-xs">
-                            {data.achievements.map((ach, index) => <li key={index}>{ach.value}</li>)}
+                            {data.achievements.map((ach) => <li key={ach.id}>{ach.value}</li>)}
                         </ul>
                         </Section>
                     )}

@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ResumeData } from '@/lib/types';
@@ -44,7 +45,7 @@ export function DefaultTemplate({ data }: TemplateProps) {
 
         {data.coreSkills && data.coreSkills.length > 0 && (
           <Section title="Skills" icon={<Sparkles className="w-[1em] h-[1em]"/>}>
-            <p className="leading-relaxed">{data.coreSkills.join(' • ')}</p>
+            <p className="leading-relaxed">{data.coreSkills.map(s => s.value).join(' • ')}</p>
           </Section>
         )}
 
