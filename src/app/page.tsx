@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import {
   ArrowRight,
@@ -29,7 +29,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import { templates } from '@/lib/templates';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -160,6 +160,24 @@ export default function Home() {
       { value: 'Professional Scrum Master I (PSM I)'},
     ],
   };
+
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [selectedSnap, setSelectedSnap] = useState(0);
+
+  const onSelect = useCallback((api: CarouselApi) => {
+    if (!api) return;
+    setSelectedSnap(api.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+    onSelect(carouselApi);
+    carouselApi.on('select', onSelect);
+    return () => {
+      carouselApi.off('select', onSelect);
+    };
+  }, [carouselApi, onSelect]);
+
 
   return (
     <div className="dark bg-background text-foreground min-h-screen">
@@ -318,39 +336,42 @@ export default function Home() {
               </div>
             </ScrollAnimation>
             
-            <Carousel 
-              opts={{ align: "start", loop: true }} 
-              className="w-full mt-16"
-            >
-              <CarouselContent className="-ml-4">
-                {filteredTemplates.map((template) => (
-                  <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                    <div className="group relative">
-                      <Card className="overflow-hidden bg-card shadow-lg transform transition-all duration-300 hover:shadow-primary/20">
-                          <div className="aspect-[1/1.414] w-full overflow-hidden bg-white">
-                            <ResumePreview
-                                resumeData={sampleResumeData}
-                                templateId={template.id}
-                                isPreview={true}
-                            />
-                          </div>
-                      </Card>
-                      <div className="absolute bottom-4 right-4 text-right">
-                        <h3 className="font-bold text-white">{template.name}</h3>
-                        <p className="text-sm text-muted-foreground">{template.category}</p>
+            <div className="relative mt-16">
+              <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-gray-900/50 via-transparent to-gray-900/50" />
+              <Carousel 
+                opts={{ align: "center", loop: true }}
+                setApi={setCarouselApi}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
+                  {filteredTemplates.map((template, index) => (
+                    <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
+                       <div 
+                        className={cn(
+                          "transition-all duration-300 ease-out flex flex-col gap-4 items-center",
+                          selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-40 scale-90 blur-sm'
+                        )}
+                      >
+                        <div className="aspect-[1/1.414] w-[300px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                          <ResumePreview
+                              resumeData={sampleResumeData}
+                              templateId={template.id}
+                              isPreview={true}
+                          />
+                        </div>
+                        <div className="text-center">
+                          <h3 className="font-bold text-white">{template.name}</h3>
+                          <p className="text-sm text-muted-foreground">{template.category}</p>
+                        </div>
                       </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                        <Button variant="secondary">
-                          Preview <ChevronRight className="ml-2" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="text-white hidden md:flex"/>
-              <CarouselNext className="text-white hidden md:flex"/>
-            </Carousel>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="text-white hidden md:flex left-8"/>
+                <CarouselNext className="text-white hidden md:flex right-8"/>
+              </Carousel>
+            </div>
+
           </div>
         </section>
         
