@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -143,9 +142,10 @@ export default function Home() {
     githubLink: 'https://github.com/alexquill',
     linkedinLink: 'https://linkedin.com/in/alexquill',
     professionalSummary: 'Innovative and results-driven Software Engineer with over 5 years of experience in designing, developing, and deploying scalable and efficient web applications. Proficient in full-stack development with a strong emphasis on front-end technologies and user experience. Passionate about creating elegant, maintainable code and working in collaborative, agile environments to solve complex problems and deliver high-quality software. Proven ability in leading projects, mentoring junior developers, and driving technical excellence to achieve business goals.',
-    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD', 'GraphQL', 'Kubernetes', 'Next.js', 'System Design', 'Microservices', 'Agile Methodologies'],
+    coreSkills: [{id: '1', value: 'React'}, {id: '2', value: 'Node.js'}, {id: '3', value: 'TypeScript'}, {id: '4', value: 'PostgreSQL'}, {id: '5', value: 'Docker'}, {id: '6', value: 'AWS'}, {id: '7', value: 'TDD'}, {id: '8', value: 'CI/CD'}, {id: '9', value: 'GraphQL'}, {id: '10', value: 'Kubernetes'}, {id: '11', value: 'Next.js'}, {id: '12', value: 'System Design'}, {id: '13', value: 'Microservices'}, {id: '14', value: 'Agile Methodologies'}],
     education: [
       {
+        id: '1',
         institution: 'University of Technology',
         degree: 'B.S. in Computer Science',
         dates: '2014 - 2018',
@@ -153,12 +153,14 @@ export default function Home() {
     ],
     experience: [
       {
+        id: '1',
         title: 'Senior Software Engineer',
         company: 'Innovatech Solutions',
         dates: '2020 - Present',
         description: 'Lead developer for the flagship SaaS product, responsible for the architecture, implementation, and maintenance of new features.\n- Architected and implemented a new microservices-based backend using Node.js and Docker, resulting in a 40% performance increase and improved scalability to handle a 200% growth in user traffic.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices through code reviews, pair programming, and weekly knowledge-sharing sessions.\n- Championed the adoption of Test-Driven Development (TDD) with Jest and React Testing Library, which increased code coverage by 30% and reduced critical bugs in production by 50%.',
       },
       {
+        id: '2',
         title: 'Software Engineer',
         company: 'CodeCrafters Inc.',
         dates: '2018 - 2020',
@@ -167,27 +169,30 @@ export default function Home() {
     ],
     projects: [
       {
+        id: '1',
         name: 'Open Source Contributor - React-Query',
         description: 'Active contributor to a popular open-source data-fetching library. Focused on improving accessibility by implementing ARIA standards and enhancing documentation for new users.',
       },
       {
+        id: '2',
         name: 'Personal Portfolio Website',
         description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills. Deployed on Vercel with a CI/CD pipeline.',
       },
        {
+        id: '3',
         name: 'Real-time Chat Application',
         description: 'Developed a real-time chat application using WebSockets, Node.js, and React, allowing users to communicate instantly in public or private chat rooms.',
       },
     ],
     achievements: [
-      { value: 'Awarded "Innovator of the Year" at Innovatech Solutions, 2022' },
-      { value: 'Speaker at "React Forward" Conference 2021 on Modern Frontend Architectures' },
-      { value: 'Published an article on "Scalable State Management with Redux" in a well-known tech blog.' },
+      { id: '1', value: 'Awarded "Innovator of the Year" at Innovatech Solutions, 2022' },
+      { id: '2', value: 'Speaker at "React Forward" Conference 2021 on Modern Frontend Architectures' },
+      { id: '3', value: 'Published an article on "Scalable State Management with Redux" in a well-known tech blog.' },
     ],
     certifications: [
-      { value: 'AWS Certified Developer - Associate' },
-      { value: 'Certified Kubernetes Application Developer (CKAD)' },
-      { value: 'Professional Scrum Master I (PSM I)'},
+      { id: '1', value: 'AWS Certified Developer - Associate' },
+      { id: '2', value: 'Certified Kubernetes Application Developer (CKAD)' },
+      { id: '3', value: 'Professional Scrum Master I (PSM I)'},
     ],
   };
 
@@ -239,7 +244,7 @@ export default function Home() {
   };
 
   const handleStartFromScratch = () => {
-    router.push('/editor');
+    router.push('/editor?new=true');
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -259,7 +264,8 @@ export default function Home() {
           const resumeData = await extractResumeDataAction(resumeText);
           
           // Navigate to editor page with the data
-          router.push('/editor', { state: { resumeData } } as any);
+          history.pushState({ resumeData }, '', '/editor');
+          router.push('/editor');
 
         } catch (e: any) {
           setError('Failed to process resume. Please try a different file.');
@@ -474,7 +480,7 @@ export default function Home() {
                       <div className="flex flex-col gap-4 items-center">
                         <div className={cn(
                           "transition-all duration-500 ease-in-out flex items-center justify-center",
-                          selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85 filter blur-sm'
+                          selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85'
                         )}>
                           <div className="aspect-[1/1.414] w-[300px] overflow-hidden rounded-lg shadow-2xl bg-white">
                            <ResumePreview
@@ -594,7 +600,7 @@ export default function Home() {
                             <cell key="rest" fill="transparent" stroke="transparent" />
                           </Pie>
                           <Pie data={[{ value: 100 }]} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={450} stroke="hsla(var(--primary) / 0.1)" strokeWidth={2} fill="transparent" />
-                          <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
+                           <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
                             {score}
                           </text>
                         </PieChart>
