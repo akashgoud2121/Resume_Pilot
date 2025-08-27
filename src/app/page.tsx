@@ -90,22 +90,28 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900/50 -z-10"></div>
           <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5 -z-10"></div>
           
-          <ScrollAnimation animation="animate-fadeInUp" className="relative z-10 w-full">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white">
-              ResumePilot
-            </h1>
-            <p className="mt-4 md:mt-6 text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground animation-delay-300">
-              Craft your perfect resume with AI-powered scoring and professional templates.
-            </p>
-            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animation-delay-600">
-              <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
-                <Upload className="mr-2" /> Upload Resume
-              </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
-                Enter Manually <ArrowRight className="ml-2" />
-              </Button>
-            </div>
-          </ScrollAnimation>
+          <div className="relative z-10 w-full">
+            <ScrollAnimation animation="animate-fadeInUp">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white">
+                ResumePilot
+              </h1>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+              <p className="mt-4 md:mt-6 text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
+                Craft your perfect resume with AI-powered scoring and professional templates.
+              </p>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 600 }}>
+              <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
+                  <Upload className="mr-2" /> Upload Resume
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
+                  Enter Manually <ArrowRight className="ml-2" />
+                </Button>
+              </div>
+            </ScrollAnimation>
+          </div>
         </section>
 
         {/* How It Works Section */}
