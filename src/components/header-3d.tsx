@@ -70,12 +70,12 @@ export function Header3d() {
             </h1>
           </div>
           <div className="initial-hidden animate-fadeInUp animation-delay-300">
-            <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-white/90">
+            <h2 className="mt-4 text-2xl md:text-3xl font-medium tracking-tight text-white/80">
               Create the Perfect Resume with Ease
             </h2>
           </div>
           <div className="initial-hidden animate-fadeInUp animation-delay-500">
-            <p className="mt-4 md:mt-6 text-lg md:text-xl max-w-2xl text-muted-foreground mx-auto lg:mx-0">
+            <p className="mt-4 md:mt-6 text-base md:text-lg max-w-2xl text-muted-foreground mx-auto lg:mx-0">
               Choose from 8 professional templates, upload your resume, or enter your details manually.
             </p>
           </div>
