@@ -44,7 +44,7 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
   if (isPreview) {
     return (
       <div
-        className="w-[280px] h-[396px] overflow-hidden bg-white shadow-lg"
+        className="w-full h-full bg-white shadow-lg"
       >
         <div
           className="origin-top-left"
