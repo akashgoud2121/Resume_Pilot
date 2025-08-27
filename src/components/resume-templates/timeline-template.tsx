@@ -7,42 +7,52 @@ interface TemplateProps {
   data: ResumeData;
 }
 
-const TimelineItem: React.FC<{ icon: React.ReactNode; children: React.ReactNode }> = ({ icon, children }) => (
-    <div className="relative pl-8 pb-6 last:pb-0">
-        <div className="absolute left-0 top-0 h-full w-px bg-gray-300"></div>
-        <div className="absolute left-[-7px] top-0 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-white">
+const TimelineItem: React.FC<{ icon: React.ReactNode; children: React.ReactNode; isLast?: boolean }> = ({ icon, children, isLast }) => (
+    <div className="relative pl-8">
+        {!isLast && <div className="absolute left-[7px] top-5 h-full w-px bg-gray-300"></div>}
+        <div className="absolute left-0 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-white">
             {icon}
         </div>
-        <div className="ml-2">{children}</div>
+        <div className="ml-4 pb-6">
+            {children}
+        </div>
     </div>
 );
 
-
 export function TimelineTemplate({ data }: TemplateProps) {
+  const timelineEvents = [
+    ...(data.experience || []).map(item => ({ type: 'experience', ...item })),
+    ...(data.education || []).map(item => ({ type: 'education', ...item })),
+  ].sort((a, b) => {
+    const aYear = parseInt(a.dates.slice(-4));
+    const bYear = parseInt(b.dates.slice(-4));
+    return bYear - aYear;
+  });
+
   return (
-    <div className="p-6 bg-white text-gray-800 font-sans">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">{data.name}</h1>
-        <div className="flex items-center gap-x-3 gap-y-1 mt-2 text-xs text-gray-500">
-          {data.email && <a href={`mailto:${data.email}`} className="flex items-center gap-1 hover:text-blue-500 break-all"><Mail size={12} /> {data.email}</a>}
-          {data.mobileNumber && <span className="flex items-center gap-1"><Phone size={12} /> {data.mobileNumber}</span>}
-          {data.linkedinLink && <a href={data.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-blue-500"><Linkedin size={12} /> LinkedIn</a>}
-          {data.githubLink && <a href={data.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-blue-500"><Github size={12} /> GitHub</a>}
+    <div className="p-8 bg-white text-gray-800 font-sans">
+      <header className="mb-8 text-center">
+        <h1 className="text-4xl font-bold text-gray-900">{data.name}</h1>
+        <div className="flex items-center justify-center gap-x-4 gap-y-1 mt-2 text-xs text-gray-600 flex-wrap">
+          {data.email && <a href={`mailto:${data.email}`} className="flex items-center gap-1.5 hover:text-blue-600 break-all"><Mail size={14} /> {data.email}</a>}
+          {data.mobileNumber && <span className="flex items-center gap-1.5"><Phone size={14} /> {data.mobileNumber}</span>}
+          {data.linkedinLink && <a href={data.linkedinLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-600"><Linkedin size={14} /> LinkedIn</a>}
+          {data.githubLink && <a href={data.githubLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-blue-600"><Github size={14} /> GitHub</a>}
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-12 gap-8">
         {/* Left Column for static info */}
-        <aside className="md:col-span-1">
+        <aside className="col-span-5">
           {data.professionalSummary && (
-            <section className="mb-5">
-              <h2 className="text-lg font-semibold mb-2 text-blue-600">Summary</h2>
+            <section className="mb-6">
+              <h2 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-2">Summary</h2>
               <p className="text-xs text-gray-600 leading-relaxed">{data.professionalSummary}</p>
             </section>
           )}
           {data.coreSkills && data.coreSkills.length > 0 && (
-            <section className="mb-5">
-              <h2 className="text-lg font-semibold mb-2 text-blue-600">Skills</h2>
+            <section className="mb-6">
+              <h2 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-2">Skills</h2>
               <div className="flex flex-wrap gap-1.5">
                 {data.coreSkills.map((skill, index) => (
                   <span key={index} className="bg-gray-200 text-gray-800 text-[10px] font-medium px-2 py-1 rounded">{skill}</span>
@@ -51,12 +61,12 @@ export function TimelineTemplate({ data }: TemplateProps) {
             </section>
           )}
           {data.projects && data.projects.length > 0 && (
-            <section className="mb-5">
-              <h2 className="text-lg font-semibold mb-2 text-blue-600">Projects</h2>
-              <div className="space-y-2.5">
+            <section className="mb-6">
+              <h2 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-2">Projects</h2>
+              <div className="space-y-3">
                 {data.projects.map((proj, index) => (
                   <div key={index} className="text-xs">
-                    <h3 className="font-bold">{proj.name}</h3>
+                    <h3 className="font-bold text-sm">{proj.name}</h3>
                     <p className="text-gray-600">{proj.description}</p>
                   </div>
                 ))}
@@ -66,52 +76,24 @@ export function TimelineTemplate({ data }: TemplateProps) {
         </aside>
 
         {/* Right Column for timeline */}
-        <main className="md:col-span-2">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Career Timeline</h2>
+        <main className="col-span-7">
+            <h2 className="text-sm font-bold uppercase text-blue-600 tracking-wider mb-2">Career Timeline</h2>
             <div className="relative">
-                {/* Experience Section */}
-                {data.experience && data.experience.map((exp, index) => (
-                    <TimelineItem key={`exp-${index}`} icon={<Briefcase size={10} />}>
-                        <p className="text-[10px] text-gray-500">{exp.dates}</p>
-                        <h3 className="font-bold text-sm">{exp.title}</h3>
-                        <h4 className="font-semibold text-blue-600 text-xs">{exp.company}</h4>
-                        <p className="mt-1.5 text-xs text-gray-600 whitespace-pre-wrap">{exp.description}</p>
+                {timelineEvents.map((item, index) => (
+                    <TimelineItem key={index} icon={item.type === 'experience' ? <Briefcase size={8} /> : <GraduationCap size={8}/>} isLast={index === timelineEvents.length - 1}>
+                        <p className="text-[10px] text-gray-500 font-semibold">{item.dates}</p>
+                        <h3 className="font-bold text-sm text-gray-800">
+                          {item.type === 'experience' ? item.title : item.degree}
+                        </h3>
+                        <h4 className="font-semibold text-blue-600 text-xs">
+                          {item.type === 'experience' ? item.company : item.institution}
+                        </h4>
+                        {item.type === 'experience' && <p className="mt-1.5 text-xs text-gray-700 whitespace-pre-wrap">{item.description}</p>}
                     </TimelineItem>
                 ))}
-                
-                {/* Education Section */}
-                {data.education && data.education.map((edu, index) => (
-                    <TimelineItem key={`edu-${index}`} icon={<GraduationCap size={10} />}>
-                        <p className="text-[10px] text-gray-500">{edu.dates}</p>
-                        <h3 className="font-bold text-sm">{edu.degree}</h3>
-                        <p className="text-xs text-gray-600">{edu.institution}</p>
-                    </TimelineItem>
-                ))}
-
-                {/* Achievements Section */}
-                {data.achievements && data.achievements.length > 0 && (
-                    <TimelineItem icon={<Trophy size={10} />}>
-                        <h3 className="font-bold text-sm">Key Achievements</h3>
-                        <ul className="list-disc list-inside mt-1.5 text-xs text-gray-600 space-y-1">
-                            {data.achievements.map((ach, index) => <li key={index}>{ach.value}</li>)}
-                        </ul>
-                    </TimelineItem>
-                )}
-
-                 {/* Certifications Section */}
-                {data.certifications && data.certifications.length > 0 && (
-                    <TimelineItem icon={<Award size={10} />}>
-                        <h3 className="font-bold text-sm">Certifications</h3>
-                         <ul className="list-disc list-inside mt-1.5 text-xs text-gray-600 space-y-1">
-                            {data.certifications.map((cert, index) => <li key={index}>{cert.value}</li>)}
-                        </ul>
-                    </TimelineItem>
-                )}
             </div>
         </main>
       </div>
     </div>
   );
 }
-
-    
