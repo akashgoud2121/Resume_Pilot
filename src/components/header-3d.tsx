@@ -11,6 +11,7 @@ import { Pie, PieChart, Cell } from 'recharts';
 const chartConfig = {
   score: {
     label: 'ATS Score',
+    color: 'hsl(var(--primary))'
   },
   rest: {
     label: 'Remaining',
@@ -161,13 +162,13 @@ export function Header3d() {
                     <div className="text-center">
                         <h4 className="text-lg font-bold text-white">ATS Score</h4>
                         <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
-                            <defs>
-                                <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2}/>
-                                </linearGradient>
-                            </defs>
                             <PieChart>
+                                <defs>
+                                    <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8}/>
+                                    <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2}/>
+                                    </linearGradient>
+                                </defs>
                                 <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
                                 <Pie 
                                     data={chartData} 
@@ -242,5 +243,3 @@ export function Header3d() {
     </section>
   );
 }
-
-    
