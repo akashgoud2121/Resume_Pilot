@@ -22,14 +22,7 @@ export function Header3d() {
     <section 
         className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-slate-950 -z-20"></div>
-      <Image 
-        src="https://picsum.photos/seed/tech/1920/1080"
-        alt="Abstract Technology Background"
-        fill
-        className="absolute inset-0 object-cover opacity-10 -z-10"
-        data-ai-hint="technology abstract"
-      />
+      <div className="absolute inset-0 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] -z-20"></div>
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-[0.02]"></div>
       
       <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
