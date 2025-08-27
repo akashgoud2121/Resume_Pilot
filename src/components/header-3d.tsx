@@ -20,8 +20,8 @@ const chartConfig = {
 
 const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) => (
   <div className="w-full">
-    <p className="text-xs text-left text-white/70 mb-1">{skill}</p>
-    <div className="h-1.5 w-full bg-white/10 rounded-full">
+    <p className="text-xs text-left text-gray-400 mb-1">{skill}</p>
+    <div className="h-1.5 w-full bg-gray-200 rounded-full">
       <div className="h-1.5 bg-teal-400 rounded-full" style={{ width: percentage }}></div>
     </div>
   </div>
@@ -39,7 +39,7 @@ export function Header3d() {
 
   const chartData = [
     { name: 'score', value: score, fill: 'var(--color-score)' },
-    { name: 'rest', value: 100 - score, fill: 'hsla(var(--primary) / 0.1)' },
+    { name: 'rest', value: 100 - score, fill: 'hsl(var(--primary) / 0.1)' },
   ];
 
   const onMouseMove = (e: MouseEvent) => {
@@ -148,37 +148,37 @@ export function Header3d() {
                   style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
               >
                   {/* Front Side */}
-                  <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left transition-transform duration-700 [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)]">
-                    <div className="text-center border-b border-white/10 pb-3">
-                      <h3 className="text-4xl font-heading font-bold text-white">Alexandria Quill</h3>
-                      <p className="text-teal-400">Software Engineer</p>
+                  <div className="absolute w-full h-full bg-white rounded-lg border border-gray-200 shadow-2xl p-6 text-left transition-transform duration-700 [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)]">
+                    <div className="text-center border-b border-gray-200 pb-3">
+                      <h3 className="text-4xl font-heading font-bold text-gray-800">Alexandria Quill</h3>
+                      <p className="text-teal-500">Software Engineer</p>
                     </div>
                     <div className="mt-4">
-                      <h4 className="text-sm font-semibold text-white/80 mb-2">SUMMARY</h4>
-                      <p className="text-xs text-white/60">Creative and detail-oriented Software Engineer with a passion for developing innovative solutions.</p>
+                      <h4 className="text-sm font-semibold text-gray-600 mb-2">SUMMARY</h4>
+                      <p className="text-xs text-gray-500">Creative and detail-oriented Software Engineer with a passion for developing innovative solutions.</p>
                     </div>
                     <div className="mt-4">
-                      <h4 className="text-sm font-semibold text-white/80 mb-3">SKILLS</h4>
+                      <h4 className="text-sm font-semibold text-gray-600 mb-3">SKILLS</h4>
                       <div className="space-y-3">
                         <SkillBar skill="JavaScript & React" percentage="90%" />
                         <SkillBar skill="Node.js & Express" percentage="85%" />
                         <SkillBar skill="UI/UX Design" percentage="75%" />
                       </div>
                     </div>
-                     <p className="text-center text-xs text-white/40 absolute bottom-4 left-1/2 -translate-x-1/2">Hover to flip</p>
+                     <p className="text-center text-xs text-gray-400 absolute bottom-4 left-1/2 -translate-x-1/2">Hover to flip</p>
                   </div>
 
                   {/* Back Side */}
-                  <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left transition-transform duration-700 [backface-visibility:hidden] [transform:rotateY(180deg)] group-hover:[transform:rotateY(0deg)]">
-                    <div className="text-center border-b border-white/10 pb-3">
-                      <h3 className="text-2xl font-bold text-white">Key Sections</h3>
+                  <div className="absolute w-full h-full bg-white rounded-lg border border-gray-200 shadow-2xl p-6 text-left transition-transform duration-700 [backface-visibility:hidden] [transform:rotateY(180deg)] group-hover:[transform:rotateY(0deg)]">
+                    <div className="text-center border-b border-gray-200 pb-3">
+                      <h3 className="text-2xl font-bold text-gray-800">Key Sections</h3>
                     </div>
-                     <ul className="space-y-3 text-sm text-muted-foreground mt-4">
-                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Professional Summary</li>
-                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Skills & Keywords</li>
-                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Work Experience</li>
-                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Education</li>
-                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Projects & Achievements</li>
+                     <ul className="space-y-3 text-sm text-gray-600 mt-4">
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Professional Summary</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Skills & Keywords</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Work Experience</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Education</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Projects & Achievements</li>
                     </ul>
                   </div>
               </div>
@@ -191,6 +191,12 @@ export function Header3d() {
                     <h4 className="font-semibold text-white text-center mb-2">ATS Score</h4>
                      <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
                             <PieChart>
+                                <defs>
+                                  <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8}/>
+                                    <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2}/>
+                                  </linearGradient>
+                                </defs>
                                 <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
                                 <Pie 
                                     data={chartData} 
@@ -205,7 +211,7 @@ export function Header3d() {
                                     cornerRadius={5}
                                     paddingAngle={-10}
                                 >
-                                     <Cell key="score" className="fill-primary stroke-primary" />
+                                     <Cell key="score" fill="url(#gradientFill)" stroke="var(--color-score)" />
                                      <Cell key="rest" className="fill-transparent stroke-transparent" />
                                 </Pie>
                                 <Pie 
@@ -232,10 +238,7 @@ export function Header3d() {
             </Card>
           </div>
         </div>
-
       </div>
     </section>
   );
 }
-
-    
