@@ -66,21 +66,21 @@ export function Header3d() {
     const currentRef = headerRef.current;
     if (currentRef) {
       document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseleave', onMouseLeave);
+      currentRef.addEventListener('mouseleave', onMouseLeave);
     }
     return () => {
       if (currentRef) {
         document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseleave', onMouseLeave);
+        currentRef.removeEventListener('mouseleave', onMouseLeave);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <section 
         ref={headerRef}
         className="relative min-h-screen flex items-center justify-center text-center p-4 overflow-hidden"
+        style={{ perspective: '2000px' }}
     >
       <div className="absolute inset-0 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] -z-20"></div>
       
@@ -104,26 +104,32 @@ export function Header3d() {
           {/* Left Content */}
           <div className="w-full lg:w-1/4 initial-hidden animate-slideInFromLeft animation-delay-500 text-left">
             <ul className="space-y-6">
-                <li className="flex items-start gap-4">
-                  <div className="p-2 bg-primary/10 rounded-full text-primary"><Sparkles size={20}/></div>
-                  <div>
-                    <h3 className="font-semibold text-white">AI-Powered Parsing</h3>
-                    <p className="text-muted-foreground text-sm">Instantly extract data from any resume format.</p>
-                  </div>
+                <li>
+                  <a href="#features" className="flex items-start gap-4 group">
+                    <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:scale-110 transition-transform"><Sparkles size={20}/></div>
+                    <div>
+                      <h3 className="font-semibold text-white group-hover:text-primary transition-colors">AI-Powered Parsing</h3>
+                      <p className="text-muted-foreground text-sm">Instantly extract data from any resume format.</p>
+                    </div>
+                  </a>
                 </li>
-                <li className="flex items-start gap-4">
-                  <div className="p-2 bg-primary/10 rounded-full text-primary"><FileText size={20}/></div>
-                  <div>
-                    <h3 className="font-semibold text-white">ATS-Friendly Templates</h3>
-                    <p className="text-muted-foreground text-sm">Beat the bots with professionally designed templates.</p>
-                  </div>
+                <li>
+                  <a href="#features" className="flex items-start gap-4 group">
+                    <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:scale-110 transition-transform"><FileText size={20}/></div>
+                    <div>
+                      <h3 className="font-semibold text-white group-hover:text-primary transition-colors">ATS-Friendly Templates</h3>
+                      <p className="text-muted-foreground text-sm">Beat the bots with professionally designed templates.</p>
+                    </div>
+                  </a>
                 </li>
-                <li className="flex items-start gap-4">
-                  <div className="p-2 bg-primary/10 rounded-full text-primary"><Download size={20}/></div>
-                  <div>
-                    <h3 className="font-semibold text-white">Instant Download</h3>
-                    <p className="text-muted-foreground text-sm">Get your job-ready resume in PDF format in seconds.</p>
-                  </div>
+                <li>
+                  <a href="#how-it-works" className="flex items-start gap-4 group">
+                    <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:scale-110 transition-transform"><Download size={20}/></div>
+                    <div>
+                      <h3 className="font-semibold text-white group-hover:text-primary transition-colors">Instant Download</h3>
+                      <p className="text-muted-foreground text-sm">Get your job-ready resume in PDF format in seconds.</p>
+                    </div>
+                  </a>
                 </li>
             </ul>
              <div className="mt-12 initial-hidden animate-fadeInUp animation-delay-700">
@@ -186,56 +192,58 @@ export function Header3d() {
 
           {/* Right Content */}
           <div className="w-full lg:w-1/4 initial-hidden animate-slideInFromRight animation-delay-500 text-left">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-                <CardContent className="p-6">
-                    <h4 className="font-semibold text-white text-center mb-2">ATS Score</h4>
-                     <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
-                            <PieChart>
-                                <defs>
-                                  <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8}/>
-                                    <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2}/>
-                                  </linearGradient>
-                                </defs>
-                                <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
-                                <Pie 
-                                    data={chartData} 
-                                    dataKey="value" 
-                                    nameKey="name"
-                                    cx="50%" 
-                                    cy="50%" 
-                                    innerRadius={60} 
-                                    outerRadius={80} 
-                                    startAngle={90}
-                                    endAngle={90 + (score / 100) * 360}
-                                    cornerRadius={5}
-                                    paddingAngle={-10}
-                                >
-                                     <Cell key="score" fill="url(#gradientFill)" stroke="var(--color-score)" />
-                                     <Cell key="rest" className="fill-transparent stroke-transparent" />
-                                </Pie>
-                                <Pie 
-                                    data={[{value: 100}]}
-                                    dataKey="value"
-                                    cx="50%" 
-                                    cy="50%" 
-                                    innerRadius={60} 
-                                    outerRadius={80} 
-                                    startAngle={90}
-                                    endAngle={450}
-                                    stroke="hsla(var(--primary) / 0.1)"
-                                    strokeWidth={2}
-                                    fill="transparent"
-                                />
-                            </PieChart>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center" aria-hidden="true">
-                                <span className="text-4xl font-bold text-white transition-all duration-1000">{score}</span>
-                                <span className="text-xs text-muted-foreground">Excellent</span>
-                            </div>
-                        </ChartContainer>
-                        <p className="text-xs text-center text-muted-foreground mt-2">This resume is highly optimized for Applicant Tracking Systems.</p>
-                </CardContent>
-            </Card>
+            <a href="#features" className="block group">
+              <Card className="bg-white/5 border-white/10 backdrop-blur-sm group-hover:border-primary/50 transition-colors">
+                  <CardContent className="p-6">
+                      <h4 className="font-semibold text-white text-center mb-2">ATS Score</h4>
+                       <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
+                              <PieChart>
+                                  <defs>
+                                    <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
+                                      <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8}/>
+                                      <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2}/>
+                                    </linearGradient>
+                                  </defs>
+                                  <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
+                                  <Pie 
+                                      data={chartData} 
+                                      dataKey="value" 
+                                      nameKey="name"
+                                      cx="50%" 
+                                      cy="50%" 
+                                      innerRadius={60} 
+                                      outerRadius={80} 
+                                      startAngle={90}
+                                      endAngle={90 + (score / 100) * 360}
+                                      cornerRadius={5}
+                                      paddingAngle={-10}
+                                  >
+                                       <Cell key="score" fill="url(#gradientFill)" stroke="var(--color-score)" />
+                                       <Cell key="rest" className="fill-transparent stroke-transparent" />
+                                  </Pie>
+                                  <Pie 
+                                      data={[{value: 100}]}
+                                      dataKey="value"
+                                      cx="50%" 
+                                      cy="50%" 
+                                      innerRadius={60} 
+                                      outerRadius={80} 
+                                      startAngle={90}
+                                      endAngle={450}
+                                      stroke="hsla(var(--primary) / 0.1)"
+                                      strokeWidth={2}
+                                      fill="transparent"
+                                  />
+                              </PieChart>
+                              <div className="absolute inset-0 flex flex-col items-center justify-center" aria-hidden="true">
+                                  <span className="text-4xl font-bold text-white transition-all duration-1000">{score}</span>
+                                  <span className="text-xs text-muted-foreground">Excellent</span>
+                              </div>
+                          </ChartContainer>
+                          <p className="text-xs text-center text-muted-foreground mt-2">This resume is highly optimized for Applicant Tracking Systems.</p>
+                  </CardContent>
+              </Card>
+            </a>
           </div>
         </div>
       </div>
