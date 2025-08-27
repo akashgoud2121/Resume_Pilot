@@ -1,556 +1,328 @@
 'use client';
 
-import { useState, useRef, useTransition } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import Image from 'next/image';
 import {
-  FileText,
-  Upload,
-  Loader2,
-  FilePenLine,
-  Trash2,
-  PlusCircle,
-  Sparkles,
   ArrowRight,
-  ChevronLeft,
-  GraduationCap,
-  Briefcase,
-  Lightbulb,
-  Trophy,
   Award,
-  User,
+  CheckCircle,
+  ChevronDown,
+  ChevronRight,
   ClipboardPaste,
-  Printer,
-  Edit,
-  TestTube2,
+  Download,
+  FileText,
+  MousePointerSquare,
+  Sparkles,
+  Twitter,
+  Linkedin,
+  Github,
+  Upload,
 } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
-import { ResumePreview } from '@/components/resume-preview';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { templates } from '@/lib/templates';
-import type { ResumeData } from '@/lib/types';
-import { extractResumeTextAction, extractResumeDataAction } from './actions';
-import { resumeSchema } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+const testimonials = [
+  {
+    name: 'Sarah J.',
+    title: 'Software Engineer',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+    text: "ResumePilot's AI parsing is a game-changer. It extracted everything from my old PDF perfectly, saving me hours of work. The templates are clean, modern, and professional.",
+  },
+  {
+    name: 'Michael B.',
+    title: 'Product Manager',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d',
+    text: 'I was struggling to get my resume noticed. The ATS-friendly templates from ResumePilot made a huge difference. I landed three interviews in the first week!',
+  },
+  {
+    name: 'Jessica L.',
+    title: 'UX Designer',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d',
+    text: 'As a designer, aesthetics are important to me. ResumePilot offers a great balance of beautiful design and functionality. The "Creative" template is my favorite.',
+  },
+    {
+    name: 'David R.',
+    title: 'Data Scientist',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026707d',
+    text: 'The process was incredibly simple and fast. From upload to download, it took less than 10 minutes to have a polished, professional resume ready to go. Highly recommended!',
+  },
+];
 
 
-const testData: ResumeData = {
-  name: 'E Akash Goud',
-  email: 'letsmail.akashgoud@gmail.com',
-  mobileNumber: '8125824741',
-  githubLink: 'https://github.com/akashgoud2121',
-  linkedinLink: 'https://linkedin.com/in/akashgoud',
-  professionalSummary:
-    'Results-driven AI/ML Engineer and Python Software Developer with experience in building and deploying machine learning models, full-stack applications, and automation solutions. Skilled in developing end-to-end projects across healthcare, finance, and productivity domains, achieving measurable accuracy improvements and performance optimization. Proficient in Python, ML/DL frameworks, APIs, Django and cloud platforms (AWS).',
-  coreSkills: [
-    'Programming & Development: Python, Java, SQL, Jupyter Notebooks (.ipynb), Django, FastAPI, Streamlit',
-    'Machine Learning, AI & Deep Learning: Kaggle, Scikit-learn, TensorFlow, PyTorch, Keras, Transformers (e.g., ChatGPT, Gemini)',
-    'Research & Publications: Conference & Scopus Papers, Research Thesis, Paper & Code Explanation',
-    'Cloud: AWS, Git, Vercel',
-    'Additional Skills: Word, Excel (for data analysis, documentation, and reporting)',
-  ],
-  education: [
-    {
-      institution: 'Malla Reddy College of Engineering and Technology',
-      degree: 'Bachelor of Technology, Computer Science (AI&ML)',
-      dates: 'Jun 2025',
-    },
-    {
-      institution: 'SriGayatri Junior College',
-      degree: 'Telangana Board of Intermediate Education (XII)',
-      dates: 'Jun 2019 - Nov 2021',
-    },
-  ],
-  experience: [
-    {
-      title: 'Python AI&ML Engineer',
-      company: 'Incline Inventions',
-      dates: 'May 2025 - Present',
-      description:
-        '• Developed 10+ machine learning and deep learning models for real-world datasets, enhancing baseline Kaggle codes for higher accuracy and originality.\n• Contributed to 4 Conference Papers, 2 Scopus Papers, and 6+ SCI/other papers, handling dataset curation, plagiarism reduction (<10%), and drafting complete documentation.\n• Delivered 15+ explanatory videos explaining code and paper pipelines for clients and internal teams.\n• Built a Speech Analysis Assistant evaluating speech on 15+ criteria, providing actionable insights for improvement.\n• Supported the delivery of AI training modules to partner institutes.\n• Strengthened skills in Python, TensorFlow, PyTorch, NLP, data preprocessing, and model optimization, while improving ability to communicate technical work effectively.',
-    },
-  ],
-  projects: [
-    {
-      name: 'Speech Analysis Assistant – Internal Project / Startup',
-      description:
-        '• Built an Al-powered speech analysis tool evaluating 15+ metrics including fluency, filler words, clarity, pace, and grammar.\n• Provided actionable insights for improving communication skills.\n• Developed ML/NLP pipelines and interactive UI for seamless user experience.\n• Skills: Python, NLP, SpeechRecognition, Streamlit, Machine Learning, Data Visualization',
-    },
-    {
-      name: 'OfficeZenith – Workplace Wellness Assistant – Internal Project / Startup',
-      description:
-        '• Developed a Django-based web app enabling reminders for water intake, screen breaks, exercises, meditation, and custom alerts.\n• Implemented backend models, database logging, and a clean front-end UI to improve employee productivity and wellness.\n• Skills Used: Django, Python, HTML, CSS, JavaScript, SQLite, Full-Stack Development',
-    },
-    {
-      name: 'Beverage Detection App (YOLOv8) – Internal Project / Startup',
-      description:
-        '• Developed a computer vision application to detect beverages (Pepsi, Coca-Cola, Mirinda, Mountain Dew) and display nutritional facts.\n• Integrated WHO sugar limit checks, health alerts, and personalized tips for users.\n• Deployed on Streamlit Cloud with model upload/download functionality for real-world usability.\n• Skills: Python, YOLOv8, Streamlit, Pandas, Matplotlib, Computer Vision, Full-Stack Deployment',
-    },
-  ],
-  achievements: [],
-  certifications: [
-      { value: 'Salesforce Developer Virtual Internship May 2024 – Jun 2024' },
-      { value: 'Salesforce Super Badges: Apex Specialist, Process Automation Specialist, Developer Super Set' },
-      { value: 'Smart India Hackathon- Internal Hackathon Aug 2023 - Sep 2023' },
-  ]
-};
-
-type LoadingState = 'idle' | 'extracting-text' | 'extracting-data' | 'processing' | 'downloading';
+const faqItems = [
+  {
+    question: "How does the AI parsing work?",
+    answer: "Our AI is trained to understand the structure of a resume. It intelligently extracts key information like your contact details, work experience, skills, and education, and automatically populates it into our system, saving you time and effort."
+  },
+  {
+    question: "Are the templates ATS-friendly?",
+    answer: "Yes! All of our templates are designed with Applicant Tracking Systems (ATS) in mind. They use clean, parsable structures to ensure your resume gets past the bots and in front of human recruiters."
+  },
+  {
+    question: "Can I customize the templates?",
+    answer: "While the core structure is optimized for ATS, you can easily input your own information and see it reflected in the chosen template. We handle the formatting to ensure it remains professional and effective."
+  },
+  {
+    question: "What file formats can I upload?",
+    answer: "Currently, our system is optimized for PDF, DOC, and DOCX files. For best results, we recommend uploading a PDF file to ensure accurate text extraction."
+  }
+];
 
 export default function Home() {
-  const [step, setStep] = useState<'landing' | 'text-review' | 'paste-text' | 'editor' | 'results' | 'preview'>('landing');
-  const [loadingState, setLoadingState] = useState<LoadingState>('idle');
-  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
-  const [extractedText, setExtractedText] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('default');
-  const [isPending, startTransition] = useTransition();
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
-
-  const form = useForm<ResumeData>({
-    resolver: zodResolver(resumeSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      mobileNumber: '',
-      githubLink: '',
-      linkedinLink: '',
-      professionalSummary: '',
-      coreSkills: [],
-      education: [{ institution: '', degree: '', dates: '' }],
-      experience: [{ title: '', company: '', dates: '', description: '' }],
-      projects: [{ name: '', description: '' }],
-      achievements: [{ value: '' }],
-      certifications: [{ value: '' }],
-    },
-  });
-
-  const { fields: eduFields, append: appendEdu, remove: removeEdu } = useFieldArray({ control: form.control, name: 'education' });
-  const { fields: expFields, append: appendExp, remove: removeExp } = useFieldArray({ control: form.control, name: 'experience' });
-  const { fields: projFields, append: appendProj, remove: removeProj } = useFieldArray({ control: form.control, name: 'projects' });
-  const { fields: achieveFields, append: appendAchieve, remove: removeAchieve } = useFieldArray({ control: form.control, name: 'achievements' });
-  const { fields: certFields, append: appendCert, remove: removeCert } = useFieldArray({ control: form.control, name: 'certifications' });
-
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast({
-          variant: 'destructive',
-          title: 'File too large',
-          description: 'Please upload a file smaller than 5MB.',
-        });
-        return;
-      }
-      setLoadingState('extracting-text');
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        startTransition(async () => {
-          try {
-            const dataUri = reader.result as string;
-            const text = await extractResumeTextAction(dataUri);
-            setExtractedText(text);
-            setStep('text-review');
-          } catch (error) {
-            toast({
-              variant: 'destructive',
-              title: 'Extraction Failed',
-              description: 'Could not extract text from the resume. Please try again or enter details manually.',
-            });
-          } finally {
-            setLoadingState('idle');
-          }
-        });
-      };
-      reader.onerror = () => {
-        setLoadingState('idle');
-        toast({
-          variant: 'destructive',
-          title: 'Error reading file',
-          description: 'There was an issue processing your file.',
-        });
-      };
-    }
-  };
-
-  const handleManualEntry = () => {
-    form.reset({
-      name: '',
-      email: '',
-      mobileNumber: '',
-      githubLink: '',
-      linkedinLink: '',
-      professionalSummary: '',
-      coreSkills: [],
-      education: [{ institution: '', degree: '', dates: '' }],
-      experience: [{ title: '', company: '', dates: '', description: '' }],
-      projects: [{ name: '', description: '' }],
-      achievements: [{ value: '' }],
-      certifications: [{ value: '' }],
-    });
-    setStep('editor');
-  };
-
-  const handleUseTestData = () => {
-    form.reset(testData);
-    setStep('editor');
-  };
+  const [filter, setFilter] = useState('All');
+  const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
   
-  const handleProceedToEditor = () => {
-    setLoadingState('extracting-data');
-    startTransition(async () => {
-      try {
-        const extractedData = await extractResumeDataAction(extractedText);
-        form.reset(extractedData);
-        setStep('editor');
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Data Parsing Failed',
-          description: 'Could not parse structured data from the text. Please proceed with manual entry.',
-        });
-        handleManualEntry(); // Fallback to manual entry
-      } finally {
-        setLoadingState('idle');
-      }
-    });
-  };
-
-  const handlePasteAndParse = () => {
-    setLoadingState('extracting-data');
-    startTransition(async () => {
-      try {
-        const extractedData = await extractResumeDataAction(extractedText);
-        setResumeData(extractedData);
-        form.reset(extractedData);
-        setStep('results');
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Data Parsing Failed',
-          description: 'Could not parse structured data from the text. Please check the format or try manual entry.',
-        });
-      } finally {
-        setLoadingState('idle');
-      }
-    });
-  }
-
-  const onSubmit = (values: ResumeData) => {
-    setLoadingState('processing');
-    startTransition(async () => {
-      try {
-        setResumeData(values);
-        setStep('results');
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Processing Failed',
-          description: 'Could not process your resume. Please check the details and try again.',
-        });
-      } finally {
-        setLoadingState('idle');
-      }
-    });
-  };
-
-  const handleSelectTemplate = (templateId: string) => {
-    setSelectedTemplate(templateId);
-    setStep('preview');
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const renderLandingPage = () => (
-    <div className="text-center">
-      <Sparkles className="mx-auto h-16 w-16 text-primary" />
-      <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-        ResumePilot
-      </h1>
-      <p className="mt-6 text-lg leading-8 text-muted-foreground">
-        Craft your perfect resume with professional templates.
-      </p>
-      <div className="mt-10 flex items-center justify-center gap-x-6">
-        <Button size="lg" onClick={() => fileInputRef.current?.click()} disabled={loadingState !== 'idle'}>
-          {loadingState === 'extracting-text' ? <Loader2 className="animate-spin" /> : <Upload />}
-          Upload Resume
-        </Button>
-        <Button size="lg" variant="outline" onClick={() => setStep('paste-text')} disabled={loadingState !== 'idle'}>
-          <ClipboardPaste />
-          Paste Raw Text
-        </Button>
-        <Button size="lg" variant="outline" onClick={handleManualEntry} disabled={loadingState !== 'idle'}>
-          <FilePenLine />
-          Enter Manually
-          <ArrowRight className="ml-2" />
-        </Button>
-      </div>
-       <div className="mt-4">
-        <Button size="sm" variant="secondary" onClick={handleUseTestData} disabled={loadingState !== 'idle'}>
-          <TestTube2 className="mr-2" />
-          Use Test Data
-        </Button>
-      </div>
-      <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".pdf,.doc,.docx" />
-    </div>
+  const filteredTemplates = templates.filter(
+    (template) => filter === 'All' || template.category === filter
   );
-
-  const renderTextReviewPage = () => (
-    <Card className="w-full max-w-4xl mx-auto shadow-2xl">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl">
-           <Button variant="ghost" size="icon" onClick={() => setStep('landing')}><ChevronLeft /></Button>
-           Review Extracted Text
-        </CardTitle>
-        <CardDescription>
-          We've extracted the text from your resume. Please review it below and make any necessary corrections before we parse it.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Textarea 
-          value={extractedText}
-          onChange={(e) => setExtractedText(e.target.value)}
-          className="h-96 text-sm"
-          placeholder="Extracted text will appear here..."
-        />
-        <Button onClick={handleProceedToEditor} size="lg" className="w-full" disabled={loadingState !== 'idle' || !extractedText}>
-          {loadingState === 'extracting-data' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
-          Proceed to Editor
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const renderPasteTextPage = () => (
-    <Card className="w-full max-w-4xl mx-auto shadow-2xl">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl">
-           <Button variant="ghost" size="icon" onClick={() => setStep('landing')}><ChevronLeft /></Button>
-           Paste Raw Resume Text
-        </CardTitle>
-        <CardDescription>
-          Paste the entire content of your resume below. We'll parse it and generate your templates.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Textarea 
-          value={extractedText}
-          onChange={(e) => setExtractedText(e.target.value)}
-          className="h-96 text-sm"
-          placeholder="Paste your resume content here..."
-        />
-        <Button onClick={handlePasteAndParse} size="lg" className="w-full" disabled={loadingState !== 'idle' || !extractedText}>
-          {loadingState === 'extracting-data' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
-          Parse and Generate Templates
-        </Button>
-      </CardContent>
-    </Card>
-  );
-
-  const renderEditorPage = () => {
-    return (
-      <Card className="w-full max-w-4xl mx-auto shadow-2xl">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Button variant="ghost" size="icon" onClick={() => extractedText ? setStep('text-review') : setStep('landing')}><ChevronLeft /></Button>
-            Resume Editor
-          </CardTitle>
-          <CardDescription>Fill in your details to generate your resume. All fields are optional but recommended.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              {/* Personal Details */}
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><User /> Personal Details</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField control={form.control} name="name" render={({ field }) => <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="john.doe@example.com" {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="mobileNumber" render={({ field }) => <FormItem><FormLabel>Mobile Number</FormLabel><FormControl><Input placeholder="+1 234 567 890" {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="githubLink" render={({ field }) => <FormItem><FormLabel>GitHub Link</FormLabel><FormControl><Input placeholder="https://github.com/johndoe" {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="linkedinLink" render={({ field }) => <FormItem><FormLabel>LinkedIn Link</FormLabel><FormControl><Input placeholder="https://linkedin.com/in/johndoe" {...field} /></FormControl><FormMessage /></FormItem>} />
-                </div>
-              </div>
-
-              {/* Professional Summary */}
-              <div className="p-4 border rounded-lg">
-                 <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><FileText/> Professional Summary</h3>
-                <FormField control={form.control} name="professionalSummary" render={({ field }) => <FormItem><FormControl><Textarea placeholder="A brief summary of your professional background..." {...field} /></FormControl><FormMessage /></FormItem>} />
-              </div>
-
-               {/* Core Skills */}
-               <div className="p-4 border rounded-lg">
-                 <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><Sparkles/> Core Skills</h3>
-                 <FormField control={form.control} name="coreSkills" render={({ field }) => <FormItem><FormControl><Textarea placeholder="JavaScript, React, Node.js, Python..." {...field} onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))} value={Array.isArray(field.value) ? field.value.join(', ') : ''} /></FormControl><FormMessage /></FormItem>} />
-              </div>
-
-              {/* Education */}
-              <div className="p-4 border rounded-lg space-y-4">
-                <h3 className="font-semibold text-lg flex items-center gap-2"><GraduationCap /> Education</h3>
-                {eduFields.map((field, index) => (
-                  <div key={field.id} className="p-4 border rounded-md relative">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField control={form.control} name={`education.${index}.institution`} render={({ field }) => <FormItem><FormLabel>Institution</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                      <FormField control={form.control} name={`education.${index}.degree`} render={({ field }) => <FormItem><FormLabel>Degree</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                      <FormField control={form.control} name={`education.${index}.dates`} render={({ field }) => <FormItem><FormLabel>Dates</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                    </div>
-                    <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2" onClick={() => removeEdu(index)}><Trash2 className="h-4 w-4" /></Button>
-                  </div>
-                ))}
-                <Button type="button" variant="outline" size="sm" onClick={() => appendEdu({ institution: '', degree: '', dates: '' })}><PlusCircle className="mr-2 h-4 w-4" /> Add Education</Button>
-              </div>
-
-              {/* Experience */}
-              <div className="p-4 border rounded-lg space-y-4">
-                <h3 className="font-semibold text-lg flex items-center gap-2"><Briefcase /> Experience</h3>
-                {expFields.map((field, index) => (
-                  <div key={field.id} className="p-4 border rounded-md relative space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField control={form.control} name={`experience.${index}.title`} render={({ field }) => <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                      <FormField control={form.control} name={`experience.${index}.company`} render={({ field }) => <FormItem><FormLabel>Company</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                      <FormField control={form.control} name={`experience.${index}.dates`} render={({ field }) => <FormItem><FormLabel>Dates</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                    </div>
-                    <FormField control={form.control} name={`experience.${index}.description`} render={({ field }) => <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>} />
-                    <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2" onClick={() => removeExp(index)}><Trash2 className="h-4 w-4" /></Button>
-                  </div>
-                ))}
-                <Button type="button" variant="outline" size="sm" onClick={() => appendExp({ title: '', company: '', dates: '', description: '' })}><PlusCircle className="mr-2 h-4 w-4" /> Add Experience</Button>
-              </div>
-
-              {/* Other Sections */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Projects */}
-                  <div className="p-4 border rounded-lg space-y-4">
-                      <h3 className="font-semibold text-lg flex items-center gap-2"><Lightbulb /> Projects</h3>
-                      {projFields.map((field, index) => (
-                        <div key={field.id} className="p-4 border rounded-md relative space-y-2">
-                           <FormField control={form.control} name={`projects.${index}.name`} render={({ field }) => <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                           <FormField control={form.control} name={`projects.${index}.description`} render={({ field }) => <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>} />
-                          <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2" onClick={() => removeProj(index)}><Trash2 className="h-4 w-4" /></Button>
-                        </div>
-                      ))}
-                      <Button type="button" variant="outline" size="sm" onClick={() => appendProj({ name: '', description: '' })}><PlusCircle className="mr-2 h-4 w-4" /> Add Project</Button>
-                  </div>
-
-                  {/* Achievements/Certs */}
-                  <div className="space-y-4">
-                     <div className="p-4 border rounded-lg space-y-4">
-                        <h3 className="font-semibold text-lg flex items-center gap-2"><Trophy /> Achievements</h3>
-                        {achieveFields.map((field, index) => (
-                          <div key={field.id} className="flex items-center gap-2">
-                            <FormField control={form.control} name={`achievements.${index}.value`} render={({ field }) => <FormItem className="flex-grow"><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                            <Button type="button" variant="ghost" size="icon" onClick={() => removeAchieve(index)}><Trash2 className="h-4 w-4" /></Button>
-                          </div>
-                        ))}
-                        <Button type="button" variant="outline" size="sm" onClick={() => appendAchieve({ value: '' })}><PlusCircle className="mr-2 h-4 w-4" /> Add Achievement</Button>
-                      </div>
-                      <div className="p-4 border rounded-lg space-y-4">
-                        <h3 className="font-semibold text-lg flex items-center gap-2"><Award /> Certifications</h3>
-                        {certFields.map((field, index) => (
-                          <div key={field.id} className="flex items-center gap-2">
-                            <FormField control={form.control} name={`certifications.${index}.value`} render={({ field }) => <FormItem className="flex-grow"><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                            <Button type="button" variant="ghost" size="icon" onClick={() => removeCert(index)}><Trash2 className="h-4 w-4" /></Button>
-                          </div>
-                        ))}
-                        <Button type="button" variant="outline" size="sm" onClick={() => appendCert({ value: '' })}><PlusCircle className="mr-2 h-4 w-4" /> Add Certification</Button>
-                      </div>
-                  </div>
-              </div>
-
-              <Button type="submit" size="lg" className="w-full" disabled={loadingState !== 'idle'}>
-                {loadingState === 'processing' ? <Loader2 className="animate-spin" /> : <Sparkles className="mr-2" />}
-                Generate Resume
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    );
-  };
-
-  const renderResultsPage = () => {
-    if (!resumeData) return null;
-  
-    return (
-      <div className="w-full max-w-7xl mx-auto space-y-8">
-        <div className="flex justify-between items-center">
-            <Button variant="outline" onClick={() => setStep('editor')}>
-                <ChevronLeft className="mr-2" />
-                Back to Editor
-            </Button>
-            <h1 className="text-3xl font-bold text-center">Choose Your Template</h1>
-            <div className="w-36"></div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {templates.map(template => (
-            <div key={template.id} className="flex flex-col">
-              <Card className="flex-grow flex flex-col transform-gpu transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
-                 <CardHeader>
-                    <CardTitle>{template.name}</CardTitle>
-                    <CardDescription>{template.category}</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 flex-grow flex justify-center items-center bg-secondary rounded-b-lg overflow-hidden">
-                    <ResumePreview resumeData={resumeData} templateId={template.id} isPreview />
-                </CardContent>
-                <div className="p-4 border-t">
-                  <Button className="w-full" onClick={() => handleSelectTemplate(template.id)}>
-                    <Printer className="mr-2" />
-                    Use This Template & Print
-                  </Button>
-                </div>
-              </Card>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-  
-  const renderPreviewPage = () => {
-    if (!resumeData) return null;
-
-    return (
-        <div className="w-full h-full flex flex-col items-center">
-            <div className="w-full max-w-4xl flex justify-between items-center my-8 no-print">
-                <Button variant="outline" onClick={() => setStep('results')}>
-                    <ChevronLeft className="mr-2" />
-                    Back to Templates
-                </Button>
-                <div className="flex gap-4">
-                    <Button variant="outline" onClick={() => setStep('editor')}>
-                        <Edit className="mr-2" />
-                        Edit Details
-                    </Button>
-                    <Button onClick={handlePrint}>
-                        <Printer className="mr-2" />
-                        Print Resume
-                    </Button>
-                </div>
-            </div>
-            <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
-        </div>
-    );
-  }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-12 lg:p-24 bg-background">
-        {step === 'landing' && renderLandingPage()}
-        {step === 'text-review' && renderTextReviewPage()}
-        {step === 'paste-text' && renderPasteTextPage()}
-        {step === 'editor' && renderEditorPage()}
-        {step === 'results' && renderResultsPage()}
-        {step === 'preview' && renderPreviewPage()}
-    </main>
+    <div className="dark bg-background text-foreground min-h-screen">
+      <main className="overflow-hidden">
+        {/* Hero Section */}
+        <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center px-4">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900/50 -z-10"></div>
+          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5 -z-10"></div>
+          
+          <div className="relative z-10">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white animate-fade-in-up">
+              ResumePilot
+            </h1>
+            <p className="mt-4 md:mt-6 text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground animate-fade-in-up animation-delay-300">
+              Craft your perfect resume with AI-powered scoring and professional templates.
+            </p>
+            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-600">
+              <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
+                <Upload className="mr-2" /> Upload Resume
+              </Button>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
+                Enter Manually <ArrowRight className="ml-2" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section id="how-it-works" className="py-20 md:py-28 px-4 bg-gray-900/50">
+          <div className="container mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-white">How It Works</h2>
+            <p className="mt-4 text-center text-muted-foreground max-w-xl mx-auto">
+              Get a job-ready resume in three simple steps.
+            </p>
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+              <div className="text-center flex flex-col items-center">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                  <ClipboardPaste className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">Step 1: Provide Your Data</h3>
+                <p className="mt-2 text-muted-foreground">Upload your current resume or simply paste the raw text. Our AI will handle the rest.</p>
+              </div>
+              <div className="text-center flex flex-col items-center">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                  <MousePointerSquare className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">Step 2: Choose Template</h3>
+                <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
+              </div>
+              <div className="text-center flex flex-col items-center">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                  <Download className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">Step 3: Download & Apply</h3>
+                <p className="mt-2 text-muted-foreground">Download your new, polished resume in PDF format and start applying for jobs with confidence.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Template Selection Section */}
+        <section id="templates" className="py-20 md:py-28 px-4">
+          <div className="container mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-white">Find Your Perfect Template</h2>
+            <p className="mt-4 text-center text-muted-foreground max-w-xl mx-auto">
+              Browse our library of templates designed for various industries and roles.
+            </p>
+
+            <div className="mt-12 flex justify-center flex-wrap gap-2">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  variant={filter === category ? 'default' : 'outline'}
+                  onClick={() => setFilter(category)}
+                  className={cn(
+                    "transition-all",
+                    filter === category ? 'bg-primary text-primary-foreground' : 'text-muted-foreground border-white/20 hover:bg-white/10'
+                  )}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+
+            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {filteredTemplates.map((template) => (
+                <div key={template.id} className="group relative overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
+                  <Image
+                    src={template.image}
+                    alt={template.name}
+                    width={400}
+                    height={565}
+                    className="w-full object-cover object-top transition-transform duration-300 group-hover:opacity-80"
+                    data-ai-hint="resume professional"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-4">
+                    <h3 className="font-bold text-white">{template.name}</h3>
+                    <p className="text-xs text-muted-foreground">{template.category}</p>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button variant="secondary">
+                      Preview <ChevronRight className="ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us Section */}
+        <section id="features" className="py-20 md:py-28 px-4 bg-gray-900/50">
+          <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative">
+               <Image
+                    src="https://picsum.photos/600/500"
+                    alt="AI in action"
+                    width={600}
+                    height={500}
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="technology abstract"
+                  />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white">Why Choose ResumePilot?</h2>
+              <p className="mt-4 text-muted-foreground">
+                We combine powerful technology with sleek design to give you an unbeatable advantage.
+              </p>
+              <ul className="mt-8 space-y-6">
+                <li className="flex items-start gap-4">
+                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-white">AI-Powered Text Extraction</h3>
+                    <p className="text-muted-foreground">Our smart AI accurately parses your existing resume, saving you from tedious manual entry.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-white">Customizable, ATS-Friendly Templates</h3>
+                    <p className="text-muted-foreground">Choose from a variety of templates that are not only beautiful but also optimized for applicant tracking systems.</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-white">Intuitive & Fast Interface</h3>
+                    <p className="text-muted-foreground">Our easy-to-use platform allows you to create a professional resume in minutes, not hours.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        {/* Testimonials Section */}
+        <section id="testimonials" className="py-20 md:py-28 px-4">
+          <div className="container mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-white">Loved by Professionals</h2>
+            <p className="mt-4 text-center text-muted-foreground max-w-xl mx-auto">
+              Don't just take our word for it. Here's what our users are saying.
+            </p>
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full max-w-4xl mx-auto mt-16"
+            >
+              <CarouselContent>
+                {testimonials.map((testimonial, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1">
+                      <Card className="h-full bg-card/50 border-white/10">
+                         <CardContent className="p-6 flex flex-col justify-between h-full">
+                           <p className="text-muted-foreground italic">"{testimonial.text}"</p>
+                           <div className="flex items-center gap-4 mt-6 pt-6 border-t border-white/10">
+                              <Avatar>
+                                <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                                <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-semibold text-white">{testimonial.name}</p>
+                                <p className="text-xs text-muted-foreground">{testimonial.title}</p>
+                              </div>
+                           </div>
+                         </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="text-white"/>
+              <CarouselNext className="text-white"/>
+            </Carousel>
+          </div>
+        </section>
+        
+        {/* FAQ Section */}
+        <section id="faq" className="py-20 md:py-28 px-4 bg-gray-900/50">
+          <div className="container mx-auto max-w-3xl">
+              <h2 className="text-3xl md:text-4xl font-bold text-center text-white">Frequently Asked Questions</h2>
+              <p className="mt-4 text-center text-muted-foreground max-w-xl mx-auto">
+                Have questions? We've got answers.
+              </p>
+              <Accordion type="single" collapsible className="w-full mt-12">
+                {faqItems.map((item, index) => (
+                  <AccordionItem key={index} value={`item-${index}`} className="border-white/10">
+                    <AccordionTrigger className="text-white text-left hover:no-underline">
+                      {item.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+          </div>
+        </section>
+
+
+        {/* Footer */}
+        <footer className="py-12 px-4 bg-black/50">
+          <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-8">
+            <div>
+              <h3 className="text-2xl font-bold text-white">ResumePilot</h3>
+              <p className="text-sm text-muted-foreground mt-2">&copy; {new Date().getFullYear()} ResumePilot. All rights reserved.</p>
+            </div>
+            <div className="flex gap-4 text-muted-foreground">
+                <a href="#" className="hover:text-primary transition-colors"><Twitter /></a>
+                <a href="#" className="hover:text-primary transition-colors"><Linkedin /></a>
+                <a href="#" className="hover:text-primary transition-colors"><Github /></a>
+            </div>
+            <nav className="flex flex-col sm:flex-row gap-4 md:gap-6 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-primary transition-colors">Terms & Conditions</a>
+              <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-primary transition-colors">Contact Us</a>
+            </nav>
+          </div>
+        </footer>
+      </main>
+    </div>
   );
 }
