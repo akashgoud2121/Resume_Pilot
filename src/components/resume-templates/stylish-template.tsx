@@ -29,9 +29,9 @@ export function StylishTemplate({ data }: TemplateProps) {
       <main className="grid grid-cols-12 gap-[2em]">
         {/* Left Column */}
         <div className="col-span-4">
-            <Section title="About Me">
+            {data.professionalSummary && <Section title="About Me">
                 <p className="text-[1em] leading-relaxed">{data.professionalSummary}</p>
-            </Section>
+            </Section>}
             <Section title="Contact">
                 <div className="space-y-[0.4em] text-[1em]">
                     {data.email && <a href={`mailto:${data.email}`} className="flex items-center gap-[0.5em] hover:text-black break-all"><Mail className="w-[1em] h-[1em]" /> {data.email}</a>}
@@ -114,5 +114,3 @@ export function StylishTemplate({ data }: TemplateProps) {
     </div>
   );
 }
-
-    

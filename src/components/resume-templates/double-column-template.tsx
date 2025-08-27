@@ -113,5 +113,3 @@ export function DoubleColumnTemplate({ data }: TemplateProps) {
     </div>
   );
 }
-
-    

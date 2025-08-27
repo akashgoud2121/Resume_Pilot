@@ -113,5 +113,3 @@ export function ModernTemplate({ data }: TemplateProps) {
     </div>
   );
 }
-
-    

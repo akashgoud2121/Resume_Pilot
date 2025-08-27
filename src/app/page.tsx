@@ -327,7 +327,7 @@ export default function Home() {
                   <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                     <div className="group relative">
                       <Card className="overflow-hidden bg-card shadow-lg transform transition-all duration-300 hover:shadow-primary/20">
-                          <div className="aspect-[1/1.414] w-full overflow-hidden flex items-center justify-center">
+                          <div className="aspect-[1/1.414] w-full overflow-hidden bg-white">
                             <ResumePreview
                                 resumeData={sampleResumeData}
                                 templateId={template.id}
