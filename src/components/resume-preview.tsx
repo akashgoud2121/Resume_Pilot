@@ -1,7 +1,9 @@
+
 'use client';
 
 import React from 'react';
 import type { ResumeData } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import { DefaultTemplate } from './resume-templates/default-template';
 import { ModernTemplate } from './resume-templates/modern-template';
 import { CreativeTemplate } from './resume-templates/creative-template';
@@ -14,9 +16,11 @@ import { ContemporaryTemplate } from './resume-templates/contemporary-template';
 interface ResumePreviewProps {
   resumeData: ResumeData;
   templateId: string;
+  isPreview?: boolean;
+  className?: string;
 }
 
-export function ResumePreview({ resumeData, templateId }: ResumePreviewProps) {
+export function ResumePreview({ resumeData, templateId, isPreview = false, className }: ResumePreviewProps) {
 
   const renderTemplate = () => {
     switch (templateId) {
@@ -41,11 +45,22 @@ export function ResumePreview({ resumeData, templateId }: ResumePreviewProps) {
 
   return (
     <div 
-      id="printable-area" 
-      className="bg-white shadow-lg" 
-      style={{ 
+      id={!isPreview ? "printable-area" : undefined}
+      className={cn(
+        "bg-white shadow-lg",
+        isPreview 
+          ? "origin-top-left"
+          : "shadow-lg",
+        className
+      )} 
+      style={isPreview ? { 
         width: '210mm', 
         height: '297mm',
+        transform: 'scale(0.333)',
+        transformOrigin: 'top left'
+      } : {
+        width: '210mm', 
+        minHeight: '297mm',
       }}
     >
       {renderTemplate()}
