@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -17,6 +18,9 @@ import {
   Linkedin,
   Github,
   Upload,
+  Cpu,
+  Gauge,
+  LayoutTemplate,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -90,38 +94,101 @@ export default function Home() {
         {/* 3D Header Section */}
         <Header3d />
 
-        {/* How It Works Section */}
-        <section id="how-it-works" className="py-20 md:py-28 px-4 bg-gray-900/50">
-          <div className="container mx-auto">
-            <ScrollAnimation animation="animate-fadeInUp" className="text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">How It Works</h2>
-              <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                Get a job-ready resume in three simple steps.
-              </p>
-            </ScrollAnimation>
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-              <ScrollAnimation animation="animate-slideInFromLeft" className="text-center flex flex-col items-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <ClipboardPaste className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">Step 1: Provide Your Data</h3>
-                <p className="mt-2 text-muted-foreground">Upload your current resume or simply paste the raw text. Our AI will handle the rest.</p>
-              </ScrollAnimation>
-              <ScrollAnimation animation="animate-fadeInUp" className="text-center flex flex-col items-center animation-delay-300">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <MousePointerClick className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">Step 2: Choose Template</h3>
-                <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
-              </ScrollAnimation>
-              <ScrollAnimation animation="animate-slideInFromRight" className="text-center flex flex-col items-center animation-delay-600">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <Download className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">Step 3: Download & Apply</h3>
-                <p className="mt-2 text-muted-foreground">Download your new, polished resume in PDF format and start applying for jobs with confidence.</p>
-              </ScrollAnimation>
+        {/* Unlock Your Potential Section */}
+        <section className="py-20 md:py-28 px-4 bg-gray-900/50">
+            <div className="container mx-auto max-w-4xl text-center">
+                <ScrollAnimation animation="animate-fadeInUp">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white">Unlock Your Career Potential</h2>
+                    <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+                        In today's competitive job market, a standout resume is your key to getting noticed. ResumePilot is more than just a builder; it's your strategic partner in crafting a professional narrative that impresses recruiters and sails through automated filters. We combine cutting-edge AI with proven, professional designs to give you the ultimate advantage.
+                    </p>
+                </ScrollAnimation>
             </div>
+        </section>
+
+        {/* AI-Powered Parsing Section */}
+        <section id="ai-parsing" className="py-20 md:py-28 px-4">
+          <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <ScrollAnimation animation="animate-slideInFromLeft">
+                <div className="pr-8">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                        <Cpu className="h-6 w-6" />
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold text-white">AI-Powered Parsing</h2>
+                  </div>
+                  <p className="mt-4 text-muted-foreground">
+                    Don't waste time with manual data entry. Upload your existing resume, and our intelligent AI will instantly read, understand, and extract key information. From contact details to complex work histories, we accurately parse your data, laying the foundation for a perfect resume in seconds.
+                  </p>
+                  <ul className="mt-6 space-y-4">
+                    <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Supports PDF, DOC, and DOCX formats for flexible uploads.</p>
+                    </li>
+                    <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Accurately identifies and categorizes experience, skills, and education.</p>
+                    </li>
+                     <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Saves you hours of tedious typing and formatting.</p>
+                    </li>
+                  </ul>
+                </div>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-slideInFromRight">
+               <Image
+                    src="https://picsum.photos/600/450"
+                    alt="AI Parsing in Action"
+                    width={600}
+                    height={450}
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="technology abstract"
+                  />
+            </ScrollAnimation>
+          </div>
+        </section>
+
+        {/* ATS Score Section */}
+        <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
+          <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <ScrollAnimation animation="animate-slideInFromLeft">
+               <Image
+                    src="https://picsum.photos/seed/ats/600/450"
+                    alt="ATS Score Dashboard"
+                    width={600}
+                    height={450}
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="dashboard chart"
+                  />
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-slideInFromRight">
+                <div className="pl-8">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                            <Gauge className="h-6 w-6" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Optimize with an ATS Score</h2>
+                    </div>
+                  <p className="mt-4 text-muted-foreground">
+                    Over 90% of large companies use Applicant Tracking Systems (ATS) to screen resumes. Our AI analyzes your resume against common ATS criteria, providing a real-time score and actionable feedback. Ensure your resume gets past the bots and into human hands.
+                  </p>
+                  <ul className="mt-6 space-y-4">
+                    <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Get a score from 0-100 based on keywords, formatting, and structure.</p>
+                    </li>
+                    <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Receive specific, AI-driven suggestions for improvement.</p>
+                    </li>
+                     <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Maximize your chances of landing an interview.</p>
+                    </li>
+                  </ul>
+                </div>
+            </ScrollAnimation>
           </div>
         </section>
 
@@ -129,9 +196,14 @@ export default function Home() {
         <section id="templates" className="py-20 md:py-28 px-4">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-white">Find Your Perfect Template</h2>
+                <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                        <LayoutTemplate className="h-6 w-6" />
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold text-white">ATS-Friendly Templates</h2>
+                </div>
                 <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                Browse our library of templates designed for various industries and roles.
+                    Beat the bots with professionally designed templates. Browse our library of templates designed for various industries and roles, all optimized to be parsed correctly by applicant tracking systems.
                 </p>
             </ScrollAnimation>
 
@@ -181,55 +253,77 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Why Choose Us Section */}
-        <section id="features" className="py-20 md:py-28 px-4 bg-gray-900/50">
+        
+        {/* Instant Download Section */}
+        <section id="instant-download" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
-               <Image
-                    src="https://picsum.photos/600/500"
-                    alt="AI in action"
-                    width={600}
-                    height={500}
-                    className="rounded-xl shadow-2xl"
-                    data-ai-hint="technology abstract"
-                  />
+                <div className="pr-8">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                            <Download className="h-6 w-6" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Instant Download</h2>
+                    </div>
+                  <p className="mt-4 text-muted-foreground">
+                    Your next career move is just a click away. Once you've perfected your resume, download it instantly as a high-quality, universally compatible PDF file. No watermarks, no delays. Just a professional, job-ready resume in your hands, ready to be sent to your dream company.
+                  </p>
+                  <Button size="lg" className="mt-8 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
+                     Create Your Resume Now <ArrowRight className="ml-2" />
+                  </Button>
+                </div>
             </ScrollAnimation>
             <ScrollAnimation animation="animate-slideInFromRight">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">Why Choose ResumePilot?</h2>
-              <p className="mt-4 text-muted-foreground">
-                We combine powerful technology with sleek design to give you an unbeatable advantage.
-              </p>
-              <ul className="mt-8 space-y-6">
-                <li className="flex items-start gap-4">
-                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-white">AI-Powered Text Extraction</h3>
-                    <p className="text-muted-foreground">Our smart AI accurately parses your existing resume, saving you from tedious manual entry.</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-4">
-                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-white">Customizable, ATS-Friendly Templates</h3>
-                    <p className="text-muted-foreground">Choose from a variety of templates that are not only beautiful but also optimized for applicant tracking systems.</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-4">
-                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold text-white">Intuitive & Fast Interface</h3>
-                    <p className="text-muted-foreground">Our easy-to-use platform allows you to create a professional resume in minutes, not hours.</p>
-                  </div>
-                </li>
-              </ul>
+               <Image
+                    src="https://picsum.photos/seed/download/600/400"
+                    alt="Person downloading a resume"
+                    width={600}
+                    height={400}
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="success document"
+                  />
             </ScrollAnimation>
           </div>
         </section>
 
 
+        {/* How It Works Section */}
+        <section id="how-it-works" className="py-20 md:py-28 px-4">
+          <div className="container mx-auto">
+            <ScrollAnimation animation="animate-fadeInUp" className="text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume in 3 Simple Steps</h2>
+              <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                From upload to a polished, job-winning document in minutes.
+              </p>
+            </ScrollAnimation>
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+              <ScrollAnimation animation="animate-slideInFromLeft" className="text-center flex flex-col items-center">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                  <ClipboardPaste className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">1. Provide Your Data</h3>
+                <p className="mt-2 text-muted-foreground">Upload your current resume or simply paste the raw text. Our AI will handle the rest.</p>
+              </ScrollAnimation>
+              <ScrollAnimation animation="animate-fadeInUp" className="text-center flex flex-col items-center animation-delay-300">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                  <MousePointerClick className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">2. Choose a Template</h3>
+                <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
+              </ScrollAnimation>
+              <ScrollAnimation animation="animate-slideInFromRight" className="text-center flex flex-col items-center animation-delay-600">
+                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                  <Download className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">3. Download & Apply</h3>
+                <p className="mt-2 text-muted-foreground">Download your new, polished resume in PDF format and start applying for jobs with confidence.</p>
+              </ScrollAnimation>
+            </div>
+          </div>
+        </section>
+
         {/* Testimonials Section */}
-        <section id="testimonials" className="py-20 md:py-28 px-4">
+        <section id="testimonials" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-white">Loved by Professionals</h2>
@@ -276,7 +370,7 @@ export default function Home() {
         </section>
         
         {/* FAQ Section */}
-        <section id="faq" className="py-20 md:py-28 px-4 bg-gray-900/50">
+        <section id="faq" className="py-20 md:py-28 px-4">
           <div className="container mx-auto max-w-3xl">
               <ScrollAnimation animation="animate-fadeInUp" className="text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-white">Frequently Asked Questions</h2>

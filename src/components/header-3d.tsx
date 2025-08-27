@@ -105,31 +105,31 @@ export function Header3d() {
           <div className="w-full lg:w-1/4 initial-hidden animate-slideInFromLeft animation-delay-500 text-left">
             <ul className="space-y-6">
                 <li>
-                  <a href="#features" className="flex items-start gap-4 group">
+                  <div className="flex items-start gap-4 group">
                     <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:scale-110 transition-transform"><Sparkles size={20}/></div>
                     <div>
                       <h3 className="font-semibold text-white group-hover:text-primary transition-colors">AI-Powered Parsing</h3>
                       <p className="text-muted-foreground text-sm">Instantly extract data from any resume format.</p>
                     </div>
-                  </a>
+                  </div>
                 </li>
                 <li>
-                  <a href="#features" className="flex items-start gap-4 group">
+                  <div className="flex items-start gap-4 group">
                     <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:scale-110 transition-transform"><FileText size={20}/></div>
                     <div>
                       <h3 className="font-semibold text-white group-hover:text-primary transition-colors">ATS-Friendly Templates</h3>
                       <p className="text-muted-foreground text-sm">Beat the bots with professionally designed templates.</p>
                     </div>
-                  </a>
+                  </div>
                 </li>
                 <li>
-                  <a href="#how-it-works" className="flex items-start gap-4 group">
+                  <div className="flex items-start gap-4 group">
                     <div className="p-2 bg-primary/10 rounded-full text-primary group-hover:scale-110 transition-transform"><Download size={20}/></div>
                     <div>
                       <h3 className="font-semibold text-white group-hover:text-primary transition-colors">Instant Download</h3>
                       <p className="text-muted-foreground text-sm">Get your job-ready resume in PDF format in seconds.</p>
                     </div>
-                  </a>
+                  </div>
                 </li>
             </ul>
              <div className="mt-12 initial-hidden animate-fadeInUp animation-delay-700">
@@ -192,7 +192,7 @@ export function Header3d() {
 
           {/* Right Content */}
           <div className="w-full lg:w-1/4 initial-hidden animate-slideInFromRight animation-delay-500 text-left">
-            <a href="#features" className="block group">
+            <div className="block group">
               <Card className="bg-white/5 border-white/10 backdrop-blur-sm group-hover:border-primary/50 transition-colors">
                   <CardContent className="p-6">
                       <h4 className="font-semibold text-white text-center mb-2">ATS Score</h4>
@@ -243,7 +243,7 @@ export function Header3d() {
                           <p className="text-xs text-center text-muted-foreground mt-2">This resume is highly optimized for Applicant Tracking Systems.</p>
                   </CardContent>
               </Card>
-            </a>
+            </div>
           </div>
         </div>
       </div>
