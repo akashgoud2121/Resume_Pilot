@@ -30,9 +30,9 @@ export function Header3d() {
           <ScrollAnimation animation="animate-fadeInUp">
             <div className="inline-flex items-center gap-2 mb-4">
               <Sparkles className="text-primary h-6 w-6" />
-              <h2 className="text-4xl font-calligraphy text-primary">ResumePilot</h2>
+              <h2 className="text-5xl font-calligraphy text-primary">ResumePilot</h2>
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
               Create the Perfect Resume with Ease
             </h1>
           </ScrollAnimation>
