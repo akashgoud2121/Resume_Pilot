@@ -25,6 +25,7 @@ import {
   Mail,
   Phone,
   GraduationCap,
+  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -37,7 +38,6 @@ import ScrollAnimation from '@/components/ui/scroll-animation';
 import { Header3d } from '@/components/header-3d';
 import type { ResumeData } from '@/lib/types';
 import { ResumePreview } from '@/components/resume-preview';
-import { User } from 'lucide-react';
 
 
 const testimonials = [
@@ -101,8 +101,6 @@ const ParsedDataItem = ({ label, value, icon }: { label: string; value: string; 
 export default function Home() {
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
-  const previewContainerRef = useRef<HTMLDivElement>(null);
-
   
   const filteredTemplates = templates.filter(
     (template) => filter === 'All' || template.category === filter
@@ -314,31 +312,41 @@ export default function Home() {
                 ))}
               </div>
             </ScrollAnimation>
-
-            <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
-              {filteredTemplates.map((template, index) => (
-                 <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: index * 100 }} key={template.id}>
+            
+            <Carousel 
+              opts={{ align: "start", loop: true }} 
+              className="w-full mt-16"
+            >
+              <CarouselContent className="-ml-4">
+                {filteredTemplates.map((template) => (
+                  <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                     <div className="group relative">
-                      <div className="relative aspect-[1/1.414] w-full overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
-                         <ResumePreview
-                            resumeData={sampleResumeData}
-                            templateId={template.id}
-                            isPreview={true}
-                         />
-                      </div>
+                      <Card className="overflow-hidden bg-card shadow-lg transform transition-all duration-300 hover:shadow-primary/20">
+                          <div className="aspect-[1/1.414] w-full overflow-hidden">
+                            <ResumePreview
+                                resumeData={sampleResumeData}
+                                templateId={template.id}
+                                isPreview={true}
+                                className="transform scale-[0.35] origin-top-left"
+                            />
+                          </div>
+                      </Card>
                       <div className="mt-4 text-center">
                         <h3 className="font-bold text-white">{template.name}</h3>
                         <p className="text-sm text-muted-foreground">{template.category}</p>
                       </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                      <div className="absolute inset-0 top-0 bottom-[4.5rem] flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
                         <Button variant="secondary">
                           Preview <ChevronRight className="ml-2" />
                         </Button>
                       </div>
                     </div>
-                </ScrollAnimation>
-              ))}
-            </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="text-white hidden md:flex"/>
+              <CarouselNext className="text-white hidden md:flex"/>
+            </Carousel>
           </div>
         </section>
         
