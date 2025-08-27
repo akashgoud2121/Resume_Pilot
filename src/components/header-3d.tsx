@@ -21,7 +21,9 @@ export function Header3d() {
     <section 
         className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 animate-gradient-xy bg-[200%_auto]"></div>
+      <div className="absolute inset-0 bg-slate-950 -z-10"></div>
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[200vw] h-[30rem] bg-gradient-to-t from-primary/30 to-primary/5 rounded-[50%] blur-3xl opacity-40"></div>
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150vw] h-[25rem] bg-gradient-to-t from-primary/20 to-primary/5 rounded-[50%] blur-2xl opacity-60"></div>
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5"></div>
       
       <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
