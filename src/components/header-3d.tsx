@@ -64,7 +64,7 @@ export function Header3d() {
         {/* Left: Text Content */}
         <div className="w-full lg:w-1/3 text-center lg:text-left">
           <div className="initial-hidden animate-dropIn">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white inline-flex items-center gap-3 bg-gradient-to-r from-blue-400 to-teal-300 text-transparent bg-clip-text" style={{filter: 'drop-shadow(0 2px 8px rgba(119, 185, 255, 0.5))'}}>
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white inline-flex items-center gap-3">
               <Sparkles className="text-primary h-10 w-10" />
               ResumePilot
             </h1>
