@@ -11,7 +11,7 @@ import {
   ClipboardPaste,
   Download,
   FileText,
-  MousePointerSquare,
+  MousePointerClick,
   Sparkles,
   Twitter,
   Linkedin,
@@ -124,7 +124,7 @@ export default function Home() {
               </div>
               <div className="text-center flex flex-col items-center">
                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <MousePointerSquare className="h-8 w-8" />
+                  <MousePointerClick className="h-8 w-8" />
                 </div>
                 <h3 className="text-xl font-semibold text-white">Step 2: Choose Template</h3>
                 <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
