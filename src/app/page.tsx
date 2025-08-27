@@ -105,9 +105,9 @@ export default function Home() {
                 </ScrollAnimation>
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                     <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}}>
-                        <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-primary/50">
+                        <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-blue-400/50">
                             <CardContent className="p-8">
-                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
+                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-500/10 text-blue-400 mb-6 mx-auto">
                                     <Sparkles className="h-8 w-8" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-white">Craft with AI</h3>
@@ -116,9 +116,9 @@ export default function Home() {
                         </Card>
                     </ScrollAnimation>
                     <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 400}}>
-                        <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-primary/50">
+                        <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-teal-400/50">
                              <CardContent className="p-8">
-                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
+                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-teal-500/10 text-teal-400 mb-6 mx-auto">
                                     <LayoutTemplate className="h-8 w-8" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-white">Impress with Design</h3>
@@ -127,9 +127,9 @@ export default function Home() {
                         </Card>
                     </ScrollAnimation>
                     <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 600}}>
-                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-primary/50">
+                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-violet-400/50">
                             <CardContent className="p-8">
-                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
+                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-violet-500/10 text-violet-400 mb-6 mx-auto">
                                     <Award className="h-8 w-8" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-white">Succeed with Strategy</h3>
