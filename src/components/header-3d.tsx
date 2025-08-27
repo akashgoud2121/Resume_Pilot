@@ -151,7 +151,7 @@ export function Header3d() {
                   <div className="absolute w-full h-full bg-white rounded-lg border border-gray-200 shadow-2xl p-6 text-left transition-transform duration-700 [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)]">
                     <div className="text-center border-b border-gray-200 pb-3">
                       <h3 className="text-4xl font-heading font-bold text-gray-800">Alexandria Quill</h3>
-                      <p className="text-blue-600">Software Engineer</p>
+                      <p className="text-pink-600">Software Engineer</p>
                     </div>
                     <div className="mt-4">
                       <h4 className="text-sm font-semibold text-gray-600 mb-2">SUMMARY</h4>
