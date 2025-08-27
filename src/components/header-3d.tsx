@@ -64,7 +64,7 @@ export function Header3d() {
                 {/* Front Side */}
                 <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden]">
                   <div className="text-center border-b border-white/10 pb-3">
-                    <h3 className="text-2xl font-bold text-white">John Doe</h3>
+                    <h3 className="text-4xl font-calligraphy font-bold text-white">Alexandria Quill</h3>
                     <p className="text-teal-400">Software Engineer</p>
                   </div>
                   <div className="mt-4">
