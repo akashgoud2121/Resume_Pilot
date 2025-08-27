@@ -38,7 +38,7 @@ export function Header3d() {
   }, []);
 
   const chartData = [
-    { name: 'score', value: score, fill: 'url(#gradientFill)' },
+    { name: 'score', value: score, fill: 'var(--color-score)' },
     { name: 'rest', value: 100 - score, fill: 'hsla(var(--primary) / 0.1)' },
   ];
 
@@ -88,12 +88,12 @@ export function Header3d() {
         
         <div className="text-center mb-12">
           <div className="initial-hidden animate-dropIn">
-            <h1 className="text-6xl md:text-7xl font-heading font-bold tracking-tight text-white inline-flex items-center gap-3">
+            <h1 className="text-5xl md:text-6xl font-heading font-bold tracking-tight text-white inline-flex items-center gap-3">
               ResumePilot
             </h1>
           </div>
           <div className="initial-hidden animate-fadeInUp animation-delay-300">
-            <h2 className="mt-2 text-lg md:text-xl font-medium tracking-tight text-white/80">
+            <h2 className="mt-2 text-xl md:text-2xl font-medium tracking-tight text-white/80">
               Create the Perfect Resume with Ease
             </h2>
           </div>
@@ -191,12 +191,6 @@ export function Header3d() {
                     <h4 className="font-semibold text-white text-center mb-2">ATS Score</h4>
                      <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
                             <PieChart>
-                                <defs>
-                                    <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8}/>
-                                    <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2}/>
-                                    </linearGradient>
-                                </defs>
                                 <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
                                 <Pie 
                                     data={chartData} 
@@ -211,7 +205,7 @@ export function Header3d() {
                                     cornerRadius={5}
                                     paddingAngle={-10}
                                 >
-                                     <Cell key="score" className="fill-[--color-score] stroke-[--color-score]" />
+                                     <Cell key="score" className="fill-primary stroke-primary" />
                                      <Cell key="rest" className="fill-transparent stroke-transparent" />
                                 </Pie>
                                 <Pie 
