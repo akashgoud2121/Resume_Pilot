@@ -1,9 +1,9 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, ArrowRight, Code, PenTool, Database, Briefcase, GraduationCap, Award } from 'lucide-react';
+import { Upload, ArrowRight, Briefcase, GraduationCap, Award } from 'lucide-react';
 import ScrollAnimation from './ui/scroll-animation';
 import { cn } from '@/lib/utils';
 
@@ -17,17 +17,15 @@ const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) 
 );
 
 export function Header3d() {
-  const [isFlipped, setIsFlipped] = useState(false);
-
   return (
     <section 
-        className="relative h-[90vh] min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
+        className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
         style={{ perspective: '1200px' }}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 animate-gradient-xy bg-[200%_auto]"></div>
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5"></div>
       
-      <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto">
+      <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
         {/* Left: Text Content */}
         <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 lg:mt-0">
           <ScrollAnimation animation="animate-fadeInUp">
@@ -56,18 +54,15 @@ export function Header3d() {
         <div 
           className="w-full lg:w-1/2 flex items-center justify-center group"
           style={{ perspective: '1000px' }}
-          onMouseEnter={() => setIsFlipped(true)}
-          onMouseLeave={() => setIsFlipped(false)}
         >
             <div 
                 className={cn(
                     "relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-in-out",
-                    "animate-[float_8s_ease-in-out_infinite]"
-                )} 
-                style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+                    "animate-[float_8s_ease-in-out_infinite] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
+                )}
             >
                 {/* Front Side */}
-                <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left" style={{ backfaceVisibility: 'hidden' }}>
+                <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden]">
                   <div className="text-center border-b border-white/10 pb-3">
                     <h3 className="text-2xl font-bold text-white">John Doe</h3>
                     <p className="text-teal-400">Software Engineer</p>
@@ -88,7 +83,7 @@ export function Header3d() {
                 </div>
 
                 {/* Back Side */}
-                <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left [backface-visibility:hidden] [transform:rotateY(180deg)]">
                   <div className="border-b border-white/10 pb-3">
                     <h4 className="text-lg font-bold text-white flex items-center gap-2"><Briefcase size={18}/> Experience</h4>
                   </div>
