@@ -73,7 +73,13 @@ const faqItems = [
   }
 ];
 
-export default function Home() {
+export default function Home({
+  params,
+  searchParams,
+}: {
+  params?: Record<string, string | string[]>;
+  searchParams?: Record<string, string | string[]>;
+}) {
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
   
