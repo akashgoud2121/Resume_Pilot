@@ -88,10 +88,8 @@ export function Header3d() {
         
         <div className="text-center mb-12">
           <div className="initial-hidden animate-dropIn">
-            <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <FileText className="h-8 w-8" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-heading font-bold tracking-tight text-white">
+            <h1 className="text-5xl md:text-6xl font-heading font-bold tracking-tight text-white flex items-center justify-center gap-3">
+              <FileText className="h-10 w-10 text-primary" />
               ResumePilot
             </h1>
           </div>
