@@ -112,7 +112,7 @@ export default function Home() {
     githubLink: 'https://github.com/alexquill',
     linkedinLink: 'https://linkedin.com/in/alexquill',
     professionalSummary: 'Innovative Software Engineer with 5+ years of experience in developing and deploying scalable web applications. Passionate about creating elegant, efficient code and working in collaborative, agile environments to solve complex problems.',
-    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD'],
+    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD', 'GraphQL', 'Kubernetes'],
     education: [
       {
         institution: 'University of Technology',
@@ -125,23 +125,33 @@ export default function Home() {
         title: 'Senior Software Engineer',
         company: 'Innovatech Solutions',
         dates: '2020 - Present',
-        description: 'Lead developer for the flagship SaaS product. Architected and implemented a new microservices-based backend, resulting in a 40% performance increase. Mentored junior developers and championed best practices in code reviews.',
+        description: 'Lead developer for the flagship SaaS product, driving the architecture and implementation of new features.\n- Architected and implemented a new microservices-based backend, resulting in a 40% performance increase and improved scalability.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices in code reviews and pair programming.\n- Championed the adoption of Test-Driven Development (TDD), increasing code coverage by 30%.',
       },
       {
         title: 'Software Engineer',
         company: 'CodeCrafters Inc.',
         dates: '2018 - 2020',
-        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js. Collaborated with designers to create a seamless user experience.',
+        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js.\n- Collaborated with UX/UI designers to create a seamless and responsive user experience, boosting user engagement by 15%.\n- Implemented a new payment gateway integration, expanding customer payment options.',
       },
     ],
     projects: [
       {
-        name: 'Open Source Contributor',
-        description: 'Active contributor to a popular open-source UI library, focusing on accessibility improvements.',
+        name: 'Open Source Contributor - React-Query',
+        description: 'Active contributor to a popular open-source data-fetching library, focusing on accessibility improvements and documentation.',
+      },
+      {
+        name: 'Personal Portfolio Website',
+        description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills.',
       },
     ],
-    achievements: [{ value: 'Awarded "Innovator of the Year" 2022' }],
-    certifications: [{ value: 'AWS Certified Developer' }],
+    achievements: [
+      { value: 'Awarded "Innovator of the Year" at Innovatech Solutions, 2022' },
+      { value: 'Speaker at "React Forward" Conference 2021' },
+    ],
+    certifications: [
+      { value: 'AWS Certified Developer - Associate' },
+      { value: 'Certified Kubernetes Application Developer (CKAD)' },
+    ],
   };
 
   return (
