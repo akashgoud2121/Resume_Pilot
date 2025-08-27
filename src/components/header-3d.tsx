@@ -22,7 +22,7 @@ const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) 
   <div className="w-full">
     <p className="text-xs text-left text-gray-400 mb-1">{skill}</p>
     <div className="h-1.5 w-full bg-gray-200 rounded-full">
-      <div className="h-1.5 bg-teal-400 rounded-full" style={{ width: percentage }}></div>
+      <div className="h-1.5 bg-blue-500 rounded-full" style={{ width: percentage }}></div>
     </div>
   </div>
 );
@@ -151,7 +151,7 @@ export function Header3d() {
                   <div className="absolute w-full h-full bg-white rounded-lg border border-gray-200 shadow-2xl p-6 text-left transition-transform duration-700 [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)]">
                     <div className="text-center border-b border-gray-200 pb-3">
                       <h3 className="text-4xl font-heading font-bold text-gray-800">Alexandria Quill</h3>
-                      <p className="text-teal-500">Software Engineer</p>
+                      <p className="text-blue-600">Software Engineer</p>
                     </div>
                     <div className="mt-4">
                       <h4 className="text-sm font-semibold text-gray-600 mb-2">SUMMARY</h4>
@@ -174,11 +174,11 @@ export function Header3d() {
                       <h3 className="text-2xl font-bold text-gray-800">Key Sections</h3>
                     </div>
                      <ul className="space-y-3 text-sm text-gray-600 mt-4">
-                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Professional Summary</li>
-                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Skills & Keywords</li>
-                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Work Experience</li>
-                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Education</li>
-                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-teal-500"/> Projects & Achievements</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-blue-500"/> Professional Summary</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-blue-500"/> Skills & Keywords</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-blue-500"/> Work Experience</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-blue-500"/> Education</li>
+                        <li className="flex items-center gap-3 text-gray-700"><CheckCircle size={16} className="text-blue-500"/> Projects & Achievements</li>
                     </ul>
                   </div>
               </div>
