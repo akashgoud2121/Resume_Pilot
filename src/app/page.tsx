@@ -582,28 +582,39 @@ export default function Home() {
               </p>
             </ScrollAnimation>
             <div className="relative mt-16 max-w-4xl mx-auto">
-              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2 hidden md:block" aria-hidden="true"></div>
+              <div className="absolute top-8 left-0 w-full h-0.5 bg-border hidden md:block"
+                style={{
+                  background: 'repeating-linear-gradient(90deg, hsl(var(--border)), hsl(var(--border)) 10px, transparent 10px, transparent 20px)'
+                }}
+                aria-hidden="true"
+              ></div>
               <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
-                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}} className="text-center flex flex-col items-center p-6 bg-card/50 rounded-lg border border-white/10">
-                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background">
-                    <span className="text-2xl font-bold text-primary">1</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">Provide Your Data</h3>
-                  <p className="mt-2 text-muted-foreground">Start from scratch or upload an existing resume. Our AI will do the heavy lifting.</p>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}} className="text-center flex flex-col items-center">
+                  <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
+                      <Upload className="h-8 w-8" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">1. Provide Your Data</h3>
+                    <p className="mt-2 text-muted-foreground">Start from scratch or upload an existing resume. Our AI will do the heavy lifting.</p>
+                  </Card>
                 </ScrollAnimation>
-                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 400}} className="text-center flex flex-col items-center p-6 bg-card/50 rounded-lg border border-white/10">
-                   <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background">
-                    <span className="text-2xl font-bold text-primary">2</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">Choose a Template</h3>
-                  <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 400}} className="text-center flex flex-col items-center">
+                  <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
+                      <LayoutTemplate className="h-8 w-8" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">2. Choose a Template</h3>
+                    <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
+                  </Card>
                 </ScrollAnimation>
-                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 600}} className="text-center flex flex-col items-center p-6 bg-card/50 rounded-lg border border-white/10">
-                   <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background">
-                    <span className="text-2xl font-bold text-primary">3</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">Download & Apply</h3>
-                  <p className="mt-2 text-muted-foreground">Instantly download your new resume in PDF format and start applying with confidence.</p>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 600}} className="text-center flex flex-col items-center">
+                   <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
+                      <Download className="h-8 w-8" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">3. Download & Apply</h3>
+                    <p className="mt-2 text-muted-foreground">Instantly download your new resume in PDF format and start applying with confidence.</p>
+                  </Card>
                 </ScrollAnimation>
               </div>
             </div>
