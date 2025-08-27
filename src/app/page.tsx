@@ -513,9 +513,6 @@ export default function Home() {
                           <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
                             {score}
                           </text>
-                          <text x="50%" y="50%" dy="1.5em" textAnchor="middle" className="fill-muted-foreground text-xs">
-                            Compatibility
-                          </text>
                         </PieChart>
                       </ChartContainer>
                     </div>
