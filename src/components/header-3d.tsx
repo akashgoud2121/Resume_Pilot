@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
 import ScrollAnimation from './ui/scroll-animation';
@@ -18,12 +18,45 @@ const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) 
 );
 
 export function Header3d() {
+  const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const headerRef = useRef<HTMLElement>(null);
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (!headerRef.current) return;
+    const rect = headerRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const x = (mouseY / height - 0.5) * -30; // Rotate on X-axis
+    const y = (mouseX / width - 0.5) * 30;  // Rotate on Y-axis
+    setRotate({ x, y });
+  };
+
+  const onMouseLeave = () => {
+    setRotate({ x: 0, y: 0 });
+  };
+  
+  useEffect(() => {
+    const currentRef = headerRef.current;
+    if (currentRef) {
+      currentRef.addEventListener('mousemove', onMouseMove);
+      currentRef.addEventListener('mouseleave', onMouseLeave);
+    }
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener('mousemove', onMouseMove);
+        currentRef.removeEventListener('mouseleave', onMouseLeave);
+      }
+    };
+  }, []);
+
   return (
     <section 
+        ref={headerRef}
         className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
     >
       <div className="absolute inset-0 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] -z-20"></div>
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-[0.02]"></div>
       
       <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
         {/* Left: Text Content */}
@@ -60,7 +93,8 @@ export function Header3d() {
           style={{ perspective: '1000px' }}
         >
             <div 
-                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-in-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)] animate-float"
+                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)] animate-float"
+                style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
             >
                 {/* Front Side */}
                 <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden]">
