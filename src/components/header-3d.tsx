@@ -20,14 +20,18 @@ export function Header3d() {
   const headerRef = useRef<HTMLElement>(null);
 
   const onMouseMove = (e: MouseEvent) => {
-    if (!headerRef.current) return;
-    const rect = headerRef.current.getBoundingClientRect();
+    const currentRef = headerRef.current;
+    if (!currentRef) return;
+    
+    const rect = currentRef.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-    const x = (mouseY / height - 0.5) * -30; // Rotate on X-axis
-    const y = (mouseX / width - 0.5) * 30;  // Rotate on Y-axis
+    
+    const x = (mouseY / height - 0.5) * -25;
+    const y = (mouseX / width - 0.5) * 25;
+    
     setRotate({ x, y });
   };
 
@@ -65,7 +69,7 @@ export function Header3d() {
               <Sparkles className="text-primary h-6 w-6" />
               <h2 className="text-5xl font-calligraphy text-primary">ResumePilot</h2>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
               Create the Perfect Resume with Ease
             </h1>
           </ScrollAnimation>
