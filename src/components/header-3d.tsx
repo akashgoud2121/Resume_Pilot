@@ -5,8 +5,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
 import ScrollAnimation from './ui/scroll-animation';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
 const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) => (
   <div className="w-full">
@@ -90,15 +88,15 @@ export function Header3d() {
         
         {/* Right: 3D Resume */}
         <div 
-          className="w-full lg:w-1/2 flex items-center justify-center group"
+          className="w-full lg:w-1/2 flex items-center justify-center"
           style={{ perspective: '1000px' }}
         >
             <div 
-                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-300 ease-out [transform-style:preserve-3d] animate-float"
+                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-300 ease-out [transform-style:preserve-3d] animate-float group"
                 style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
             >
                 {/* Front Side */}
-                <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden]">
+                <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)] transition-transform duration-700">
                   <div className="text-center border-b border-white/10 pb-3">
                     <h3 className="text-4xl font-calligraphy font-bold text-white">Alexandria Quill</h3>
                     <p className="text-teal-400">Software Engineer</p>
@@ -118,7 +116,7 @@ export function Header3d() {
                 </div>
 
                 {/* Back Side */}
-                <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left [backface-visibility:hidden] [transform:rotateY(180deg)] group-hover:[transform:rotateY(0deg)] transition-transform duration-700">
                   <div className="border-b border-white/10 pb-3">
                     <h4 className="text-lg font-bold text-white flex items-center gap-2"><Briefcase size={18}/> Experience</h4>
                   </div>
