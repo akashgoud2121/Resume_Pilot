@@ -56,10 +56,7 @@ export function Header3d() {
           style={{ perspective: '1000px' }}
         >
             <div 
-                className={cn(
-                    "relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-in-out",
-                    "animate-[float_8s_ease-in-out_infinite] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
-                )}
+                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-in-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)] animate-[float_8s_ease-in-out_infinite]"
             >
                 {/* Front Side */}
                 <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden]">
