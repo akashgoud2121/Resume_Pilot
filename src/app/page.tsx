@@ -3,6 +3,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
   ArrowRight,
@@ -27,6 +28,7 @@ import {
   GraduationCap,
   FileInput,
   PenSquare,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -42,6 +44,9 @@ import { ResumePreview } from '@/components/resume-preview';
 import { User } from 'lucide-react';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Pie, PieChart } from 'recharts';
+import { extractResumeDataAction, extractResumeTextAction } from './actions';
+import { useToast } from '@/hooks/use-toast';
+import Autoplay from "embla-carousel-autoplay"
 
 
 const testimonials = [
@@ -118,6 +123,12 @@ const ShineEffect = ({ x, y }: { x: number; y: number }) => (
 
 
 export default function Home() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
   
@@ -223,9 +234,76 @@ export default function Home() {
     { name: 'rest', value: 100 - score, fill: 'hsl(var(--primary) / 0.1)' },
   ];
 
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleStartFromScratch = () => {
+    router.push('/editor');
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const dataUri = reader.result as string;
+        try {
+          const resumeText = await extractResumeTextAction(dataUri);
+          const resumeData = await extractResumeDataAction(resumeText);
+          
+          // Navigate to editor page with the data
+          router.push('/editor', { state: { resumeData } } as any);
+
+        } catch (e: any) {
+          setError('Failed to process resume. Please try a different file.');
+          toast({
+            title: 'Processing Error',
+            description: 'We couldn\'t extract data from your resume. Please try another file or start from scratch.',
+            variant: 'destructive',
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      reader.onerror = (error) => {
+        setError('Failed to read file.');
+        toast({
+          title: 'File Read Error',
+          description: 'There was an issue reading your file. Please try again.',
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+      };
+    } catch (e: any) {
+        setError('An unexpected error occurred.');
+        toast({
+          title: 'Error',
+          description: 'An unexpected error occurred. Please try again.',
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+    }
+    // Reset file input value to allow re-uploading the same file
+    event.target.value = '';
+  };
 
   return (
     <div className="dark bg-background text-foreground min-h-screen">
+       <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+        accept=".pdf,.doc,.docx"
+        disabled={isLoading}
+      />
       <main className="overflow-x-hidden">
         {/* 3D Header Section */}
         <Header3d />
@@ -382,27 +460,29 @@ export default function Home() {
             </ScrollAnimation>
             
             <div className="relative mt-16">
-              <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-gray-900/50 via-transparent to-gray-900/50" />
+               <div className="absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-gray-900/50 to-transparent pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-gray-900/50 to-transparent pointer-events-none" />
               <Carousel 
+                 plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
                 opts={{ align: "center", loop: true }}
                 setApi={setCarouselApi}
                 className="w-full"
               >
                 <CarouselContent className="-ml-4">
                   {filteredTemplates.map((template, index) => (
-                    <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
+                     <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-[40%] group">
                       <div className="flex flex-col gap-4 items-center">
                         <div className={cn(
-                          "transition-all duration-500 ease-in-out w-[300px] flex items-center justify-center",
+                          "transition-all duration-500 ease-in-out flex items-center justify-center",
                           selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85 filter blur-sm'
                         )}>
-                           <div className="aspect-[1/1.414] w-full overflow-hidden rounded-lg shadow-2xl bg-white">
-                            <ResumePreview
+                          <div className="aspect-[1/1.414] w-[300px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                           <ResumePreview
                                 resumeData={sampleResumeData}
                                 templateId={template.id}
                                 isPreview={true}
                             />
-                          </div>
+                           </div>
                         </div>
                         <div className="text-center">
                           <h3 className="font-bold text-white">{template.name}</h3>
@@ -620,10 +700,11 @@ export default function Home() {
             </div>
              <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 700 }}>
               <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg">
-                  <FileInput className="mr-2" /> Upload Existing Resume
+                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg" onClick={handleUploadClick} disabled={isLoading}>
+                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileInput className="mr-2" />}
+                  {isLoading ? 'Processing...' : 'Upload Existing Resume'}
                 </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handleStartFromScratch} disabled={isLoading}>
                   <PenSquare className="mr-2" /> Start from Scratch
                 </Button>
               </div>
