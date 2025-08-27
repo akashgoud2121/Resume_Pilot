@@ -35,6 +35,8 @@ import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import ScrollAnimation from '@/components/ui/scroll-animation';
 import { Header3d } from '@/components/header-3d';
+import type { ResumeData } from '@/lib/types';
+import { ResumePreview } from '@/components/resume-preview';
 
 
 const testimonials = [
@@ -102,6 +104,45 @@ export default function Home() {
   const filteredTemplates = templates.filter(
     (template) => filter === 'All' || template.category === filter
   );
+
+  const sampleResumeData: ResumeData = {
+    name: 'Alexandria Quill',
+    email: 'alex.quill@email.com',
+    mobileNumber: '555-123-4567',
+    githubLink: 'https://github.com/alexquill',
+    linkedinLink: 'https://linkedin.com/in/alexquill',
+    professionalSummary: 'Innovative Software Engineer with 5+ years of experience in developing and deploying scalable web applications. Passionate about creating elegant, efficient code and working in collaborative, agile environments to solve complex problems.',
+    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD'],
+    education: [
+      {
+        institution: 'University of Technology',
+        degree: 'B.S. in Computer Science',
+        dates: '2014 - 2018',
+      },
+    ],
+    experience: [
+      {
+        title: 'Senior Software Engineer',
+        company: 'Innovatech Solutions',
+        dates: '2020 - Present',
+        description: 'Lead developer for the flagship SaaS product. Architected and implemented a new microservices-based backend, resulting in a 40% performance increase. Mentored junior developers and championed best practices in code reviews.',
+      },
+      {
+        title: 'Software Engineer',
+        company: 'CodeCrafters Inc.',
+        dates: '2018 - 2020',
+        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js. Collaborated with designers to create a seamless user experience.',
+      },
+    ],
+    projects: [
+      {
+        name: 'Open Source Contributor',
+        description: 'Active contributor to a popular open-source UI library, focusing on accessibility improvements.',
+      },
+    ],
+    achievements: [{ value: 'Awarded "Innovator of the Year" 2022' }],
+    certifications: [{ value: 'AWS Certified Developer' }],
+  };
 
   return (
     <div className="dark bg-background text-foreground min-h-screen">
@@ -264,14 +305,7 @@ export default function Home() {
               {filteredTemplates.map((template, index) => (
                  <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: index * 100 }} key={template.id}>
                     <div className="group relative overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
-                      <Image
-                        src={template.image}
-                        alt={template.name}
-                        width={400}
-                        height={565}
-                        className="w-full object-cover object-top transition-transform duration-300 group-hover:opacity-80"
-                        data-ai-hint="resume professional"
-                      />
+                       <ResumePreview resumeData={sampleResumeData} templateId={template.id} isPreview />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 p-4">
                         <h3 className="font-bold text-white">{template.name}</h3>
