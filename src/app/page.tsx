@@ -26,6 +26,8 @@ import { templates } from '@/lib/templates';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import ScrollAnimation from '@/components/ui/scroll-animation';
+import { Header3d } from '@/components/header-3d';
+
 
 const testimonials = [
   {
@@ -85,34 +87,8 @@ export default function Home() {
   return (
     <div className="dark bg-background text-foreground min-h-screen">
       <main className="overflow-x-hidden">
-        {/* Hero Section */}
-        <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center px-4 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 animate-gradient-xy -z-10"></div>
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5 -z-10"></div>
-          
-          <div className="relative z-10 w-full">
-            <ScrollAnimation animation="animate-fadeInUp">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white">
-                ResumePilot
-              </h1>
-            </ScrollAnimation>
-            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
-              <p className="mt-4 md:mt-6 text-lg md:text-xl max-w-2xl mx-auto text-muted-foreground">
-                Craft your perfect resume with AI-powered scoring and professional templates.
-              </p>
-            </ScrollAnimation>
-            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 600 }}>
-              <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
-                  <Upload className="mr-2" /> Upload Resume
-                </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
-                  Enter Manually <ArrowRight className="ml-2" />
-                </Button>
-              </div>
-            </ScrollAnimation>
-          </div>
-        </section>
+        {/* 3D Header Section */}
+        <Header3d />
 
         {/* How It Works Section */}
         <section id="how-it-works" className="py-20 md:py-28 px-4 bg-gray-900/50">
