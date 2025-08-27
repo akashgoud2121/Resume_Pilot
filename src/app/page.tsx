@@ -263,8 +263,11 @@ export default function Home() {
           const resumeText = await extractResumeTextAction(dataUri);
           const resumeData = await extractResumeDataAction(resumeText);
           
+          sessionStorage.setItem('resumeData', JSON.stringify(resumeData));
+          sessionStorage.setItem('resumeText', resumeText);
+
           // Navigate to editor page with the data
-          history.pushState({ resumeData }, '', '/editor');
+          history.pushState({ resumeData, resumeText }, '', '/editor');
           router.push('/editor');
 
         } catch (e: any) {
@@ -476,7 +479,7 @@ export default function Home() {
               >
                 <CarouselContent className="-ml-4">
                   {filteredTemplates.map((template, index) => (
-                     <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-[40%] group">
+                     <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
                       <div className="flex flex-col gap-4 items-center">
                         <div className={cn(
                           "transition-all duration-500 ease-in-out flex items-center justify-center",
