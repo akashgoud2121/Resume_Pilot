@@ -105,7 +105,7 @@ export default function Home() {
                 </ScrollAnimation>
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                     <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}}>
-                        <Card className="bg-card/50 border-white/10 h-full">
+                        <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-primary/50">
                             <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
                                     <Sparkles className="h-8 w-8" />
@@ -116,7 +116,7 @@ export default function Home() {
                         </Card>
                     </ScrollAnimation>
                     <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 400}}>
-                        <Card className="bg-card/50 border-white/10 h-full">
+                        <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-primary/50">
                              <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
                                     <LayoutTemplate className="h-8 w-8" />
@@ -127,7 +127,7 @@ export default function Home() {
                         </Card>
                     </ScrollAnimation>
                     <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 600}}>
-                         <Card className="bg-card/50 border-white/10 h-full">
+                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-primary/50">
                             <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
                                     <Award className="h-8 w-8" />
