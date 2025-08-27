@@ -88,7 +88,7 @@ export function Header3d() {
         
         <div className="text-center mb-12">
           <div className="initial-hidden animate-dropIn">
-            <h1 className="text-6xl md:text-7xl font-calligraphy tracking-tight text-white inline-flex items-center gap-3">
+            <h1 className="text-6xl md:text-7xl font-heading font-bold tracking-tight text-white inline-flex items-center gap-3">
               ResumePilot
             </h1>
           </div>
@@ -150,7 +150,7 @@ export function Header3d() {
                   {/* Front Side */}
                   <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left transition-transform duration-700 [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)]">
                     <div className="text-center border-b border-white/10 pb-3">
-                      <h3 className="text-4xl font-calligraphy font-bold text-white">Alexandria Quill</h3>
+                      <h3 className="text-4xl font-heading font-bold text-white">Alexandria Quill</h3>
                       <p className="text-teal-400">Software Engineer</p>
                     </div>
                     <div className="mt-4">
