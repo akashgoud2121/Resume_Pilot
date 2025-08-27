@@ -26,7 +26,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function EditorPage() {
-  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [template, setTemplate] = useState('default');
   const [isPrinting, setIsPrinting] = useState(false);
   const router = useRouter();
@@ -41,18 +40,19 @@ export default function EditorPage() {
   const watchedData = form.watch();
 
   useEffect(() => {
-    if (watchedData) {
-        const validatedData = resumeSchema.safeParse(watchedData);
+    // This effect now only handles sessionStorage persistence
+    const subscription = form.watch((value) => {
+        const validatedData = resumeSchema.safeParse(value);
         if (validatedData.success) {
-            setResumeData(validatedData.data);
             try {
-              sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
+                sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
             } catch (e) {
                 console.error("Could not write to sessionStorage", e);
             }
         }
-    }
-  }, [watchedData]);
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
 
   useLayoutEffect(() => {
@@ -82,8 +82,12 @@ export default function EditorPage() {
     }
 
     if(initialData) {
-        form.reset(initialData);
-        setResumeData(initialData);
+        const validatedData = resumeSchema.safeParse(initialData);
+        if (validatedData.success) {
+          form.reset(validatedData.data);
+        } else {
+          form.reset(DUMMY_RESUME_DATA);
+        }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -114,7 +118,9 @@ export default function EditorPage() {
       const pdfHeight = pdf.internal.pageSize.getHeight();
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${resumeData?.name?.replace(' ', '_') ?? 'resume'}_${template}.pdf`);
+      const validatedData = resumeSchema.safeParse(watchedData);
+      const name = validatedData.success ? validatedData.data.name : 'resume';
+      pdf.save(`${name.replace(' ', '_') ?? 'resume'}_${template}.pdf`);
 
     } catch (error) {
       console.error("Failed to generate PDF:", error);
@@ -128,6 +134,8 @@ export default function EditorPage() {
     }
   };
 
+  const validatedResumeData = resumeSchema.safeParse(watchedData);
+
   return (
     <div className="flex h-screen bg-muted/40">
       {/* Left Panel: Editor Form */}
@@ -139,7 +147,7 @@ export default function EditorPage() {
             <h1 className="text-xl font-bold">Resume Editor</h1>
         </div>
         <ScrollArea className="flex-1">
-            {resumeData ? (
+            {watchedData ? (
                 <ResumeEditorForm form={form} />
             ) : (
                  <div className="flex justify-center items-center h-full">
@@ -177,8 +185,8 @@ export default function EditorPage() {
         </div>
         <ScrollArea className="flex-1 p-8">
             <div className="flex justify-center">
-                {resumeData ? (
-                    <ResumePreview resumeData={resumeData} templateId={template} />
+                {validatedResumeData.success ? (
+                    <ResumePreview resumeData={validatedResumeData.data} templateId={template} />
                 ) : (
                     <div className="w-[210mm] h-[297mm] bg-white shadow-lg flex justify-center items-center">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
