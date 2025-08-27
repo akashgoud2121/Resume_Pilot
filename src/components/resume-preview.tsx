@@ -49,19 +49,14 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, class
       className={cn(
         "bg-white shadow-lg",
         isPreview 
-          ? "origin-top-left"
+          ? "[&>div]:text-[4.5px] w-full h-full"
           : "shadow-lg",
         className
       )} 
-      style={isPreview ? { 
-        width: '210mm', 
-        height: '297mm',
-        transform: 'scale(0.333)',
-        transformOrigin: 'top left'
-      } : {
+      style={!isPreview ? {
         width: '210mm', 
         minHeight: '297mm',
-      }}
+      } : {}}
     >
       {renderTemplate()}
     </div>
