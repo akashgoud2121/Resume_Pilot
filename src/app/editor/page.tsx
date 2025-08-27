@@ -32,7 +32,11 @@ export default function EditorPage() {
   
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    const templateId = searchParams.get('template');
+    if (templateId && templates.some(t => t.id === templateId)) {
+        setSelectedTemplate(templateId);
+    }
+  }, [searchParams]);
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
@@ -137,7 +141,7 @@ export default function EditorPage() {
         <Sidebar collapsible="icon">
           <SidebarHeader>
              <div className="flex items-center justify-between">
-                <Button variant="ghost" size="icon" onClick={() => router.push('/')}>
+                <Button variant="ghost" size="icon" onClick={() => router.back()}>
                     <ArrowLeft />
                 </Button>
                 <h2 className="font-semibold text-lg">Editor</h2>

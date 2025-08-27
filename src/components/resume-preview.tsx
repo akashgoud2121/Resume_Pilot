@@ -17,10 +17,11 @@ interface ResumePreviewProps {
   resumeData: ResumeData;
   templateId: string;
   isPreview?: boolean;
+  isGallery?: boolean;
   className?: string;
 }
 
-export function ResumePreview({ resumeData, templateId, isPreview = false, className }: ResumePreviewProps) {
+export function ResumePreview({ resumeData, templateId, isPreview = false, isGallery = false, className }: ResumePreviewProps) {
 
   const renderTemplate = () => {
     switch (templateId) {
@@ -46,6 +47,14 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, class
   if (isPreview) {
     return (
       <div className="w-[210mm] h-[297mm] origin-top-left bg-white text-black transform scale-[0.354]">
+        {renderTemplate()}
+      </div>
+    );
+  }
+
+  if (isGallery) {
+     return (
+      <div className="w-full h-full bg-white text-black">
         {renderTemplate()}
       </div>
     );

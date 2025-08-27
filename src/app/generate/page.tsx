@@ -61,8 +61,8 @@ export default function GeneratePage() {
     try {
       const resumeData: ResumeData = await extractResumeDataAction(resumeText);
       sessionStorage.setItem('resumeData', JSON.stringify(resumeData));
-      history.pushState({ resumeData }, '', '/editor');
-      router.push('/editor');
+      history.pushState({ resumeData }, '', '/preview-templates');
+      router.push('/preview-templates');
     } catch (e: any) {
       console.error("Failed to generate resume data:", e);
       toast({
