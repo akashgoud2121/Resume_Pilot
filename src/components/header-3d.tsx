@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
+import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles, CheckCircle } from 'lucide-react';
 
 const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) => (
   <div className="w-full">
@@ -28,8 +28,8 @@ export function Header3d() {
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     
-    const x = (mouseY / height - 0.5) * -25;
-    const y = (mouseX / width - 0.5) * 25;
+    const x = (mouseY / height - 0.5) * -20; // Reduced intensity
+    const y = (mouseX / width - 0.5) * 20;  // Reduced intensity
     
     setRotate({ x, y });
   };
@@ -60,17 +60,17 @@ export function Header3d() {
     >
       <div className="absolute inset-0 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] -z-20"></div>
       
-      <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
+      <div className="relative z-10 w-full flex flex-col lg:flex-row items-center justify-center lg:justify-between max-w-7xl mx-auto py-16">
         {/* Left: Text Content */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 lg:mt-0">
+        <div className="w-full lg:w-1/3 text-center lg:text-left">
           <div className="initial-hidden animate-dropIn">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white inline-flex items-center gap-3">
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white inline-flex items-center gap-3 bg-gradient-to-r from-blue-400 to-teal-300 text-transparent bg-clip-text" style={{filter: 'drop-shadow(0 2px 8px rgba(119, 185, 255, 0.5))'}}>
               <Sparkles className="text-primary h-10 w-10" />
               ResumePilot
             </h1>
           </div>
           <div className="initial-hidden animate-fadeInUp animation-delay-300">
-            <h2 className="mt-4 text-2xl md:text-3xl font-medium tracking-tight text-white/80">
+            <h2 className="mt-4 text-xl md:text-2xl font-medium tracking-tight text-white/80">
               Create the Perfect Resume with Ease
             </h2>
           </div>
@@ -91,9 +91,9 @@ export function Header3d() {
           </div>
         </div>
         
-        {/* Right: 3D Resume */}
+        {/* Middle: 3D Resume */}
         <div 
-          className="w-full lg:w-1/2 flex items-center justify-center"
+          className="w-full lg:w-1/3 flex items-center justify-center my-12 lg:my-0"
           style={{ perspective: '1000px' }}
         >
             <div 
@@ -151,6 +151,38 @@ export function Header3d() {
                 </div>
             </div>
         </div>
+
+        {/* Right: Feature List */}
+        <div className="w-full lg:w-1/3 hidden lg:flex flex-col items-start justify-center gap-4 text-left">
+          <div className="initial-hidden animate-fadeInUp animation-delay-400 w-full">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-white/5">
+              <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-white">AI-Powered Parsing</h3>
+                <p className="text-muted-foreground text-sm">Instantly extract data from any resume format.</p>
+              </div>
+            </div>
+          </div>
+          <div className="initial-hidden animate-fadeInUp animation-delay-600 w-full">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-white/5">
+              <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-white">ATS-Friendly Templates</h3>
+                <p className="text-muted-foreground text-sm">Designed to get past automated screeners.</p>
+              </div>
+            </div>
+          </div>
+          <div className="initial-hidden animate-fadeInUp animation-delay-[800ms] w-full">
+             <div className="flex items-start gap-4 p-4 rounded-lg bg-white/5">
+              <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-semibold text-white">Instant Download</h3>
+                <p className="text-muted-foreground text-sm">Get your new resume in PDF format in seconds.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   );
