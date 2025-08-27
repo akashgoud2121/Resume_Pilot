@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, ArrowRight, Briefcase, GraduationCap, Award } from 'lucide-react';
+import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
 import ScrollAnimation from './ui/scroll-animation';
 import { cn } from '@/lib/utils';
 
@@ -28,6 +28,10 @@ export function Header3d() {
         {/* Left: Text Content */}
         <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 lg:mt-0">
           <ScrollAnimation animation="animate-fadeInUp">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <Sparkles className="text-primary h-6 w-6" />
+              <h2 className="text-3xl font-calligraphy text-primary">ResumePilot</h2>
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
               Create the Perfect Resume with Ease
             </h1>
