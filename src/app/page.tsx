@@ -38,6 +38,8 @@ import { Header3d } from '@/components/header-3d';
 import type { ResumeData } from '@/lib/types';
 import { ResumePreview } from '@/components/resume-preview';
 import { User } from 'lucide-react';
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Pie, PieChart } from 'recharts';
 
 
 const testimonials = [
@@ -95,6 +97,21 @@ const ParsedDataItem = ({ label, value, icon }: { label: string; value: string; 
     </p>
     <p className="text-sm text-foreground mt-0.5">{value}</p>
   </div>
+);
+
+const ShineEffect = ({ x, y }: { x: number; y: number }) => (
+  <div
+    className="pointer-events-none absolute inset-0 z-20 rounded-xl"
+    style={{
+      background: `radial-gradient(
+        200px circle at ${x}px ${y}px,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      )`,
+      opacity: x > 0 && y > 0 ? 1 : 0,
+      transition: 'opacity 0.2s ease-out',
+    }}
+  />
 );
 
 
@@ -177,6 +194,32 @@ export default function Home() {
       carouselApi.off('select', onSelect);
     };
   }, [carouselApi, onSelect]);
+
+  const [mousePos, setMousePos] = useState({ x: -1, y: -1 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+  const handleMouseLeave = () => {
+    setMousePos({ x: -1, y: -1 });
+  };
+
+  const [score, setScore] = useState(0);
+  useEffect(() => {
+    const timer = setTimeout(() => setScore(96), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const chartConfig = {
+    score: { label: 'Score', color: 'hsl(var(--primary))' },
+    rest: { label: 'Rest' },
+  } satisfies ChartConfig;
+
+  const chartData = [
+    { name: 'score', value: score, fill: 'var(--color-score)' },
+    { name: 'rest', value: 100 - score, fill: 'hsl(var(--primary) / 0.1)' },
+  ];
 
 
   return (
@@ -379,73 +422,145 @@ export default function Home() {
         <section id="instant-download" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
-                <div className="pr-8">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
-                            <Download className="h-6 w-6" />
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Instant Download</h2>
-                    </div>
-                  <p className="mt-4 text-muted-foreground">
-                    Your next career move is just a click away. Once you've perfected your resume, download it instantly as a high-quality, universally compatible PDF file. No watermarks, no delays. Just a professional, job-ready resume in your hands, ready to be sent to your dream company.
-                  </p>
-                  <Button size="lg" className="mt-8 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
-                     Create Your Resume Now <ArrowRight className="ml-2" />
-                  </Button>
+              <div className="pr-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                    <Download className="h-6 w-6" />
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">Instant Download</h2>
                 </div>
+                <p className="mt-4 text-muted-foreground">
+                  Your next career move is just a click away. Once you've perfected your resume, download it instantly as a high-quality, universally compatible PDF file.
+                </p>
+                <ul className="mt-6 space-y-4">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                    <p className="text-muted-foreground">Instant PDF download, ready for application.</p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                    <p className="text-muted-foreground">High-quality, professional-grade output.</p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                    <p className="text-muted-foreground">No watermarks. Ever.</p>
+                  </li>
+                </ul>
+              </div>
             </ScrollAnimation>
             <ScrollAnimation animation="animate-slideInFromRight">
-               <Image
-                    src="https://picsum.photos/seed/download/600/400"
-                    alt="Person downloading a resume"
-                    width={600}
-                    height={400}
-                    className="rounded-xl shadow-2xl"
-                    data-ai-hint="success document"
-                  />
+              <div
+                className="relative w-full max-w-md mx-auto group"
+                style={{ perspective: '1000px' }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="absolute w-full h-full bg-white/10 rounded-xl -bottom-4 -right-4 transform-gpu rotate-6 transition-transform group-hover:-translate-x-2 group-hover:-translate-y-2 group-hover:rotate-3" />
+                <div className="absolute w-full h-full bg-white/10 rounded-xl -bottom-2 -right-2 transform-gpu rotate-3 transition-transform group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:rotate-1" />
+
+                <div className="relative w-full h-full rounded-xl bg-gradient-to-br from-card/70 to-card/90 border border-white/10 backdrop-blur-sm p-8 text-center shadow-2xl transition-transform group-hover:scale-105">
+                  <ShineEffect x={mousePos.x} y={mousePos.y} />
+                  <div className="relative z-10 flex flex-col items-center justify-center h-full">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                      <FileText className="h-8 w-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">Ready to Go?</h3>
+                    <p className="text-muted-foreground mt-2 mb-6">Your professionally crafted resume is just one click away.</p>
+                    <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg shadow-primary/20">
+                      Create Your Resume Now <ArrowRight className="ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </ScrollAnimation>
           </div>
         </section>
 
-        {/* ATS Score Section */}
+        {/* Beat the Bots Section */}
         <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
-               <Image
-                    src="https://picsum.photos/seed/ats/600/450"
-                    alt="ATS Score Dashboard"
-                    width={600}
-                    height={450}
-                    className="rounded-xl shadow-2xl"
-                    data-ai-hint="dashboard chart"
-                  />
+              <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-primary/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary">
+                      <CheckCircle className="h-5 w-5" />
+                    </div>
+                    <span>ATS Compatibility Check</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-6 items-center">
+                  <div className="col-span-1">
+                    <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
+                      <PieChart>
+                        <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
+                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={90 + (score / 100) * 360} cornerRadius={5} paddingAngle={-10}>
+                          <defs>
+                            <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8} />
+                              <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2} />
+                            </linearGradient>
+                          </defs>
+                          <cell key="score" fill="url(#scoreGradient)" stroke="var(--color-score)" />
+                          <cell key="rest" fill="transparent" stroke="transparent" />
+                        </Pie>
+                        <Pie data={[{ value: 100 }]} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={450} stroke="hsla(var(--primary) / 0.1)" strokeWidth={2} fill="transparent" />
+                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
+                          {score}
+                        </text>
+                        <text x="50%" y="50%" dy="1.5em" textAnchor="middle" className="fill-muted-foreground text-xs">
+                          Compatibility
+                        </text>
+                      </PieChart>
+                    </ChartContainer>
+                  </div>
+                  <div className="col-span-1 space-y-3">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-muted-foreground">Keyword Optimization</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-muted-foreground">Standard Formatting</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-muted-foreground">Parsable Layout</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-muted-foreground">Clear Section Headers</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </ScrollAnimation>
             <ScrollAnimation animation="animate-slideInFromRight">
-                <div className="pl-8">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
-                            <Gauge className="h-6 w-6" />
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Optimize with an ATS Score</h2>
-                    </div>
-                  <p className="mt-4 text-muted-foreground">
-                    Over 90% of large companies use Applicant Tracking Systems (ATS) to screen resumes. Our AI analyzes your resume against common ATS criteria, providing a real-time score and actionable feedback. Ensure your resume gets past the bots and into human hands.
-                  </p>
-                  <ul className="mt-6 space-y-4">
-                    <li className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-muted-foreground">Get a score from 0-100 based on keywords, formatting, and structure.</p>
-                    </li>
-                    <li className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-muted-foreground">Receive specific, AI-driven suggestions for improvement.</p>
-                    </li>
-                     <li className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-muted-foreground">Maximize your chances of landing an interview.</p>
-                    </li>
-                  </ul>
+              <div className="pl-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                    <CheckCircle className="h-6 w-6" />
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">Beat the Bots with ATS-Friendly Design</h2>
                 </div>
+                <p className="mt-4 text-muted-foreground">
+                  Over 90% of large companies use Applicant Tracking Systems (ATS) to screen resumes. Our templates are designed from the ground up with the latest ATS guidelines in mind, ensuring your resume gets past the automated filters and into human hands.
+                </p>
+                <ul className="mt-6 space-y-4">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                    <p className="text-muted-foreground">Optimized for keyword matching and content parsing.</p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                    <p className="text-muted-foreground">Built with clean, standard formatting recruiters prefer.</p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                    <p className="text-muted-foreground">Increases your visibility and chances of landing an interview.</p>
+                  </li>
+                </ul>
+              </div>
             </ScrollAnimation>
           </div>
         </section>
