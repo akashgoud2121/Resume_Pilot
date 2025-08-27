@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useState, useLayoutEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { ResumeData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Download, ArrowLeft, Loader2, Palette, Printer } from 'lucide-react';
+import { Download, ArrowLeft, Loader2, Palette } from 'lucide-react';
 import { ResumePreview } from '@/components/resume-preview';
 import { ResumeEditorForm } from '@/components/resume-editor-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -32,12 +33,11 @@ export default function EditorPage() {
   useLayoutEffect(() => {
     try {
       const stateFromHistory = history.state as { resumeData?: ResumeData };
-      if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 2) { // More than name/email
+      if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 2) {
         setResumeData(stateFromHistory.resumeData);
         return;
       }
 
-      // Fallback for direct navigation or empty state
       const fromScratch = searchParams.get('new') === 'true';
       if(fromScratch) {
         setResumeData(DUMMY_RESUME_DATA);
@@ -48,14 +48,15 @@ export default function EditorPage() {
       }
     } catch (error) {
       console.error("Failed to load resume data:", error);
-      setResumeData(DUMMY_RESUME_DATA); // Load dummy data on error
+      setResumeData(DUMMY_RESUME_DATA);
       toast({
         title: "Error Loading Data",
         description: "Could not load your resume data. Starting with a sample.",
         variant: "destructive",
       });
     }
-  }, [searchParams, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   const handleFormChange = useCallback((data: ResumeData) => {
     setResumeData(data);
@@ -72,7 +73,7 @@ export default function EditorPage() {
       if (!element) return;
       
       const canvas = await html2canvas(element, {
-        scale: 4, // Higher scale for better quality
+        scale: 4,
         useCORS: true,
         logging: false,
       });
