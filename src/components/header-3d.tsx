@@ -20,7 +20,6 @@ export function Header3d() {
   return (
     <section 
         className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
-        style={{ perspective: '1200px' }}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 animate-gradient-xy bg-[200%_auto]"></div>
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5"></div>
@@ -56,7 +55,7 @@ export function Header3d() {
           style={{ perspective: '1000px' }}
         >
             <div 
-                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-in-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)] animate-[float_8s_ease-in-out_infinite]"
+                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-in-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)] animate-float"
             >
                 {/* Front Side */}
                 <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden]">
@@ -76,7 +75,6 @@ export function Header3d() {
                       <SkillBar skill="UI/UX Design" percentage="75%" />
                     </div>
                   </div>
-                  <div className="absolute bottom-4 right-4 text-xs text-white/30">Hover to flip</div>
                 </div>
 
                 {/* Back Side */}

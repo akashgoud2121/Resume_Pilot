@@ -132,6 +132,10 @@
   .animate-gradient-xy {
     animation: gradient-xy 15s ease infinite;
   }
+
+  .animate-float {
+    animation: float 8s ease-in-out infinite;
+  }
   
   /* Animation delays */
   .animation-delay-200 { animation-delay: 200ms; }
