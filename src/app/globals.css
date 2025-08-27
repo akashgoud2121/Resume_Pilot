@@ -111,6 +111,17 @@
       transform: translateY(-20px) rotateY(5deg);
     }
   }
+  
+  @keyframes dropIn {
+    from {
+      opacity: 0;
+      transform: translateY(-50px) scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 
   /* Animation classes to be applied when element is visible */
   .animate-fadeInUp {
@@ -135,6 +146,10 @@
 
   .animate-float {
     animation: float 8s ease-in-out infinite;
+  }
+
+  .animate-dropIn {
+    animation: dropIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
   
   /* Animation delays */

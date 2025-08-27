@@ -4,7 +4,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
-import ScrollAnimation from './ui/scroll-animation';
 
 const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) => (
   <div className="w-full">
@@ -64,21 +63,23 @@ export function Header3d() {
       <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
         {/* Left: Text Content */}
         <div className="w-full lg:w-1/2 text-center lg:text-left mt-8 lg:mt-0">
-          <ScrollAnimation animation="animate-fadeInUp">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <Sparkles className="text-primary h-6 w-6" />
-              <h2 className="text-5xl font-calligraphy text-primary">ResumePilot</h2>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
-              Create the Perfect Resume with Ease
+          <div className="initial-hidden animate-dropIn">
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white inline-flex items-center gap-3">
+              <Sparkles className="text-primary h-10 w-10" />
+              ResumePilot
             </h1>
-          </ScrollAnimation>
-          <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+          </div>
+          <div className="initial-hidden animate-fadeInUp animation-delay-300">
+            <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-white/90">
+              Create the Perfect Resume with Ease
+            </h2>
+          </div>
+          <div className="initial-hidden animate-fadeInUp animation-delay-500">
             <p className="mt-4 md:mt-6 text-lg md:text-xl max-w-2xl text-muted-foreground mx-auto lg:mx-0">
               Choose from 8 professional templates, upload your resume, or enter your details manually.
             </p>
-          </ScrollAnimation>
-          <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 600 }}>
+          </div>
+          <div className="initial-hidden animate-fadeInUp animation-delay-700">
             <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
               <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
                 <Upload className="mr-2" /> Upload Resume
@@ -87,7 +88,7 @@ export function Header3d() {
                 Enter Manually <ArrowRight className="ml-2" />
               </Button>
             </div>
-          </ScrollAnimation>
+          </div>
         </div>
         
         {/* Right: 3D Resume */}
