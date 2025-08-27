@@ -1,11 +1,9 @@
 
 'use client';
 
-import React, { useEffect } from 'react';
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
+import { useFieldArray, FormProvider, type UseFormReturn } from 'react-hook-form';
 import type { ResumeData } from '@/lib/types';
-import { resumeSchema } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,16 +12,10 @@ import { Trash2, PlusCircle } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 interface ResumeEditorFormProps {
-  initialData: ResumeData;
-  onFormChange: (data: ResumeData) => void;
+  form: UseFormReturn<ResumeData>;
 }
 
-export function ResumeEditorForm({ initialData, onFormChange }: ResumeEditorFormProps) {
-  const form = useForm<ResumeData>({
-    resolver: zodResolver(resumeSchema),
-    defaultValues: initialData,
-  });
-
+export function ResumeEditorForm({ form }: ResumeEditorFormProps) {
   const { fields: experienceFields, append: appendExperience, remove: removeExperience } = useFieldArray({
     control: form.control,
     name: 'experience',
@@ -54,16 +46,6 @@ export function ResumeEditorForm({ initialData, onFormChange }: ResumeEditorForm
     name: 'certifications',
   });
 
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      onFormChange(value as ResumeData);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, onFormChange]);
-  
-  useEffect(() => {
-    form.reset(initialData);
-  }, [initialData, form]);
 
   return (
     <FormProvider {...form}>

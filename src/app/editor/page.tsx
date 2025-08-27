@@ -1,9 +1,10 @@
 
 'use client';
 
-import { useState, useLayoutEffect, useCallback } from 'react';
+import { useState, useLayoutEffect, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { ResumeData } from '@/lib/types';
+import { resumeSchema } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Download, ArrowLeft, Loader2, Palette } from 'lucide-react';
 import { ResumePreview } from '@/components/resume-preview';
@@ -21,6 +22,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function EditorPage() {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
@@ -30,39 +33,61 @@ export default function EditorPage() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
 
+  const form = useForm<ResumeData>({
+    resolver: zodResolver(resumeSchema),
+    defaultValues: DUMMY_RESUME_DATA,
+  });
+
+  const watchedData = form.watch();
+
+  useEffect(() => {
+    if (watchedData) {
+        const validatedData = resumeSchema.safeParse(watchedData);
+        if (validatedData.success) {
+            setResumeData(validatedData.data);
+            try {
+              sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
+            } catch (e) {
+                console.error("Could not write to sessionStorage", e);
+            }
+        }
+    }
+  }, [watchedData]);
+
+
   useLayoutEffect(() => {
+    let initialData: ResumeData | null = null;
     try {
       const stateFromHistory = history.state as { resumeData?: ResumeData };
       if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 2) {
-        setResumeData(stateFromHistory.resumeData);
-        return;
-      }
-
-      const fromScratch = searchParams.get('new') === 'true';
-      if(fromScratch) {
-        setResumeData(DUMMY_RESUME_DATA);
-      } else if (sessionStorage.getItem('resumeData')) {
-        setResumeData(JSON.parse(sessionStorage.getItem('resumeData')!));
+        initialData = stateFromHistory.resumeData;
       } else {
-        setResumeData(DUMMY_RESUME_DATA);
+        const fromScratch = searchParams.get('new') === 'true';
+        if(fromScratch) {
+          initialData = DUMMY_RESUME_DATA;
+        } else if (sessionStorage.getItem('resumeData')) {
+          initialData = JSON.parse(sessionStorage.getItem('resumeData')!);
+        } else {
+          initialData = DUMMY_RESUME_DATA;
+        }
       }
     } catch (error) {
       console.error("Failed to load resume data:", error);
-      setResumeData(DUMMY_RESUME_DATA);
+      initialData = DUMMY_RESUME_DATA;
       toast({
         title: "Error Loading Data",
         description: "Could not load your resume data. Starting with a sample.",
         variant: "destructive",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    if(initialData) {
+        form.reset(initialData);
+        setResumeData(initialData);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
-  const handleFormChange = useCallback((data: ResumeData) => {
-    setResumeData(data);
-    sessionStorage.setItem('resumeData', JSON.stringify(data));
-  }, []);
-
   const handleDownloadPdf = async () => {
     setIsPrinting(true);
     try {
@@ -115,10 +140,7 @@ export default function EditorPage() {
         </div>
         <ScrollArea className="flex-1">
             {resumeData ? (
-                <ResumeEditorForm
-                    initialData={resumeData}
-                    onFormChange={handleFormChange}
-                />
+                <ResumeEditorForm form={form} />
             ) : (
                  <div className="flex justify-center items-center h-full">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
