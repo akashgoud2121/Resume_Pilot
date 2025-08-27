@@ -332,7 +332,6 @@ export default function Home() {
                                 resumeData={sampleResumeData}
                                 templateId={template.id}
                                 isPreview={true}
-                                className="transform scale-[0.35]"
                             />
                           </div>
                       </Card>

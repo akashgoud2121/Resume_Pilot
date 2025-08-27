@@ -47,7 +47,7 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, class
     return (
       <div 
         className={cn(
-          "bg-white shadow-lg w-[210mm] h-[297mm]",
+          "bg-white w-[210mm] min-h-[297mm] text-[5px]",
           className
         )}
       >
