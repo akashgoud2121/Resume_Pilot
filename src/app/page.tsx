@@ -28,6 +28,7 @@ import {
   FileInput,
   PenSquare,
   Loader2,
+  TestTube,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -43,9 +44,10 @@ import { ResumePreview } from '@/components/resume-preview';
 import { User } from 'lucide-react';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Pie, PieChart } from 'recharts';
-import { extractResumeDataAction, extractResumeTextAction } from './actions';
+import { extractResumeTextAction } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import Autoplay from "embla-carousel-autoplay"
+import { DETAILED_DUMMY_RESUME_DATA, DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 
 
 const testimonials = [
@@ -135,66 +137,7 @@ export default function Home() {
     (template) => filter === 'All' || template.category === filter
   );
 
-  const sampleResumeData: ResumeData = {
-    name: 'Alexandria Quill',
-    email: 'alex.quill@email.com',
-    mobileNumber: '555-123-4567',
-    githubLink: 'https://github.com/alexquill',
-    linkedinLink: 'https://linkedin.com/in/alexquill',
-    professionalSummary: 'Innovative and results-driven Software Engineer with over 5 years of experience in designing, developing, and deploying scalable and efficient web applications. Proficient in full-stack development with a strong emphasis on front-end technologies and user experience. Passionate about creating elegant, maintainable code and working in collaborative, agile environments to solve complex problems and deliver high-quality software. Proven ability in leading projects, mentoring junior developers, and driving technical excellence to achieve business goals.',
-    coreSkills: [{id: '1', value: 'React'}, {id: '2', value: 'Node.js'}, {id: '3', value: 'TypeScript'}, {id: '4', value: 'PostgreSQL'}, {id: '5', value: 'Docker'}, {id: '6', value: 'AWS'}, {id: '7', value: 'TDD'}, {id: '8', value: 'CI/CD'}, {id: '9', value: 'GraphQL'}, {id: '10', value: 'Kubernetes'}, {id: '11', value: 'Next.js'}, {id: '12', value: 'System Design'}, {id: '13', value: 'Microservices'}, {id: '14', value: 'Agile Methodologies'}],
-    education: [
-      {
-        id: '1',
-        institution: 'University of Technology',
-        degree: 'B.S. in Computer Science',
-        dates: '2014 - 2018',
-      },
-    ],
-    experience: [
-      {
-        id: '1',
-        title: 'Senior Software Engineer',
-        company: 'Innovatech Solutions',
-        dates: '2020 - Present',
-        description: 'Lead developer for the flagship SaaS product, responsible for the architecture, implementation, and maintenance of new features.\n- Architected and implemented a new microservices-based backend using Node.js and Docker, resulting in a 40% performance increase and improved scalability to handle a 200% growth in user traffic.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices through code reviews, pair programming, and weekly knowledge-sharing sessions.\n- Championed the adoption of Test-Driven Development (TDD) with Jest and React Testing Library, which increased code coverage by 30% and reduced critical bugs in production by 50%.',
-      },
-      {
-        id: '2',
-        title: 'Software Engineer',
-        company: 'CodeCrafters Inc.',
-        dates: '2018 - 2020',
-        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js.\n- Collaborated with UX/UI designers to create a seamless and responsive user experience, boosting user engagement by 15% and decreasing bounce rate.\n- Implemented a new payment gateway integration (Stripe), which expanded customer payment options and increased conversion rates by 5%.\n- Optimized application performance by identifying and fixing memory leaks, which reduced server response times by 20%.',
-      },
-    ],
-    projects: [
-      {
-        id: '1',
-        name: 'Open Source Contributor - React-Query',
-        description: 'Active contributor to a popular open-source data-fetching library. Focused on improving accessibility by implementing ARIA standards and enhancing documentation for new users.',
-      },
-      {
-        id: '2',
-        name: 'Personal Portfolio Website',
-        description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills. Deployed on Vercel with a CI/CD pipeline.',
-      },
-       {
-        id: '3',
-        name: 'Real-time Chat Application',
-        description: 'Developed a real-time chat application using WebSockets, Node.js, and React, allowing users to communicate instantly in public or private chat rooms.',
-      },
-    ],
-    achievements: [
-      { id: '1', value: 'Awarded "Innovator of the Year" at Innovatech Solutions, 2022' },
-      { id: '2', value: 'Speaker at "React Forward" Conference 2021 on Modern Frontend Architectures' },
-      { id: '3', value: 'Published an article on "Scalable State Management with Redux" in a well-known tech blog.' },
-    ],
-    certifications: [
-      { id: '1', value: 'AWS Certified Developer - Associate' },
-      { id: '2', value: 'Certified Kubernetes Application Developer (CKAD)' },
-      { id: '3', value: 'Professional Scrum Master I (PSM I)'},
-    ],
-  };
+  const sampleResumeData: ResumeData = DUMMY_RESUME_DATA;
 
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [selectedSnap, setSelectedSnap] = useState(0);
@@ -246,6 +189,13 @@ export default function Home() {
   const handleStartFromScratch = () => {
     router.push('/editor?new=true');
   };
+  
+  const handleUseTestData = () => {
+    const testData = DETAILED_DUMMY_RESUME_DATA;
+    sessionStorage.setItem('resumeData', JSON.stringify(testData));
+    history.pushState({ resumeData: testData }, '', '/preview-templates');
+    router.push('/preview-templates');
+  };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -269,7 +219,7 @@ export default function Home() {
           setError('Failed to process resume. Please try a different file.');
           toast({
             title: 'Processing Error',
-            description: 'We couldn\'t extract text from your resume. Please try another file.',
+            description: "We couldn't extract text from your resume. Please try another file.",
             variant: 'destructive',
           });
         } finally {
@@ -702,6 +652,9 @@ export default function Home() {
                 </Button>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handleStartFromScratch} disabled={isLoading}>
                   <PenSquare className="mr-2" /> Start from Scratch
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handleUseTestData} disabled={isLoading}>
+                  <TestTube className="mr-2" /> Test with Detailed Data
                 </Button>
               </div>
             </ScrollAnimation>
