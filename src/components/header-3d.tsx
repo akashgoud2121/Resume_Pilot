@@ -49,6 +49,7 @@ export function Header3d() {
         currentRef.removeEventListener('mouseleave', onMouseLeave);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -93,7 +94,7 @@ export function Header3d() {
           style={{ perspective: '1000px' }}
         >
             <div 
-                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-700 ease-out [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)] animate-float"
+                className="relative w-[300px] h-[420px] md:w-[350px] md:h-[490px] transition-transform duration-300 ease-out [transform-style:preserve-3d] animate-float"
                 style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
             >
                 {/* Front Side */}
