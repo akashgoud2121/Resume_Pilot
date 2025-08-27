@@ -105,13 +105,13 @@
 
   @keyframes float {
     0%, 100% {
-      transform: translateY(0) rotateX(20deg) rotateY(-30deg);
+      transform: translateY(0) rotateY(0deg);
     }
     50% {
-      transform: translateY(-20px) rotateX(20deg) rotateY(-30deg);
+      transform: translateY(-20px) rotateY(5deg);
     }
   }
-  
+
   /* Animation classes to be applied when element is visible */
   .animate-fadeInUp {
     animation: fadeInUp 0.8s ease-out forwards;
