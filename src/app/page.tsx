@@ -86,8 +86,8 @@ export default function Home() {
     <div className="dark bg-background text-foreground min-h-screen">
       <main className="overflow-x-hidden">
         {/* Hero Section */}
-        <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center px-4">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900/50 -z-10"></div>
+        <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center px-4 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 animate-gradient-xy -z-10"></div>
           <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5 -z-10"></div>
           
           <div className="relative z-10 w-full">
