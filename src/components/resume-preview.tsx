@@ -47,13 +47,9 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, class
     <div 
       id={!isPreview ? "printable-area" : undefined}
       className={cn(
-        "bg-white shadow-lg",
+        "bg-white shadow-lg w-[210mm] min-h-[297mm]",
         className
-      )} 
-      style={{
-        width: '210mm', 
-        minHeight: '297mm',
-      }}
+      )}
     >
       {renderTemplate()}
     </div>

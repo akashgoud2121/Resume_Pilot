@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import {
   ArrowRight,
@@ -100,6 +100,33 @@ const ParsedDataItem = ({ label, value, icon }: { label: string; value: string; 
 export default function Home() {
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const container = entry.target as HTMLElement;
+        const preview = container.firstChild as HTMLElement;
+        if (preview) {
+          const scale = container.offsetWidth / preview.offsetWidth;
+          container.style.setProperty('--tw-scale-x', scale.toString());
+          container.style.setProperty('--tw-scale-y', scale.toString());
+        }
+      }
+    });
+
+    const container = previewContainerRef.current;
+    if (container) {
+      document.querySelectorAll('.preview-container').forEach(el => {
+        resizeObserver.observe(el);
+      });
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   
   const filteredTemplates = templates.filter(
     (template) => filter === 'All' || template.category === filter
@@ -316,13 +343,12 @@ export default function Home() {
               {filteredTemplates.map((template, index) => (
                  <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: index * 100 }} key={template.id}>
                     <div className="group relative overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
-                      <div className="aspect-[1/1.414] w-full overflow-hidden bg-white">
-                        <ResumePreview
+                      <div ref={previewContainerRef} className="preview-container aspect-[1/1.414] w-full overflow-hidden bg-white transform-gpu origin-top-left transition-transform ease-in-out">
+                         <ResumePreview
                             resumeData={sampleResumeData}
                             templateId={template.id}
                             isPreview={true}
-                            className="transform scale-[0.333] origin-top-left"
-                        />
+                         />
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 p-4">
