@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
 import ScrollAnimation from './ui/scroll-animation';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) => (
   <div className="w-full">
@@ -21,10 +22,15 @@ export function Header3d() {
     <section 
         className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-slate-950 -z-10"></div>
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[200vw] h-[30rem] bg-gradient-to-t from-primary/30 to-primary/5 rounded-[50%] blur-3xl opacity-40"></div>
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[150vw] h-[25rem] bg-gradient-to-t from-primary/20 to-primary/5 rounded-[50%] blur-2xl opacity-60"></div>
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-5"></div>
+      <div className="absolute inset-0 bg-slate-950 -z-20"></div>
+      <Image 
+        src="https://picsum.photos/seed/tech/1920/1080"
+        alt="Abstract Technology Background"
+        fill
+        className="absolute inset-0 object-cover opacity-10 -z-10"
+        data-ai-hint="technology abstract"
+      />
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-repeat opacity-[0.02]"></div>
       
       <div className="relative z-10 w-full flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between max-w-6xl mx-auto py-16">
         {/* Left: Text Content */}
