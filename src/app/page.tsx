@@ -111,8 +111,8 @@ export default function Home() {
     mobileNumber: '555-123-4567',
     githubLink: 'https://github.com/alexquill',
     linkedinLink: 'https://linkedin.com/in/alexquill',
-    professionalSummary: 'Innovative Software Engineer with 5+ years of experience in developing and deploying scalable web applications. Passionate about creating elegant, efficient code and working in collaborative, agile environments to solve complex problems.',
-    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD', 'GraphQL', 'Kubernetes'],
+    professionalSummary: 'Innovative Software Engineer with 5+ years of experience in developing and deploying scalable web applications. Passionate about creating elegant, efficient code and working in collaborative, agile environments to solve complex problems. Proven ability in leading projects, mentoring junior developers, and driving technical excellence.',
+    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD', 'GraphQL', 'Kubernetes', 'Next.js', 'System Design'],
     education: [
       {
         institution: 'University of Technology',
@@ -125,13 +125,13 @@ export default function Home() {
         title: 'Senior Software Engineer',
         company: 'Innovatech Solutions',
         dates: '2020 - Present',
-        description: 'Lead developer for the flagship SaaS product, driving the architecture and implementation of new features.\n- Architected and implemented a new microservices-based backend, resulting in a 40% performance increase and improved scalability.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices in code reviews and pair programming.\n- Championed the adoption of Test-Driven Development (TDD), increasing code coverage by 30%.',
+        description: 'Lead developer for the flagship SaaS product, driving the architecture and implementation of new features.\n- Architected and implemented a new microservices-based backend, resulting in a 40% performance increase and improved scalability.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices in code reviews and pair programming.\n- Championed the adoption of Test-Driven Development (TDD), increasing code coverage by 30% and reducing critical bugs post-release.',
       },
       {
         title: 'Software Engineer',
         company: 'CodeCrafters Inc.',
         dates: '2018 - 2020',
-        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js.\n- Collaborated with UX/UI designers to create a seamless and responsive user experience, boosting user engagement by 15%.\n- Implemented a new payment gateway integration, expanding customer payment options.',
+        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js.\n- Collaborated with UX/UI designers to create a seamless and responsive user experience, boosting user engagement by 15%.\n- Implemented a new payment gateway integration, expanding customer payment options and increasing conversion rates by 5%.',
       },
     ],
     projects: [
@@ -141,12 +141,13 @@ export default function Home() {
       },
       {
         name: 'Personal Portfolio Website',
-        description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills.',
+        description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills, deployed on Vercel.',
       },
     ],
     achievements: [
       { value: 'Awarded "Innovator of the Year" at Innovatech Solutions, 2022' },
-      { value: 'Speaker at "React Forward" Conference 2021' },
+      { value: 'Speaker at "React Forward" Conference 2021 on Modern Frontend Architectures' },
+      { value: 'Published an article on "Scalable State Management" in a well-known tech blog.' },
     ],
     certifications: [
       { value: 'AWS Certified Developer - Associate' },
@@ -320,6 +321,7 @@ export default function Home() {
                             resumeData={sampleResumeData}
                             templateId={template.id}
                             isPreview={true}
+                            className="transform scale-[0.333] origin-top-left"
                         />
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
