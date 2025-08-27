@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Loader2, Download, PenSquare } from 'lucide-react';
+import { Loader2, Download, PenSquare, Expand } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { ResumeData } from '@/lib/types';
 import { templates } from '@/lib/templates';
@@ -13,6 +13,8 @@ import { ResumePreview } from '@/components/resume-preview';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function PreviewTemplatesPage() {
   const router = useRouter();
@@ -31,7 +33,6 @@ export default function PreviewTemplatesPage() {
             if (storedData) {
                 setResumeData(JSON.parse(storedData));
             } else {
-                // Fallback to dummy data if nothing is found
                 setResumeData(DUMMY_RESUME_DATA);
                 toast({
                     title: "No Resume Data Found",
@@ -93,7 +94,6 @@ export default function PreviewTemplatesPage() {
     setIsDownloading(null);
   };
 
-
   if (isLoading || !resumeData) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -108,22 +108,30 @@ export default function PreviewTemplatesPage() {
         <header className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Choose Your Template</h1>
             <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
-                Your resume data has been populated into our templates. Select a design you like to download it or edit it further.
+                Your resume data has been populated into our templates. Select a design you like to download it, edit it, or click the expand icon to get a closer look.
             </p>
         </header>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {templates.map((template) => (
-                <Card key={template.id} className="flex flex-col overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
-                    <CardContent className="p-4 flex-grow">
-                       <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white">
-                         <div id={`printable-wrapper-${template.id}`} className="transform scale-[0.27] origin-top-left w-[777px] h-[1100px]">
-                           <ResumePreview
-                                resumeData={resumeData}
-                                templateId={template.id}
-                                isGallery={true}
-                            />
-                         </div>
+              <Dialog key={template.id}>
+                <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
+                    <CardContent className="p-4 flex-grow relative group">
+                       <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white cursor-pointer">
+                          <DialogTrigger asChild>
+                            <div>
+                              <div id={`printable-wrapper-${template.id}`} className="transform scale-[0.27] origin-top-left w-[777px] h-[1100px]">
+                                <ResumePreview
+                                    resumeData={resumeData}
+                                    templateId={template.id}
+                                    isGallery={true}
+                                />
+                              </div>
+                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <Expand className="h-12 w-12 text-white" />
+                              </div>
+                            </div>
+                          </DialogTrigger>
                        </div>
                     </CardContent>
                     <CardFooter className="bg-background/50 p-3 flex flex-col items-stretch gap-2 border-t">
@@ -153,10 +161,23 @@ export default function PreviewTemplatesPage() {
                         </div>
                     </CardFooter>
                 </Card>
+                <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+                  <DialogHeader>
+                    <DialogTitle>{template.name} Template Preview</DialogTitle>
+                  </DialogHeader>
+                  <ScrollArea className="flex-1 -mx-6">
+                    <div className="flex items-start justify-center p-4">
+                      <ResumePreview
+                        resumeData={resumeData}
+                        templateId={template.id}
+                      />
+                    </div>
+                  </ScrollArea>
+                </DialogContent>
+              </Dialog>
             ))}
         </div>
         
-        {/* A hidden container for each resume to be rendered at full size for PDF generation */}
         <div className="absolute -left-[9999px] -top-[9999px] opacity-0 pointer-events-none">
             {templates.map(template => (
                  <div key={`pdf-${template.id}`} id={`printable-area-${template.id}`} className="w-[210mm] h-[297mm]">
