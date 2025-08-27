@@ -331,11 +331,11 @@ export default function Home() {
                             />
                           </div>
                       </Card>
-                      <div className="mt-4 text-center">
+                      <div className="absolute bottom-4 right-4 text-right">
                         <h3 className="font-bold text-white">{template.name}</h3>
                         <p className="text-sm text-muted-foreground">{template.category}</p>
                       </div>
-                      <div className="absolute inset-0 top-0 bottom-[4.5rem] flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
                         <Button variant="secondary">
                           Preview <ChevronRight className="ml-2" />
                         </Button>
