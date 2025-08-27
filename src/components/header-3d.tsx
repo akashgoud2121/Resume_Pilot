@@ -88,9 +88,9 @@ export function Header3d() {
         
         <div className="text-center mb-12">
           <div className="initial-hidden animate-dropIn">
-            <h1 className="text-5xl md:text-6xl font-heading font-bold tracking-tight text-white flex items-center justify-center gap-3">
+            <h1 className="text-5xl md:text-6xl font-heading tracking-tight text-white flex items-center justify-center gap-3">
               <FileText className="h-10 w-10 text-primary" />
-              ResumePilot
+              Resume Pilot
             </h1>
           </div>
           <div className="initial-hidden animate-fadeInUp animation-delay-300">
