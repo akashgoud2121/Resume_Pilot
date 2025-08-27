@@ -96,13 +96,48 @@ export default function Home() {
 
         {/* Unlock Your Potential Section */}
         <section className="py-20 md:py-28 px-4 bg-gray-900/50">
-            <div className="container mx-auto max-w-4xl text-center">
-                <ScrollAnimation animation="animate-fadeInUp">
+            <div className="container mx-auto max-w-6xl">
+                <ScrollAnimation animation="animate-fadeInUp" className="text-center">
                     <h2 className="text-3xl md:text-4xl font-bold text-white">Unlock Your Career Potential</h2>
-                    <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-                        In today's competitive job market, a standout resume is your key to getting noticed. ResumePilot is more than just a builder; it's your strategic partner in crafting a professional narrative that impresses recruiters and sails through automated filters. We combine cutting-edge AI with proven, professional designs to give you the ultimate advantage.
+                    <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
+                        Don't just build a resume—build your future. ResumePilot combines cutting-edge AI with professional design to give you the ultimate advantage in today's competitive job market.
                     </p>
                 </ScrollAnimation>
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}}>
+                        <Card className="bg-card/50 border-white/10 h-full">
+                            <CardContent className="p-8">
+                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
+                                    <Sparkles className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-white">Craft with AI</h3>
+                                <p className="mt-2 text-muted-foreground">Let our intelligent tools parse, score, and optimize your resume content for maximum impact.</p>
+                            </CardContent>
+                        </Card>
+                    </ScrollAnimation>
+                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 400}}>
+                        <Card className="bg-card/50 border-white/10 h-full">
+                             <CardContent className="p-8">
+                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
+                                    <LayoutTemplate className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-white">Impress with Design</h3>
+                                <p className="mt-2 text-muted-foreground">Choose from a library of ATS-friendly templates designed by professionals.</p>
+                            </CardContent>
+                        </Card>
+                    </ScrollAnimation>
+                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 600}}>
+                         <Card className="bg-card/50 border-white/10 h-full">
+                            <CardContent className="p-8">
+                                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 mx-auto">
+                                    <Award className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-white">Succeed with Strategy</h3>
+                                <p className="mt-2 text-muted-foreground">Get the insights you need to beat automated filters and land more interviews.</p>
+                            </CardContent>
+                        </Card>
+                    </ScrollAnimation>
+                </div>
             </div>
         </section>
 
