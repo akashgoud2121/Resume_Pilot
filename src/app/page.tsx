@@ -25,6 +25,8 @@ import {
   Mail,
   Phone,
   GraduationCap,
+  FileInput,
+  PenSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -466,9 +468,11 @@ export default function Home() {
                     </div>
                     <h3 className="text-2xl font-bold text-white">Ready to Go?</h3>
                     <p className="text-muted-foreground mt-2 mb-6">Your professionally crafted resume is just one click away.</p>
-                    <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg shadow-primary/20">
-                      Create Your Resume Now <ArrowRight className="ml-2" />
-                    </Button>
+                    <a href="#how-it-works">
+                      <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg shadow-primary/20">
+                        Create Your Resume Now <ArrowRight className="ml-2" />
+                      </Button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -572,34 +576,47 @@ export default function Home() {
         <section id="how-it-works" className="py-20 md:py-28 px-4">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume in 3 Simple Steps</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume Ready in Minutes</h2>
               <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                From upload to a polished, job-winning document in minutes.
+                Follow these simple steps to craft your perfect resume.
               </p>
             </ScrollAnimation>
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-              <ScrollAnimation animation="animate-slideInFromLeft" className="text-center flex flex-col items-center">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <ClipboardPaste className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">1. Provide Your Data</h3>
-                <p className="mt-2 text-muted-foreground">Upload your current resume or simply paste the raw text. Our AI will handle the rest.</p>
-              </ScrollAnimation>
-              <ScrollAnimation animation="animate-fadeInUp" className="text-center flex flex-col items-center animation-delay-300">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <MousePointerClick className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">2. Choose a Template</h3>
-                <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
-              </ScrollAnimation>
-              <ScrollAnimation animation="animate-slideInFromRight" className="text-center flex flex-col items-center animation-delay-600">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
-                  <Download className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">3. Download & Apply</h3>
-                <p className="mt-2 text-muted-foreground">Download your new, polished resume in PDF format and start applying for jobs with confidence.</p>
-              </ScrollAnimation>
+            <div className="relative mt-16 max-w-4xl mx-auto">
+              <div className="absolute top-1/2 left-0 w-full h-0.5 bg-border -translate-y-1/2 hidden md:block" aria-hidden="true"></div>
+              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}} className="text-center flex flex-col items-center p-6 bg-card/50 rounded-lg border border-white/10">
+                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background">
+                    <span className="text-2xl font-bold text-primary">1</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">Provide Your Data</h3>
+                  <p className="mt-2 text-muted-foreground">Start from scratch or upload an existing resume. Our AI will do the heavy lifting.</p>
+                </ScrollAnimation>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 400}} className="text-center flex flex-col items-center p-6 bg-card/50 rounded-lg border border-white/10">
+                   <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background">
+                    <span className="text-2xl font-bold text-primary">2</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">Choose a Template</h3>
+                  <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
+                </ScrollAnimation>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 600}} className="text-center flex flex-col items-center p-6 bg-card/50 rounded-lg border border-white/10">
+                   <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background">
+                    <span className="text-2xl font-bold text-primary">3</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">Download & Apply</h3>
+                  <p className="mt-2 text-muted-foreground">Instantly download your new resume in PDF format and start applying with confidence.</p>
+                </ScrollAnimation>
+              </div>
             </div>
+             <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 700 }}>
+              <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg">
+                  <FileInput className="mr-2" /> Upload Existing Resume
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
+                  <PenSquare className="mr-2" /> Start from Scratch
+                </Button>
+              </div>
+            </ScrollAnimation>
           </div>
         </section>
 

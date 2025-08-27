@@ -134,14 +134,11 @@ export function Header3d() {
                 </li>
             </ul>
              <div className="mt-12 initial-hidden animate-fadeInUp animation-delay-700">
-              <div className="flex flex-col sm:flex-row items-center justify-start gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
-                  <Upload className="mr-2" /> Upload Resume
-                </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
-                  Enter Manually <ArrowRight className="ml-2" />
-                </Button>
-              </div>
+                <a href="#how-it-works">
+                  <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg shadow-primary/20">
+                    Create Your Resume Now <ArrowRight className="ml-2" />
+                  </Button>
+                </a>
             </div>
           </div>
 
