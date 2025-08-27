@@ -10,15 +10,13 @@ import { DoubleColumnTemplate } from './resume-templates/double-column-template'
 import { StylishTemplate } from './resume-templates/stylish-template';
 import { TimelineTemplate } from './resume-templates/timeline-template';
 import { ContemporaryTemplate } from './resume-templates/contemporary-template';
-import { cn } from '@/lib/utils';
 
 interface ResumePreviewProps {
   resumeData: ResumeData;
   templateId: string;
-  isPreview?: boolean;
 }
 
-export function ResumePreview({ resumeData, templateId, isPreview = false }: ResumePreviewProps) {
+export function ResumePreview({ resumeData, templateId }: ResumePreviewProps) {
 
   const renderTemplate = () => {
     switch (templateId) {
@@ -40,28 +38,16 @@ export function ResumePreview({ resumeData, templateId, isPreview = false }: Res
         return <DefaultTemplate data={resumeData} />;
     }
   };
-  
-  if (isPreview) {
-    return (
-      <div
-        className="w-full h-full bg-white shadow-lg"
-      >
-        <div
-          className="origin-top-left"
-          style={{
-            transform: 'scale(0.333)',
-            width: '210mm',
-            height: '297mm',
-          }}
-          >
-          {renderTemplate()}
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div id="printable-area" className="bg-white shadow-lg" style={{ width: '210mm', minHeight: '297mm' }}>
+    <div 
+      id="printable-area" 
+      className="bg-white shadow-lg" 
+      style={{ 
+        width: '210mm', 
+        height: '297mm',
+      }}
+    >
       {renderTemplate()}
     </div>
   );

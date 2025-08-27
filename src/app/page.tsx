@@ -305,8 +305,10 @@ export default function Home() {
               {filteredTemplates.map((template, index) => (
                  <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: index * 100 }} key={template.id}>
                     <div className="group relative overflow-hidden rounded-lg bg-card shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-primary/20">
-                      <div className="aspect-[1/1.414] w-full overflow-hidden">
-                        <ResumePreview resumeData={sampleResumeData} templateId={template.id} isPreview />
+                      <div className="aspect-[1/1.414] w-full overflow-hidden bg-white">
+                        <div className="origin-top-left" style={{ transform: 'scale(0.333)', transformOrigin: 'top left'}}>
+                          <ResumePreview resumeData={sampleResumeData} templateId={template.id} />
+                        </div>
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 p-4">
