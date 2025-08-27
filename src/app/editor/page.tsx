@@ -9,7 +9,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, ArrowLeft, Download, Eye, Code, Palette } from 'lucide-react';
+import { Loader2, ArrowLeft, Download, Palette } from 'lucide-react';
 import { ResumeEditorForm } from '@/components/resume-editor-form';
 import { ResumePreview } from '@/components/resume-preview';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarInset } from '@/components/ui/sidebar';
@@ -26,10 +26,13 @@ export default function EditorPage() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
 
-  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
@@ -49,14 +52,17 @@ export default function EditorPage() {
           const stateFromHistory = history.state as { resumeData?: ResumeData };
           if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 2) {
              initialData = stateFromHistory.resumeData;
-          } else if (sessionStorage.getItem('resumeData')) {
-            initialData = JSON.parse(sessionStorage.getItem('resumeData')!);
+          } else {
+             const storedData = sessionStorage.getItem('resumeData');
+             if(storedData) {
+                initialData = JSON.parse(storedData);
+             }
           }
         } catch (error) {
-          console.error("Failed to load resume data from history or sessionStorage:", error);
+          console.error("Failed to load resume data:", error);
           toast({
             title: "Error Loading Data",
-            description: "Could not load your resume data.",
+            description: "Could not load your resume data. Please try again.",
             variant: "destructive",
           });
         }
@@ -65,11 +71,9 @@ export default function EditorPage() {
     if (initialData) {
       const validated = resumeSchema.safeParse(initialData);
       if (validated.success) {
-        setResumeData(validated.data);
         form.reset(validated.data);
       } else {
         console.error("Validation failed for initial data:", validated.error);
-        setResumeData(DUMMY_RESUME_DATA);
         form.reset(DUMMY_RESUME_DATA);
         toast({
           title: "Data Validation Failed",
@@ -81,18 +85,13 @@ export default function EditorPage() {
       router.push('/');
       return;
     } else {
-       setResumeData(DUMMY_RESUME_DATA);
        form.reset(DUMMY_RESUME_DATA);
     }
-
-    setLoading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const validatedData = resumeSchema.safeParse(watchedData);
-    if(validatedData.success){
-        setResumeData(validatedData.data);
+    if(validatedData.success && Object.keys(validatedData.data).length > 0){
         sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
     }
   }, [watchedData]);
@@ -124,20 +123,12 @@ export default function EditorPage() {
     setIsDownloading(false);
   };
 
-  if (loading) {
+  if (!isClient) {
     return (
       <div className="flex h-screen items-center justify-center bg-muted/40">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
-  }
-  
-  if (!resumeData) {
-      return (
-        <div className="flex h-screen items-center justify-center bg-muted/40">
-          <p>No resume data found.</p>
-        </div>
-      );
   }
 
   return (
@@ -160,45 +151,47 @@ export default function EditorPage() {
           </ScrollArea>
         </Sidebar>
         
-        <SidebarInset className="bg-muted/40 p-4 flex flex-col">
-            <header className="bg-background/80 backdrop-blur-sm rounded-lg p-2 mb-4 border flex items-center justify-between shadow-sm">
-                <div className="flex items-center gap-2">
-                    <Palette className="text-primary"/>
-                    <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select a template" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {templates.map(template => (
-                        <SelectItem key={template.id} value={template.id}>
-                            {template.name}
-                        </SelectItem>
-                        ))}
-                    </SelectContent>
-                    </Select>
-                </div>
-                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        onClick={handleDownload}
-                        disabled={isDownloading}
-                    >
-                        {isDownloading ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            <Download className="mr-2 h-4 w-4" />
-                        )}
-                        Download PDF
-                    </Button>
-                </div>
-            </header>
+        <FormProvider {...form}>
+            <SidebarInset className="bg-muted/40 p-4 flex flex-col">
+                <header className="bg-background/80 backdrop-blur-sm rounded-lg p-2 mb-4 border flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-2">
+                        <Palette className="text-primary"/>
+                        <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Select a template" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {templates.map(template => (
+                            <SelectItem key={template.id} value={template.id}>
+                                {template.name}
+                            </SelectItem>
+                            ))}
+                        </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={handleDownload}
+                            disabled={isDownloading}
+                        >
+                            {isDownloading ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Download className="mr-2 h-4 w-4" />
+                            )}
+                            Download PDF
+                        </Button>
+                    </div>
+                </header>
 
-            <ScrollArea className="flex-1 rounded-lg">
-              <div className="flex items-start justify-center p-4">
-                  <ResumePreview resumeData={resumeData} templateId={selectedTemplate} />
-              </div>
-            </ScrollArea>
-        </SidebarInset>
+                <ScrollArea className="flex-1 rounded-lg">
+                <div className="flex items-start justify-center p-4">
+                    <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
+                </div>
+                </ScrollArea>
+            </SidebarInset>
+        </FormProvider>
       </div>
     </SidebarProvider>
   );

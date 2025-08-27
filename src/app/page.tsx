@@ -261,20 +261,15 @@ export default function Home() {
         const dataUri = reader.result as string;
         try {
           const resumeText = await extractResumeTextAction(dataUri);
-          const resumeData = await extractResumeDataAction(resumeText);
-          
-          sessionStorage.setItem('resumeData', JSON.stringify(resumeData));
           sessionStorage.setItem('resumeText', resumeText);
-
-          // Navigate to editor page with the data
-          history.pushState({ resumeData, resumeText }, '', '/editor');
-          router.push('/editor');
+          history.pushState({ resumeText }, '', '/generate');
+          router.push('/generate');
 
         } catch (e: any) {
           setError('Failed to process resume. Please try a different file.');
           toast({
             title: 'Processing Error',
-            description: 'We couldn\'t extract data from your resume. Please try another file or start from scratch.',
+            description: 'We couldn\'t extract text from your resume. Please try another file.',
             variant: 'destructive',
           });
         } finally {
@@ -299,7 +294,6 @@ export default function Home() {
         });
         setIsLoading(false);
     }
-    // Reset file input value to allow re-uploading the same file
     event.target.value = '';
   };
 
@@ -314,10 +308,7 @@ export default function Home() {
         disabled={isLoading}
       />
       <main className="overflow-x-hidden">
-        {/* 3D Header Section */}
         <Header3d />
-
-        {/* Unlock Your Potential Section */}
         <section className="py-20 md:py-28 px-4 bg-gray-900/50">
             <div className="container mx-auto max-w-6xl">
                 <ScrollAnimation animation="animate-fadeInUp" className="text-center">
@@ -364,7 +355,6 @@ export default function Home() {
             </div>
         </section>
 
-        {/* AI-Powered Parsing Section */}
         <section id="ai-parsing" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
@@ -397,7 +387,6 @@ export default function Home() {
             <ScrollAnimation animation="animate-slideInFromRight">
               <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-primary/20">
                 <CardContent className="p-6 grid grid-cols-2 gap-6 items-start">
-                  {/* Left Column: Raw Text */}
                   <div className="col-span-1">
                     <CardTitle className="text-lg mb-4 text-muted-foreground">Raw Text</CardTitle>
                     <div className="text-xs text-muted-foreground/80 font-mono space-y-2 leading-relaxed">
@@ -412,7 +401,6 @@ export default function Home() {
                       <p>Skills: React, Node.js</p>
                     </div>
                   </div>
-                  {/* Right Column: Parsed Data */}
                   <div className="col-span-1 bg-background/50 p-4 rounded-lg border border-white/10">
                     <CardTitle className="text-lg mb-4 text-primary">Parsed Data</CardTitle>
                     <div className="space-y-3">
@@ -435,7 +423,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Template Selection Section */}
         <section id="templates" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
@@ -509,7 +496,6 @@ export default function Home() {
           </div>
         </section>
         
-        {/* Instant Download Section */}
         <section id="instant-download" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
@@ -569,7 +555,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Beat the Bots Section */}
         <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
@@ -605,6 +590,9 @@ export default function Home() {
                           <Pie data={[{ value: 100 }]} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={450} stroke="hsla(var(--primary) / 0.1)" strokeWidth={2} fill="transparent" />
                            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
                             {score}
+                          </text>
+                           <text x="50%" y="65%" textAnchor="middle" dominantBaseline="middle" className="fill-muted-foreground text-sm font-medium transition-all duration-1000">
+                            Compatibility
                           </text>
                         </PieChart>
                       </ChartContainer>
@@ -661,7 +649,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works Section */}
         <section id="how-it-works" className="py-20 md:py-28 px-4">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
@@ -721,7 +708,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
         <section id="testimonials" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
@@ -768,7 +754,6 @@ export default function Home() {
           </div>
         </section>
         
-        {/* FAQ Section */}
         <section id="faq" className="py-20 md:py-28 px-4">
           <div className="container mx-auto max-w-3xl">
               <ScrollAnimation animation="animate-fadeInUp" className="text-center">
@@ -793,9 +778,6 @@ export default function Home() {
               </ScrollAnimation>
           </div>
         </section>
-
-
-        {/* Footer */}
         <footer className="py-12 px-4 bg-black/50">
          <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
           <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-8">
