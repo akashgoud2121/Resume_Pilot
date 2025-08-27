@@ -227,51 +227,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ATS Score Section */}
-        <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
-          <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <ScrollAnimation animation="animate-slideInFromLeft">
-               <Image
-                    src="https://picsum.photos/seed/ats/600/450"
-                    alt="ATS Score Dashboard"
-                    width={600}
-                    height={450}
-                    className="rounded-xl shadow-2xl"
-                    data-ai-hint="dashboard chart"
-                  />
-            </ScrollAnimation>
-            <ScrollAnimation animation="animate-slideInFromRight">
-                <div className="pl-8">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
-                            <Gauge className="h-6 w-6" />
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Optimize with an ATS Score</h2>
-                    </div>
-                  <p className="mt-4 text-muted-foreground">
-                    Over 90% of large companies use Applicant Tracking Systems (ATS) to screen resumes. Our AI analyzes your resume against common ATS criteria, providing a real-time score and actionable feedback. Ensure your resume gets past the bots and into human hands.
-                  </p>
-                  <ul className="mt-6 space-y-4">
-                    <li className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-muted-foreground">Get a score from 0-100 based on keywords, formatting, and structure.</p>
-                    </li>
-                    <li className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-muted-foreground">Receive specific, AI-driven suggestions for improvement.</p>
-                    </li>
-                     <li className="flex items-start gap-3">
-                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-muted-foreground">Maximize your chances of landing an interview.</p>
-                    </li>
-                  </ul>
-                </div>
-            </ScrollAnimation>
-          </div>
-        </section>
-
         {/* Template Selection Section */}
-        <section id="templates" className="py-20 md:py-28 px-4">
+        <section id="templates" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
             <ScrollAnimation animation="animate-fadeInUp" className="text-center">
                 <div className="flex items-center justify-center gap-4 mb-4">
@@ -333,7 +290,7 @@ export default function Home() {
         </section>
         
         {/* Instant Download Section */}
-        <section id="instant-download" className="py-20 md:py-28 px-4 bg-gray-900/50">
+        <section id="instant-download" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
                 <div className="pr-8">
@@ -364,6 +321,48 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ATS Score Section */}
+        <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
+          <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <ScrollAnimation animation="animate-slideInFromLeft">
+               <Image
+                    src="https://picsum.photos/seed/ats/600/450"
+                    alt="ATS Score Dashboard"
+                    width={600}
+                    height={450}
+                    className="rounded-xl shadow-2xl"
+                    data-ai-hint="dashboard chart"
+                  />
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-slideInFromRight">
+                <div className="pl-8">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                            <Gauge className="h-6 w-6" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Optimize with an ATS Score</h2>
+                    </div>
+                  <p className="mt-4 text-muted-foreground">
+                    Over 90% of large companies use Applicant Tracking Systems (ATS) to screen resumes. Our AI analyzes your resume against common ATS criteria, providing a real-time score and actionable feedback. Ensure your resume gets past the bots and into human hands.
+                  </p>
+                  <ul className="mt-6 space-y-4">
+                    <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Get a score from 0-100 based on keywords, formatting, and structure.</p>
+                    </li>
+                    <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Receive specific, AI-driven suggestions for improvement.</p>
+                    </li>
+                     <li className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                        <p className="text-muted-foreground">Maximize your chances of landing an interview.</p>
+                    </li>
+                  </ul>
+                </div>
+            </ScrollAnimation>
+          </div>
+        </section>
 
         {/* How It Works Section */}
         <section id="how-it-works" className="py-20 md:py-28 px-4">
