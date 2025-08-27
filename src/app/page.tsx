@@ -21,6 +21,10 @@ import {
   Cpu,
   Gauge,
   LayoutTemplate,
+  Mail,
+  Phone,
+  GraduationCap,
+  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -38,19 +42,19 @@ const testimonials = [
     name: 'Sarah J.',
     title: 'Software Engineer',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-    text: "ResumePilot's AI parsing is a game-changer. It extracted everything from my old PDF perfectly, saving me hours of work. The templates are clean, modern, and professional.",
+    text: "Resume Pilot's AI parsing is a game-changer. It extracted everything from my old PDF perfectly, saving me hours of work. The templates are clean, modern, and professional.",
   },
   {
     name: 'Michael B.',
     title: 'Product Manager',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d',
-    text: 'I was struggling to get my resume noticed. The ATS-friendly templates from ResumePilot made a huge difference. I landed three interviews in the first week!',
+    text: 'I was struggling to get my resume noticed. The ATS-friendly templates from Resume Pilot made a huge difference. I landed three interviews in the first week!',
   },
   {
     name: 'Jessica L.',
     title: 'UX Designer',
     avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d',
-    text: 'As a designer, aesthetics are important to me. ResumePilot offers a great balance of beautiful design and functionality. The "Creative" template is my favorite.',
+    text: 'As a designer, aesthetics are important to me. Resume Pilot offers a great balance of beautiful design and functionality. The "Creative" template is my favorite.',
   },
   {
     name: 'David R.',
@@ -80,6 +84,17 @@ const faqItems = [
   }
 ];
 
+const ParsedDataItem = ({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) => (
+  <div>
+    <p className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5">
+      {icon}
+      {label}
+    </p>
+    <p className="text-sm text-foreground mt-0.5">{value}</p>
+  </div>
+);
+
+
 export default function Home() {
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
@@ -100,7 +115,7 @@ export default function Home() {
                 <ScrollAnimation animation="animate-fadeInUp" className="text-center">
                     <h2 className="text-3xl md:text-4xl font-bold text-white">Unlock Your Career Potential</h2>
                     <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
-                        Don't just build a resume—build your future. ResumePilot combines cutting-edge AI with professional design to give you the ultimate advantage in today's competitive job market.
+                        Don't just build a resume—build your future. Resume Pilot combines cutting-edge AI with professional design to give you the ultimate advantage in today's competitive job market.
                     </p>
                 </ScrollAnimation>
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -172,14 +187,42 @@ export default function Home() {
                 </div>
             </ScrollAnimation>
             <ScrollAnimation animation="animate-slideInFromRight">
-               <Image
-                    src="https://picsum.photos/600/450"
-                    alt="AI Parsing in Action"
-                    width={600}
-                    height={450}
-                    className="rounded-xl shadow-2xl"
-                    data-ai-hint="technology abstract"
-                  />
+              <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-primary/20">
+                <CardContent className="p-6 grid grid-cols-2 gap-6 items-start">
+                  {/* Left Column: Raw Text */}
+                  <div className="col-span-1">
+                    <CardTitle className="text-lg mb-4 text-muted-foreground">Raw Text</CardTitle>
+                    <div className="text-xs text-muted-foreground/80 font-mono space-y-2 leading-relaxed">
+                      <p>Alexandria Quill</p>
+                      <p>alex.quill@email.com</p>
+                      <p>555-123-4567</p>
+                      <p>Software Engineer</p>
+                      <p>...</p>
+                      <p>University of Tech</p>
+                      <p>B.S. Computer Science</p>
+                      <p>2018 - 2022</p>
+                      <p>Skills: React, Node.js</p>
+                    </div>
+                  </div>
+                  {/* Right Column: Parsed Data */}
+                  <div className="col-span-1 bg-background/50 p-4 rounded-lg border border-white/10">
+                    <CardTitle className="text-lg mb-4 text-primary">Parsed Data</CardTitle>
+                    <div className="space-y-3">
+                       <ParsedDataItem label="Name" value="Alexandria Quill" icon={<User size={14} />} />
+                       <ParsedDataItem label="Email" value="alex.quill@email.com" icon={<Mail size={14} />} />
+                       <ParsedDataItem label="Phone" value="555-123-4567" icon={<Phone size={14} />} />
+                       <ParsedDataItem label="Education" value="B.S. Computer Science" icon={<GraduationCap size={14} />} />
+                       <div className="pt-2 border-t border-white/10">
+                        <p className="text-xs text-muted-foreground font-semibold mb-2">Skills</p>
+                        <div className="flex flex-wrap gap-1.5">
+                            <span className="bg-primary/10 text-primary text-[10px] font-semibold px-2 py-0.5 rounded">React</span>
+                            <span className="bg-primary/10 text-primary text-[10px] font-semibold px-2 py-0.5 rounded">Node.js</span>
+                        </div>
+                       </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </ScrollAnimation>
           </div>
         </section>
