@@ -99,10 +99,10 @@ export function Header3d() {
           </div>
         </div>
         
-        <div className="w-full flex items-center justify-around gap-8">
+        <div className="w-full flex flex-col lg:flex-row items-center justify-around gap-8">
 
           {/* Left Content */}
-          <div className="w-1/4 initial-hidden animate-slideInFromLeft animation-delay-500 hidden lg:block text-left">
+          <div className="w-full lg:w-1/4 initial-hidden animate-slideInFromLeft animation-delay-500 text-left">
             <ul className="space-y-6">
                 <li className="flex items-start gap-4">
                   <div className="p-2 bg-primary/10 rounded-full text-primary"><Sparkles size={20}/></div>
@@ -126,11 +126,21 @@ export function Header3d() {
                   </div>
                 </li>
             </ul>
+             <div className="mt-12 initial-hidden animate-fadeInUp animation-delay-700">
+              <div className="flex flex-col sm:flex-row items-center justify-start gap-4">
+                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
+                  <Upload className="mr-2" /> Upload Resume
+                </Button>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
+                  Enter Manually <ArrowRight className="ml-2" />
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Middle: 3D Resume */}
           <div 
-            className="w-full max-w-[350px] flex items-center justify-center"
+            className="w-full max-w-[350px] flex-shrink-0 flex items-center justify-center order-first lg:order-none my-8 lg:my-0"
             style={{ perspective: '1000px' }}
           >
               <div 
@@ -138,7 +148,7 @@ export function Header3d() {
                   style={{ transform: `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)` }}
               >
                   {/* Front Side */}
-                  <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)] transition-transform duration-700">
+                  <div className="absolute w-full h-full bg-white/5 rounded-lg border border-white/10 shadow-2xl shadow-blue-500/10 backdrop-blur-md p-6 text-left transition-transform duration-700 [backface-visibility:hidden] group-hover:[transform:rotateY(180deg)]">
                     <div className="text-center border-b border-white/10 pb-3">
                       <h3 className="text-4xl font-calligraphy font-bold text-white">Alexandria Quill</h3>
                       <p className="text-teal-400">Software Engineer</p>
@@ -155,13 +165,31 @@ export function Header3d() {
                         <SkillBar skill="UI/UX Design" percentage="75%" />
                       </div>
                     </div>
+                     <p className="text-center text-xs text-white/40 absolute bottom-4 left-1/2 -translate-x-1/2">Hover to flip</p>
                   </div>
 
                   {/* Back Side */}
-                  <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left [backface-visibility:hidden] [transform:rotateY(180deg)] group-hover:[transform:rotateY(0deg)] transition-transform duration-700">
-                    <div className="text-center">
-                        <h4 className="text-lg font-bold text-white">ATS Score</h4>
-                        <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
+                  <div className="absolute w-full h-full bg-white/10 rounded-lg border border-white/20 shadow-2xl shadow-blue-500/20 backdrop-blur-lg p-6 text-left transition-transform duration-700 [backface-visibility:hidden] [transform:rotateY(180deg)] group-hover:[transform:rotateY(0deg)]">
+                    <div className="text-center border-b border-white/10 pb-3">
+                      <h3 className="text-2xl font-bold text-white">Key Sections</h3>
+                    </div>
+                     <ul className="space-y-3 text-sm text-muted-foreground mt-4">
+                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Professional Summary</li>
+                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Skills & Keywords</li>
+                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Work Experience</li>
+                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Education</li>
+                        <li className="flex items-center gap-3 text-white/80"><CheckCircle size={16} className="text-primary"/> Projects & Achievements</li>
+                    </ul>
+                  </div>
+              </div>
+          </div>
+
+          {/* Right Content */}
+          <div className="w-full lg:w-1/4 initial-hidden animate-slideInFromRight animation-delay-500 text-left">
+            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+                <CardContent className="p-6">
+                    <h4 className="font-semibold text-white text-center mb-2">ATS Score</h4>
+                     <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
                             <PieChart>
                                 <defs>
                                     <linearGradient id="gradientFill" x1="0" y1="0" x2="0" y2="1">
@@ -200,46 +228,20 @@ export function Header3d() {
                                     fill="transparent"
                                 />
                             </PieChart>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center" aria-hidden="true">
                                 <span className="text-4xl font-bold text-white transition-all duration-1000">{score}</span>
                                 <span className="text-xs text-muted-foreground">Excellent</span>
                             </div>
                         </ChartContainer>
                         <p className="text-xs text-center text-muted-foreground mt-2">This resume is highly optimized for Applicant Tracking Systems.</p>
-                    </div>
-                  </div>
-              </div>
-          </div>
-
-          {/* Right Content */}
-          <div className="w-1/4 initial-hidden animate-slideInFromRight animation-delay-500 hidden lg:block text-left">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
-                <CardContent className="p-6">
-                    <h4 className="font-semibold text-white mb-3">Key Sections</h4>
-                    <ul className="space-y-3 text-sm text-muted-foreground">
-                        <li className="flex items-center gap-3"><CheckCircle size={16} className="text-primary"/> Professional Summary</li>
-                        <li className="flex items-center gap-3"><CheckCircle size={16} className="text-primary"/> Skills & Keywords</li>
-                        <li className="flex items-center gap-3"><CheckCircle size={16} className="text-primary"/> Work Experience</li>
-                        <li className="flex items-center gap-3"><CheckCircle size={16} className="text-primary"/> Education</li>
-                        <li className="flex items-center gap-3"><CheckCircle size={16} className="text-primary"/> Projects & Achievements</li>
-                    </ul>
                 </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Bottom: Buttons */}
-        <div className="mt-12 initial-hidden animate-fadeInUp animation-delay-700">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
-              <Upload className="mr-2" /> Upload Resume
-            </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
-              Enter Manually <ArrowRight className="ml-2" />
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );
 }
+
+    
