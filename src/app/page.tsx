@@ -101,7 +101,7 @@ const ParsedDataItem = ({ label, value, icon }: { label: string; value: string; 
 
 const ShineEffect = ({ x, y }: { x: number; y: number }) => (
   <div
-    className="pointer-events-none absolute inset-0 z-20 rounded-xl"
+    className="pointer-events-none absolute inset-0 z-20 rounded-xl transition-opacity duration-500 group-hover:opacity-80"
     style={{
       background: `radial-gradient(
         200px circle at ${x}px ${y}px,
@@ -391,8 +391,8 @@ export default function Home() {
                     <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
                       <div className="flex flex-col gap-4 items-center">
                         <div className={cn(
-                          "transition-all duration-500 ease-out w-[300px] flex items-center justify-center",
-                          selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-40 scale-90 blur-sm'
+                          "transition-all duration-500 ease-in-out w-[300px] flex items-center justify-center",
+                          selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85 filter blur-sm'
                         )}>
                            <div className="aspect-[1/1.414] w-full overflow-hidden rounded-lg shadow-2xl bg-white">
                             <ResumePreview
@@ -461,7 +461,7 @@ export default function Home() {
                 <div className="relative w-full h-full rounded-xl bg-gradient-to-br from-card/70 to-card/90 border border-white/10 backdrop-blur-sm p-8 text-center shadow-2xl transition-transform group-hover:scale-105">
                   <ShineEffect x={mousePos.x} y={mousePos.y} />
                   <div className="relative z-10 flex flex-col items-center justify-center h-full">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 transition-transform group-hover:scale-110">
                       <FileText className="h-8 w-8" />
                     </div>
                     <h3 className="text-2xl font-bold text-white">Ready to Go?</h3>
@@ -480,60 +480,66 @@ export default function Home() {
         <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <ScrollAnimation animation="animate-slideInFromLeft">
-              <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-primary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3">
-                    <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary">
-                      <CheckCircle className="h-5 w-5" />
-                    </div>
-                    <span>ATS Compatibility Check</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-6 items-center">
-                  <div className="col-span-1">
-                    <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
-                      <PieChart>
-                        <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
-                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={90 + (score / 100) * 360} cornerRadius={5} paddingAngle={-10}>
+              <a href="#templates" className="block group">
+                <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:shadow-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3">
+                      <div className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary">
+                        <CheckCircle className="h-5 w-5" />
+                      </div>
+                      <span>ATS Compatibility Check</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-6 items-center">
+                    <div className="col-span-1">
+                      <ChartContainer config={chartConfig} className="w-full aspect-square h-[180px] mx-auto">
+                        <PieChart>
                           <defs>
                             <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
                               <stop offset="5%" stopColor="var(--color-score)" stopOpacity={0.8} />
                               <stop offset="95%" stopColor="var(--color-score)" stopOpacity={0.2} />
                             </linearGradient>
+                            <linearGradient id="scoreStrokeGradient" x1="0" y1="0" x2="0" y2="1">
+                               <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={1} />
+                               <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                            </linearGradient>
                           </defs>
-                          <cell key="score" fill="url(#scoreGradient)" stroke="var(--color-score)" />
-                          <cell key="rest" fill="transparent" stroke="transparent" />
-                        </Pie>
-                        <Pie data={[{ value: 100 }]} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={450} stroke="hsla(var(--primary) / 0.1)" strokeWidth={2} fill="transparent" />
-                        <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
-                          {score}
-                        </text>
-                        <text x="50%" y="50%" dy="1.5em" textAnchor="middle" className="fill-muted-foreground text-xs">
-                          Compatibility
-                        </text>
-                      </PieChart>
-                    </ChartContainer>
-                  </div>
-                  <div className="col-span-1 space-y-3">
-                    <div className="flex items-start gap-2">
-                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-muted-foreground">Keyword Optimization</p>
+                          <ChartTooltip content={<ChartTooltipContent hideLabel hideIndicator />} />
+                          <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={90 + (score / 100) * 360} cornerRadius={5} paddingAngle={-10}>
+                            <cell key="score" fill="url(#scoreGradient)" stroke="url(#scoreStrokeGradient)" />
+                            <cell key="rest" fill="transparent" stroke="transparent" />
+                          </Pie>
+                          <Pie data={[{ value: 100 }]} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={450} stroke="hsla(var(--primary) / 0.1)" strokeWidth={2} fill="transparent" />
+                          <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
+                            {score}
+                          </text>
+                          <text x="50%" y="50%" dy="1.5em" textAnchor="middle" className="fill-muted-foreground text-xs">
+                            Compatibility
+                          </text>
+                        </PieChart>
+                      </ChartContainer>
                     </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-muted-foreground">Standard Formatting</p>
+                    <div className="col-span-1 space-y-3">
+                      <div className="flex items-start gap-2">
+                        <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                        <p className="text-xs text-muted-foreground">Keyword Optimization</p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                        <p className="text-xs text-muted-foreground">Standard Formatting</p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                        <p className="text-xs text-muted-foreground">Parsable Layout</p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
+                        <p className="text-xs text-muted-foreground">Clear Section Headers</p>
+                      </div>
                     </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-muted-foreground">Parsable Layout</p>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle size={16} className="text-primary flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-muted-foreground">Clear Section Headers</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </a>
             </ScrollAnimation>
             <ScrollAnimation animation="animate-slideInFromRight">
               <div className="pl-8">
