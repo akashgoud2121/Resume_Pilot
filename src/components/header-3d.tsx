@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles, CheckCircle } from 'lucide-react';
+import { Upload, ArrowRight, Briefcase, GraduationCap, Award, Sparkles } from 'lucide-react';
 
 const SkillBar = ({ skill, percentage }: { skill: string, percentage: string }) => (
   <div className="w-full">
@@ -56,44 +56,29 @@ export function Header3d() {
   return (
     <section 
         ref={headerRef}
-        className="relative min-h-[90vh] lg:min-h-[700px] flex items-center justify-center text-center p-4 overflow-hidden"
+        className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-center text-center p-4 overflow-hidden"
     >
       <div className="absolute inset-0 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] -z-20"></div>
       
-      <div className="relative z-10 w-full flex flex-col lg:flex-row items-center justify-center lg:justify-between max-w-7xl mx-auto py-16">
-        {/* Left: Text Content */}
-        <div className="w-full lg:w-1/3 text-center lg:text-left">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center max-w-7xl mx-auto py-16">
+        
+        {/* Top: Text Content */}
+        <div className="text-center mb-8">
           <div className="initial-hidden animate-dropIn">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white inline-flex items-center gap-3">
-              <Sparkles className="text-primary h-10 w-10" />
+            <h1 className="text-6xl md:text-7xl font-calligraphy tracking-tight text-white inline-flex items-center gap-3">
               ResumePilot
             </h1>
           </div>
           <div className="initial-hidden animate-fadeInUp animation-delay-300">
-            <h2 className="mt-4 text-xl md:text-2xl font-medium tracking-tight text-white/80">
+            <h2 className="mt-2 text-lg md:text-xl font-medium tracking-tight text-white/80">
               Create the Perfect Resume with Ease
             </h2>
-          </div>
-          <div className="initial-hidden animate-fadeInUp animation-delay-500">
-            <p className="mt-4 md:mt-6 text-base md:text-lg max-w-2xl text-muted-foreground mx-auto lg:mx-0">
-              Choose from 8 professional templates, upload your resume, or enter your details manually.
-            </p>
-          </div>
-          <div className="initial-hidden animate-fadeInUp animation-delay-700">
-            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
-                <Upload className="mr-2" /> Upload Resume
-              </Button>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
-                Enter Manually <ArrowRight className="ml-2" />
-              </Button>
-            </div>
           </div>
         </div>
         
         {/* Middle: 3D Resume */}
         <div 
-          className="w-full lg:w-1/3 flex items-center justify-center my-12 lg:my-0"
+          className="w-full flex items-center justify-center my-8"
           style={{ perspective: '1000px' }}
         >
             <div 
@@ -152,37 +137,20 @@ export function Header3d() {
             </div>
         </div>
 
-        {/* Right: Feature List */}
-        <div className="w-full lg:w-1/3 hidden lg:flex flex-col items-start justify-center gap-4 text-left">
-          <div className="initial-hidden animate-fadeInUp animation-delay-400 w-full">
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-white/5">
-              <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-white">AI-Powered Parsing</h3>
-                <p className="text-muted-foreground text-sm">Instantly extract data from any resume format.</p>
-              </div>
-            </div>
-          </div>
-          <div className="initial-hidden animate-fadeInUp animation-delay-600 w-full">
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-white/5">
-              <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-white">ATS-Friendly Templates</h3>
-                <p className="text-muted-foreground text-sm">Designed to get past automated screeners.</p>
-              </div>
-            </div>
-          </div>
-          <div className="initial-hidden animate-fadeInUp animation-delay-[800ms] w-full">
-             <div className="flex items-start gap-4 p-4 rounded-lg bg-white/5">
-              <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-white">Instant Download</h3>
-                <p className="text-muted-foreground text-sm">Get your new resume in PDF format in seconds.</p>
-              </div>
-            </div>
+        {/* Bottom: Buttons */}
+        <div className="initial-hidden animate-fadeInUp animation-delay-700">
+          <p className="mt-4 md:mt-6 text-base md:text-lg max-w-xl text-muted-foreground mx-auto">
+            Choose from 8 professional templates, upload your resume, or enter your details manually.
+          </p>
+          <div className="mt-8 md:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105">
+              <Upload className="mr-2" /> Upload Resume
+            </Button>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/50 hover:bg-white/10 hover:text-white transition-transform hover:scale-105">
+              Enter Manually <ArrowRight className="ml-2" />
+            </Button>
           </div>
         </div>
-
       </div>
     </section>
   );
