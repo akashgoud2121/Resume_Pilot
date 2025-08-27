@@ -1,3 +1,4 @@
+
 'use server';
 
 import { extractResumeData } from '@/ai/flows/extract-resume-data';
@@ -16,12 +17,12 @@ export async function extractResumeDataAction(resumeText: string): Promise<Resum
   // and mapping simple arrays to object arrays for the form
   const validatedData = resumeSchema.parse({
     ...extractedData,
-    coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${index}`, value: skill })) || [],
-    education: extractedData.education || [],
-    experience: extractedData.experience || [],
-    projects: extractedData.projects || [],
-    achievements: extractedData.achievements?.map((value, index) => ({ id: `${index}`, value })) || [],
-    certifications: extractedData.certifications?.map((value, index) => ({ id: `${index}`, value })) || [],
+    coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })) || [],
+    education: extractedData.education?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
+    experience: extractedData.experience?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
+    projects: extractedData.projects?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
+    achievements: extractedData.achievements?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
+    certifications: extractedData.certifications?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
   });
   return validatedData;
 }
