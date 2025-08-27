@@ -45,10 +45,10 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, class
   
   if (isPreview) {
     return (
-      <div className="w-full h-full text-[5px] origin-top-left">
-        <div className='w-[210mm] h-[297mm] origin-top-left scale-[0.354]'>
-           {renderTemplate()}
-        </div>
+      <div 
+        className="w-[210mm] h-[297mm] origin-top-left bg-white text-black transform scale-[0.354]"
+      >
+        {renderTemplate()}
       </div>
     );
   }

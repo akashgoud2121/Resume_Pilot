@@ -346,18 +346,18 @@ export default function Home() {
                 <CarouselContent className="-ml-4">
                   {filteredTemplates.map((template, index) => (
                     <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
-                       <div 
-                        className={cn(
-                          "transition-all duration-300 ease-out flex flex-col gap-4 items-center",
+                      <div className="flex flex-col gap-4 items-center">
+                        <div className={cn(
+                          "transition-all duration-500 ease-out w-[300px] flex items-center justify-center",
                           selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-40 scale-90 blur-sm'
-                        )}
-                      >
-                        <div className="aspect-[1/1.414] w-[300px] overflow-hidden rounded-lg shadow-2xl bg-white">
-                          <ResumePreview
-                              resumeData={sampleResumeData}
-                              templateId={template.id}
-                              isPreview={true}
-                          />
+                        )}>
+                           <div className="aspect-[1/1.414] w-full overflow-hidden rounded-lg shadow-2xl bg-white">
+                            <ResumePreview
+                                resumeData={sampleResumeData}
+                                templateId={template.id}
+                                isPreview={true}
+                            />
+                          </div>
                         </div>
                         <div className="text-center">
                           <h3 className="font-bold text-white">{template.name}</h3>
