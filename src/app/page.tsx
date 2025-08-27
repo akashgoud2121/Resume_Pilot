@@ -25,7 +25,6 @@ import {
   Mail,
   Phone,
   GraduationCap,
-  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -38,6 +37,7 @@ import ScrollAnimation from '@/components/ui/scroll-animation';
 import { Header3d } from '@/components/header-3d';
 import type { ResumeData } from '@/lib/types';
 import { ResumePreview } from '@/components/resume-preview';
+import { User } from 'lucide-react';
 
 
 const testimonials = [
@@ -112,8 +112,8 @@ export default function Home() {
     mobileNumber: '555-123-4567',
     githubLink: 'https://github.com/alexquill',
     linkedinLink: 'https://linkedin.com/in/alexquill',
-    professionalSummary: 'Innovative Software Engineer with 5+ years of experience in developing and deploying scalable web applications. Passionate about creating elegant, efficient code and working in collaborative, agile environments to solve complex problems. Proven ability in leading projects, mentoring junior developers, and driving technical excellence.',
-    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD', 'GraphQL', 'Kubernetes', 'Next.js', 'System Design'],
+    professionalSummary: 'Innovative and results-driven Software Engineer with over 5 years of experience in designing, developing, and deploying scalable and efficient web applications. Proficient in full-stack development with a strong emphasis on front-end technologies and user experience. Passionate about creating elegant, maintainable code and working in collaborative, agile environments to solve complex problems and deliver high-quality software. Proven ability in leading projects, mentoring junior developers, and driving technical excellence to achieve business goals.',
+    coreSkills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS', 'TDD', 'CI/CD', 'GraphQL', 'Kubernetes', 'Next.js', 'System Design', 'Microservices', 'Agile Methodologies'],
     education: [
       {
         institution: 'University of Technology',
@@ -126,33 +126,38 @@ export default function Home() {
         title: 'Senior Software Engineer',
         company: 'Innovatech Solutions',
         dates: '2020 - Present',
-        description: 'Lead developer for the flagship SaaS product, driving the architecture and implementation of new features.\n- Architected and implemented a new microservices-based backend, resulting in a 40% performance increase and improved scalability.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices in code reviews and pair programming.\n- Championed the adoption of Test-Driven Development (TDD), increasing code coverage by 30% and reducing critical bugs post-release.',
+        description: 'Lead developer for the flagship SaaS product, responsible for the architecture, implementation, and maintenance of new features.\n- Architected and implemented a new microservices-based backend using Node.js and Docker, resulting in a 40% performance increase and improved scalability to handle a 200% growth in user traffic.\n- Mentored a team of 4 junior developers, fostering a culture of growth and best practices through code reviews, pair programming, and weekly knowledge-sharing sessions.\n- Championed the adoption of Test-Driven Development (TDD) with Jest and React Testing Library, which increased code coverage by 30% and reduced critical bugs in production by 50%.',
       },
       {
         title: 'Software Engineer',
         company: 'CodeCrafters Inc.',
         dates: '2018 - 2020',
-        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js.\n- Collaborated with UX/UI designers to create a seamless and responsive user experience, boosting user engagement by 15%.\n- Implemented a new payment gateway integration, expanding customer payment options and increasing conversion rates by 5%.',
+        description: 'Developed and maintained full-stack features for a high-traffic e-commerce platform using React and Node.js.\n- Collaborated with UX/UI designers to create a seamless and responsive user experience, boosting user engagement by 15% and decreasing bounce rate.\n- Implemented a new payment gateway integration (Stripe), which expanded customer payment options and increased conversion rates by 5%.\n- Optimized application performance by identifying and fixing memory leaks, which reduced server response times by 20%.',
       },
     ],
     projects: [
       {
         name: 'Open Source Contributor - React-Query',
-        description: 'Active contributor to a popular open-source data-fetching library, focusing on accessibility improvements and documentation.',
+        description: 'Active contributor to a popular open-source data-fetching library. Focused on improving accessibility by implementing ARIA standards and enhancing documentation for new users.',
       },
       {
         name: 'Personal Portfolio Website',
-        description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills, deployed on Vercel.',
+        description: 'Designed and built a personal portfolio using Next.js and Tailwind CSS, showcasing various projects and skills. Deployed on Vercel with a CI/CD pipeline.',
+      },
+       {
+        name: 'Real-time Chat Application',
+        description: 'Developed a real-time chat application using WebSockets, Node.js, and React, allowing users to communicate instantly in public or private chat rooms.',
       },
     ],
     achievements: [
       { value: 'Awarded "Innovator of the Year" at Innovatech Solutions, 2022' },
       { value: 'Speaker at "React Forward" Conference 2021 on Modern Frontend Architectures' },
-      { value: 'Published an article on "Scalable State Management" in a well-known tech blog.' },
+      { value: 'Published an article on "Scalable State Management with Redux" in a well-known tech blog.' },
     ],
     certifications: [
       { value: 'AWS Certified Developer - Associate' },
       { value: 'Certified Kubernetes Application Developer (CKAD)' },
+      { value: 'Professional Scrum Master I (PSM I)'},
     ],
   };
 
@@ -322,12 +327,12 @@ export default function Home() {
                   <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                     <div className="group relative">
                       <Card className="overflow-hidden bg-card shadow-lg transform transition-all duration-300 hover:shadow-primary/20">
-                          <div className="aspect-[1/1.414] w-full overflow-hidden">
+                          <div className="aspect-[1/1.414] w-full overflow-hidden flex items-center justify-center">
                             <ResumePreview
                                 resumeData={sampleResumeData}
                                 templateId={template.id}
                                 isPreview={true}
-                                className="transform scale-[0.35] origin-top-left"
+                                className="transform scale-[0.35]"
                             />
                           </div>
                       </Card>
