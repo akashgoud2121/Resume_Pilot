@@ -103,3 +103,13 @@ export type PortfolioDocument = {
     fileName: string;
     dataUri: string;
 };
+
+const PortfolioDocumentSchema = z.object({
+  type: z.enum(['certificate', 'project', 'other']).describe('The type of the document.'),
+  fileName: z.string().describe('The name of the uploaded file.'),
+  dataUri: z.string().describe("The document content as a data URI. Expected format: 'data:<mimetype>;base64,<encoded_data>'"),
+});
+
+export const GenerateResumeFromPortfolioInputSchema = z.object({
+    documents: z.array(PortfolioDocumentSchema).describe('An array of portfolio documents.'),
+});

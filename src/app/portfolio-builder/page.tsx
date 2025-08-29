@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Loader2, Upload, FileText, FileBadge, Briefcase } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { generateResumeFromPortfolioAction } from '../actions';
+import { synthesizePortfolioTextAction } from '../actions';
 import type { PortfolioDocument } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -112,11 +112,10 @@ export default function PortfolioBuilderPage() {
           ...otherFiles.map(async file => ({ type: 'other' as const, fileName: file.name, dataUri: await fileToDataUri(file) }))
       ]);
 
-      const resumeData = await generateResumeFromPortfolioAction(documents);
+      const synthesizedText = await synthesizePortfolioTextAction(documents);
       
-      const resumeJsonString = JSON.stringify(resumeData, null, 2);
-      sessionStorage.setItem('resumeText', resumeJsonString);
-      history.pushState({ resumeText: resumeJsonString }, '', '/generate');
+      sessionStorage.setItem('resumeText', synthesizedText);
+      history.pushState({ resumeText: synthesizedText }, '', '/generate');
       router.push('/generate');
 
     } catch (e: any) {

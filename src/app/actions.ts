@@ -4,6 +4,7 @@
 import { extractResumeData } from '@/ai/flows/extract-resume-data';
 import { extractResumeText } from '@/ai/flows/extract-resume-text';
 import { generateResumeFromPortfolio } from '@/ai/flows/generate-resume-from-portfolio';
+import { synthesizePortfolioText } from '@/ai/flows/synthesize-portfolio-text';
 import type { ResumeData, PortfolioDocument } from '@/lib/types';
 import { resumeSchema } from '@/lib/types';
 
@@ -42,4 +43,9 @@ export async function generateResumeFromPortfolioAction(documents: PortfolioDocu
     });
 
     return validatedData;
+}
+
+export async function synthesizePortfolioTextAction(documents: PortfolioDocument[]): Promise<string> {
+    const { synthesizedText } = await synthesizePortfolioText({ documents });
+    return synthesizedText;
 }
