@@ -114,9 +114,10 @@ export default function PortfolioBuilderPage() {
 
       const resumeData = await generateResumeFromPortfolioAction(documents);
       
-      sessionStorage.setItem('resumeData', JSON.stringify(resumeData));
-      history.pushState({ resumeData }, '', '/preview-templates');
-      router.push('/preview-templates');
+      const resumeJsonString = JSON.stringify(resumeData, null, 2);
+      sessionStorage.setItem('resumeText', resumeJsonString);
+      history.pushState({ resumeText: resumeJsonString }, '', '/generate');
+      router.push('/generate');
 
     } catch (e: any) {
         console.error("Failed to generate resume from portfolio:", e);
