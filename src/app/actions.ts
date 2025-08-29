@@ -3,7 +3,8 @@
 
 import { extractResumeData } from '@/ai/flows/extract-resume-data';
 import { extractResumeText } from '@/ai/flows/extract-resume-text';
-import type { ResumeData } from '@/lib/types';
+import { generateResumeFromPortfolio } from '@/ai/flows/generate-resume-from-portfolio';
+import type { ResumeData, PortfolioDocument } from '@/lib/types';
 import { resumeSchema } from '@/lib/types';
 
 export async function extractResumeTextAction(dataUri: string): Promise<string> {
@@ -25,4 +26,20 @@ export async function extractResumeDataAction(resumeText: string): Promise<Resum
     certifications: extractedData.certifications?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
   });
   return validatedData;
+}
+
+export async function generateResumeFromPortfolioAction(documents: PortfolioDocument[]): Promise<ResumeData> {
+    const extractedData = await generateResumeFromPortfolio({ documents });
+
+    const validatedData = resumeSchema.parse({
+        ...extractedData,
+        coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })) || [],
+        education: extractedData.education?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
+        experience: extractedData.experience?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
+        projects: extractedData.projects?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
+        achievements: extractedData.achievements?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
+        certifications: extractedData.certifications?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
+    });
+
+    return validatedData;
 }

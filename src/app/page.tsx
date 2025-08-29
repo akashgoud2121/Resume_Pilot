@@ -28,7 +28,8 @@ import {
   FileInput,
   PenSquare,
   Loader2,
-  TestTube,
+  Files,
+  Briefcase as BriefcaseIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -195,6 +196,10 @@ export default function Home() {
     sessionStorage.setItem('resumeData', JSON.stringify(testData));
     history.pushState({ resumeData: testData }, '', '/preview-templates');
     router.push('/preview-templates');
+  };
+  
+  const handlePortfolioBuilder = () => {
+    router.push('/portfolio-builder');
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -654,7 +659,10 @@ export default function Home() {
                   <PenSquare className="mr-2" /> Start from Scratch
                 </Button>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handleUseTestData} disabled={isLoading}>
-                  <TestTube className="mr-2" /> Test with Detailed Data
+                   <Files className="mr-2" /> Test with Detailed Data
+                </Button>
+                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handlePortfolioBuilder} disabled={isLoading}>
+                  <BriefcaseIcon className="mr-2" /> Build from Portfolio
                 </Button>
               </div>
             </ScrollAnimation>
