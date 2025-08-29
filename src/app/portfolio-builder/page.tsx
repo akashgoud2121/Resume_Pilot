@@ -106,18 +106,10 @@ export default function PortfolioBuilderPage() {
     setIsLoading(true);
 
     try {
-      // This is a placeholder for the actual implementation
-      toast({
-        title: 'Feature Under Construction',
-        description: 'The AI portfolio processing is not yet implemented. This is a placeholder for the UI flow.',
-      });
-      
-      // The actual implementation would look something like this:
-      /*
       const documents: PortfolioDocument[] = await Promise.all([
-          ...academicFiles.map(async file => ({ type: 'certificate', fileName: file.name, dataUri: await fileToDataUri(file) })),
-          ...projectFiles.map(async file => ({ type: 'project', fileName: file.name, dataUri: await fileToDataUri(file) })),
-          ...otherFiles.map(async file => ({ type: 'other', fileName: file.name, dataUri: await fileToDataUri(file) }))
+          ...academicFiles.map(async file => ({ type: 'certificate' as const, fileName: file.name, dataUri: await fileToDataUri(file) })),
+          ...projectFiles.map(async file => ({ type: 'project' as const, fileName: file.name, dataUri: await fileToDataUri(file) })),
+          ...otherFiles.map(async file => ({ type: 'other' as const, fileName: file.name, dataUri: await fileToDataUri(file) }))
       ]);
 
       const resumeData = await generateResumeFromPortfolioAction(documents);
@@ -125,13 +117,12 @@ export default function PortfolioBuilderPage() {
       sessionStorage.setItem('resumeData', JSON.stringify(resumeData));
       history.pushState({ resumeData }, '', '/preview-templates');
       router.push('/preview-templates');
-      */
 
     } catch (e: any) {
         console.error("Failed to generate resume from portfolio:", e);
         toast({
             title: 'Generation Failed',
-            description: "We couldn't generate a resume from the provided documents. Please try again.",
+            description: e.message || "We couldn't generate a resume from the provided documents. Please try again.",
             variant: 'destructive',
         });
     } finally {

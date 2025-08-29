@@ -29,13 +29,7 @@ export type GenerateResumeFromPortfolioOutput = z.infer<typeof ExtractResumeData
 
 
 export async function generateResumeFromPortfolio(input: GenerateResumeFromPortfolioInput): Promise<GenerateResumeFromPortfolioOutput> {
-  // This is a placeholder. The actual implementation will call the Genkit flow.
-  console.log('Received documents for processing:', input.documents.map(d => `${d.type}: ${d.fileName}`).join(', '));
-  
-  // Throw an error because the flow is not yet implemented.
-  throw new Error('AI flow for portfolio generation is not yet implemented.');
-  
-  // return generateResumeFromPortfolioFlow(input);
+  return generateResumeFromPortfolioFlow(input);
 }
 
 
