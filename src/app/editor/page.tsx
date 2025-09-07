@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,18 +20,15 @@ import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-
-export default function EditorPage() {
+function EditorPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
-  const [isClient, setIsClient] = useState(false);
   
   useEffect(() => {
-    setIsClient(true);
     const templateId = searchParams.get('template');
     if (templateId && templates.some(t => t.id === templateId)) {
         setSelectedTemplate(templateId);
@@ -91,6 +88,7 @@ export default function EditorPage() {
     } else {
        form.reset(DUMMY_RESUME_DATA);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -126,14 +124,6 @@ export default function EditorPage() {
     }
     setIsDownloading(false);
   };
-
-  if (!isClient) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-muted/40">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <SidebarProvider>
@@ -199,4 +189,16 @@ export default function EditorPage() {
       </div>
     </SidebarProvider>
   );
+}
+
+export default function EditorPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex h-screen items-center justify-center bg-muted/40">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        }>
+            <EditorPageContent />
+        </Suspense>
+    )
 }
