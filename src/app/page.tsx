@@ -59,25 +59,21 @@ const initialTestimonials = [
   {
     name: 'Sarah J.',
     title: 'Software Engineer',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
     text: "Resume Pilot's AI parsing is a game-changer. It extracted everything from my old PDF perfectly, saving me hours of work. The templates are clean, modern, and professional.",
   },
   {
     name: 'Michael B.',
     title: 'Product Manager',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026705d',
     text: 'I was struggling to get my resume noticed. The ATS-friendly templates from Resume Pilot made a huge difference. I landed three interviews in the first week!',
   },
   {
     name: 'Jessica L.',
     title: 'UX Designer',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026706d',
     text: 'As a designer, aesthetics are important to me. Resume Pilot offers a great balance of beautiful design and functionality. The "Creative" template is my favorite.',
   },
   {
     name: 'David R.',
     title: 'Data Scientist',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026707d',
     text: 'The process was incredibly simple and fast. From upload to download, it took less than 10 minutes to have a polished, professional resume ready to go. Highly recommended!',
   },
 ];
@@ -168,7 +164,6 @@ export default function Home() {
         name: formData.get('name') as string,
         title: formData.get('title') as string,
         text: formData.get('text') as string,
-        avatar: `https://i.pravatar.cc/150?u=${Math.random()}` // Random avatar for new reviews
     };
 
     if (newTestimonial.name && newTestimonial.title && newTestimonial.text) {
@@ -744,7 +739,6 @@ export default function Home() {
                             <p className="text-muted-foreground italic">"{testimonial.text}"</p>
                             <div className="flex items-center gap-4 mt-6 pt-6 border-t border-white/10">
                                 <Avatar>
-                                    <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
                                     <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div>
