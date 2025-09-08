@@ -16,12 +16,11 @@ import { ContemporaryTemplate } from './resume-templates/contemporary-template';
 interface ResumePreviewProps {
   resumeData: ResumeData;
   templateId: string;
-  isPreview?: boolean;
   isGallery?: boolean;
   className?: string;
 }
 
-export function ResumePreview({ resumeData, templateId, isPreview = false, isGallery = false, className }: ResumePreviewProps) {
+export function ResumePreview({ resumeData, templateId, isGallery = false, className }: ResumePreviewProps) {
 
   const renderTemplate = () => {
     switch (templateId) {
@@ -44,17 +43,9 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, isGal
     }
   };
   
-  if (isPreview) {
-    return (
-      <div className="w-[210mm] h-[297mm] origin-top-left bg-white text-black transform scale-[calc(300/840)]">
-        {renderTemplate()}
-      </div>
-    );
-  }
-
   if (isGallery) {
      return (
-      <div className="w-full h-full bg-white text-black">
+      <div className="w-full h-full bg-white text-black transform scale-[calc(300/210)/calc(424/297)] origin-top-left">
         {renderTemplate()}
       </div>
     );

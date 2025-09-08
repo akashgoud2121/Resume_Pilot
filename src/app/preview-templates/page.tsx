@@ -120,7 +120,7 @@ export default function PreviewTemplatesPage() {
                        <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white cursor-pointer">
                           <DialogTrigger asChild>
                             <div>
-                              <div id={`printable-wrapper-${template.id}`} className="transform scale-[0.27] origin-top-left w-[777px] h-[1100px]">
+                              <div className="transform scale-[0.27] origin-top-left w-[777px] h-[1100px] pointer-events-none">
                                 <ResumePreview
                                     resumeData={resumeData}
                                     templateId={template.id}

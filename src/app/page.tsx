@@ -431,7 +431,7 @@ export default function Home() {
                            <ResumePreview
                                 resumeData={sampleResumeData}
                                 templateId={template.id}
-                                isPreview={true}
+                                isGallery={true}
                             />
                            </div>
                         </div>
