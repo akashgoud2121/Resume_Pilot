@@ -1,3 +1,4 @@
+
 import type { ResumeData } from './types';
 
 export const DUMMY_RESUME_DATA: ResumeData = {
