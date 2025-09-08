@@ -46,7 +46,7 @@ export function ResumePreview({ resumeData, templateId, isPreview = false, isGal
   
   if (isPreview) {
     return (
-      <div className="w-[210mm] h-[297mm] origin-top-left bg-white text-black transform scale-[0.354]">
+      <div className="w-[210mm] h-[297mm] origin-top-left bg-white text-black transform scale-[calc(300/840)]">
         {renderTemplate()}
       </div>
     );

@@ -427,7 +427,7 @@ export default function Home() {
                           "transition-all duration-500 ease-in-out flex items-center justify-center",
                           selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85'
                         )}>
-                          <div className="aspect-[1/1.414] w-[300px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                          <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
                            <ResumePreview
                                 resumeData={sampleResumeData}
                                 templateId={template.id}
