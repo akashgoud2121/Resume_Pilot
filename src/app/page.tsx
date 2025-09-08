@@ -428,11 +428,12 @@ export default function Home() {
                           selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85'
                         )}>
                           <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
-                           <ResumePreview
-                                resumeData={sampleResumeData}
-                                templateId={template.id}
-                                isGallery={true}
-                            />
+                           <div className="transform scale-[0.38] origin-top-left w-[789px] h-[1116px]">
+                               <ResumePreview
+                                    resumeData={sampleResumeData}
+                                    templateId={template.id}
+                                />
+                           </div>
                            </div>
                         </div>
                         <div className="text-center">
