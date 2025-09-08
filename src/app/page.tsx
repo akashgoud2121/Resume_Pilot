@@ -30,6 +30,7 @@ import {
   Loader2,
   Files,
   Briefcase as BriefcaseIcon,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -50,9 +51,11 @@ import { useToast } from '@/hooks/use-toast';
 import Autoplay from "embla-carousel-autoplay"
 import { DETAILED_DUMMY_RESUME_DATA, DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import Footer from '@/components/footer';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 
-const testimonials = [
+const initialTestimonials = [
   {
     name: 'Sarah J.',
     title: 'Software Engineer',
@@ -143,6 +146,52 @@ export default function Home() {
 
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [selectedSnap, setSelectedSnap] = useState(0);
+
+  const [testimonials, setTestimonials] = useState(initialTestimonials);
+
+  useEffect(() => {
+    try {
+        const storedTestimonials = localStorage.getItem('testimonials');
+        if (storedTestimonials) {
+            setTestimonials(JSON.parse(storedTestimonials));
+        }
+    } catch (error) {
+        console.error("Could not parse testimonials from localStorage", error);
+        setTestimonials(initialTestimonials);
+    }
+  }, []);
+
+  const handleAddTestimonial = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const newTestimonial = {
+        name: formData.get('name') as string,
+        title: formData.get('title') as string,
+        text: formData.get('text') as string,
+        avatar: `https://i.pravatar.cc/150?u=${Math.random()}` // Random avatar for new reviews
+    };
+
+    if (newTestimonial.name && newTestimonial.title && newTestimonial.text) {
+        const updatedTestimonials = [...testimonials, newTestimonial];
+        setTestimonials(updatedTestimonials);
+        try {
+            localStorage.setItem('testimonials', JSON.stringify(updatedTestimonials));
+            toast({
+                title: "Review Submitted!",
+                description: "Thank you for your feedback.",
+            });
+            (event.target as HTMLFormElement).reset();
+        } catch (error) {
+            console.error("Could not save testimonials to localStorage", error);
+             toast({
+                title: "Submission Error",
+                description: "Could not save your review.",
+                variant: "destructive",
+            });
+        }
+    }
+  };
+
 
   const onSelect = useCallback((api: CarouselApi) => {
     if (!api) return;
@@ -544,8 +593,7 @@ export default function Home() {
                             <cell key="score" fill="url(#scoreGradient)" stroke="url(#scoreStrokeGradient)" />
                             <cell key="rest" fill="transparent" stroke="transparent" />
                           </Pie>
-                          <Pie data={[{ value: 100 }]} dataKey="value" cx="50%" cy="50%" innerRadius={60} outerRadius={80} startAngle={90} endAngle={450} stroke="hsla(var(--primary) / 0.1)" strokeWidth={2} fill="transparent" />
-                           <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
+                          <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="fill-white text-4xl font-bold transition-all duration-1000" style={{ transform: 'translateZ(0)' }}>
                             {score}
                           </text>
                            <text x="50%" y="65%" textAnchor="middle" dominantBaseline="middle" className="fill-muted-foreground text-sm font-medium transition-all duration-1000">
@@ -713,6 +761,31 @@ export default function Home() {
                 <CarouselPrevious className="text-white"/>
                 <CarouselNext className="text-white"/>
                 </Carousel>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+                <Card className="max-w-2xl mx-auto mt-16 bg-card/50 border-white/10">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-3">
+                            <MessageSquare className="text-primary"/>
+                            Share Your Experience
+                        </CardTitle>
+                        <CardDescription>
+                            We'd love to hear your feedback! Your review will help others and inspire our team.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form className="space-y-4" onSubmit={handleAddTestimonial}>
+                            <div className="grid sm:grid-cols-2 gap-4">
+                                <Input name="name" placeholder="Your Name" required/>
+                                <Input name="title" placeholder="Your Title (e.g., Software Engineer)" required/>
+                            </div>
+                            <Textarea name="text" placeholder="Write your review here..." required rows={4}/>
+                            <div className="flex justify-end">
+                                <Button type="submit">Submit Review</Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
             </ScrollAnimation>
           </div>
         </section>
