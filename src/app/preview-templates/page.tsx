@@ -67,10 +67,6 @@ export default function PreviewTemplatesPage() {
         scale: 2,
         useCORS: true,
         logging: false,
-        width: printableArea.scrollWidth,
-        height: printableArea.scrollHeight,
-        windowWidth: printableArea.scrollWidth,
-        windowHeight: printableArea.scrollHeight,
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -116,14 +112,13 @@ export default function PreviewTemplatesPage() {
             {templates.map((template) => (
               <Dialog key={template.id}>
                 <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
-                    <CardContent className="p-4 flex-grow relative group">
+                    <CardContent className="p-4 flex-grow relative group bg-zinc-800">
                        <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white cursor-pointer">
                           <DialogTrigger asChild>
-                            <div className="w-full h-full">
+                            <div className="w-full h-full scale-[0.23] sm:scale-[0.28] md:scale-[0.24] lg:scale-[0.28] xl:scale-[0.35] origin-top-left">
                                <ResumePreview
                                     resumeData={resumeData}
                                     templateId={template.id}
-                                    className="w-full h-full"
                                 />
                               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                   <Expand className="h-12 w-12 text-white" />
@@ -165,10 +160,12 @@ export default function PreviewTemplatesPage() {
                   </DialogHeader>
                   <ScrollArea className="flex-1 -mx-6">
                     <div className="flex items-start justify-center p-4">
-                      <ResumePreview
-                        resumeData={resumeData}
-                        templateId={template.id}
-                      />
+                      <div className="scale-[0.8] origin-top">
+                        <ResumePreview
+                          resumeData={resumeData}
+                          templateId={template.id}
+                        />
+                      </div>
                     </div>
                   </ScrollArea>
                 </DialogContent>
@@ -176,6 +173,7 @@ export default function PreviewTemplatesPage() {
             ))}
         </div>
         
+        {/* Hidden, for PDF generation */}
         <div className="absolute -left-[9999px] -top-[9999px] opacity-0 pointer-events-none">
             {templates.map(template => (
                  <div key={`pdf-${template.id}`} id={`printable-area-${template.id}`} className="w-[210mm] h-[297mm]">
