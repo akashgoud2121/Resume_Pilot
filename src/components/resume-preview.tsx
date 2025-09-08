@@ -46,9 +46,12 @@ export function ResumePreview({ resumeData, templateId, className }: ResumePrevi
     <div 
       id="printable-area"
       className={cn(
-        "bg-white shadow-lg w-[210mm] min-h-[297mm]",
+        "bg-white shadow-lg w-[210mm] h-[297mm] transform-gpu origin-top-left",
         className
       )}
+      style={{
+        transform: className?.includes('h-full') ? 'scale(calc(1/2.6))' : ''
+      }}
     >
       {renderTemplate()}
     </div>

@@ -119,13 +119,12 @@ export default function PreviewTemplatesPage() {
                     <CardContent className="p-4 flex-grow relative group">
                        <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white cursor-pointer">
                           <DialogTrigger asChild>
-                            <div>
-                              <div className="transform scale-[0.27] origin-top-left w-[777px] h-[1100px] pointer-events-none">
-                                <ResumePreview
+                            <div className="w-full h-full">
+                               <ResumePreview
                                     resumeData={resumeData}
                                     templateId={template.id}
+                                    className="w-full h-full"
                                 />
-                              </div>
                               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                   <Expand className="h-12 w-12 text-white" />
                               </div>
