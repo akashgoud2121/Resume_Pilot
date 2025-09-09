@@ -16,7 +16,6 @@ import jsPDF from 'jspdf';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import Autoplay from "embla-carousel-autoplay"
-import { ScalableResumePreview } from '@/components/scalable-resume-preview';
 
 
 export default function PreviewTemplatesPage() {
@@ -84,16 +83,14 @@ export default function PreviewTemplatesPage() {
     const templateId = templates[selectedSnap].id;
     setIsDownloading(templateId);
     
-    // Create a temporary element to render the component for PDF generation
     const printableArea = document.createElement('div');
     printableArea.id = `printable-area-temp-${templateId}`;
-    printableArea.className = "w-[210mm] h-[297mm] bg-white";
+    printableArea.className = "w-[210mm] h-[297mm] bg-white absolute -top-[9999px] -left-[9999px]";
     document.body.appendChild(printableArea);
 
     const tempRoot = (await import('react-dom/client')).createRoot(printableArea);
     tempRoot.render(<ResumePreview resumeData={resumeData!} templateId={templateId} />);
     
-    // Allow time for rendering
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const canvas = await html2canvas(printableArea, {
@@ -114,7 +111,6 @@ export default function PreviewTemplatesPage() {
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`resume-${templateId}.pdf`);
 
-    // Cleanup
     tempRoot.unmount();
     document.body.removeChild(printableArea);
     
@@ -152,14 +148,14 @@ export default function PreviewTemplatesPage() {
                 <CarouselContent>
                     {templates.map((template, index) => (
                         <CarouselItem key={template.id}>
-                            <Card className="border-0 bg-transparent">
-                                <CardContent className="p-0 aspect-[210/297] w-full overflow-hidden rounded-lg shadow-2xl bg-white">
-                                    <ScalableResumePreview
+                           <div className="w-full h-full overflow-hidden rounded-lg shadow-2xl bg-white aspect-[210/297]">
+                                <div className="w-[794px] h-[1123px] origin-top-left bg-white transform scale-[var(--scale-factor)]" style={{ '--scale-factor': 'calc(100% / 794px)' } as React.CSSProperties}>
+                                    <ResumePreview
                                         resumeData={resumeData}
                                         templateId={template.id}
                                     />
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
