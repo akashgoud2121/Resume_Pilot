@@ -1,11 +1,11 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Loader2, Download, PenSquare, Expand } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Loader2, Download, PenSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { ResumeData } from '@/lib/types';
 import { templates } from '@/lib/templates';
@@ -13,8 +13,10 @@ import { ResumePreview } from '@/components/resume-preview';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
+import Autoplay from "embla-carousel-autoplay"
+
 
 export default function PreviewTemplatesPage() {
   const router = useRouter();
@@ -22,6 +24,8 @@ export default function PreviewTemplatesPage() {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState<string | null>(null);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [selectedSnap, setSelectedSnap] = useState(0)
 
   useEffect(() => {
     try {
@@ -53,40 +57,66 @@ export default function PreviewTemplatesPage() {
     }
   }, [toast]);
   
-  const handleEdit = (templateId: string) => {
+  const onSelect = useCallback((api: CarouselApi) => {
+    if (!api) return;
+    setSelectedSnap(api.selectedScrollSnap())
+  }, [])
+
+  useEffect(() => {
+    if (!carouselApi) return;
+    
+    onSelect(carouselApi);
+    carouselApi.on("select", onSelect);
+
+    return () => {
+      carouselApi.off("select", onSelect);
+    };
+  }, [carouselApi, onSelect]);
+
+  const handleEdit = () => {
+    const templateId = templates[selectedSnap].id;
     history.pushState({ resumeData }, '', `/editor?template=${templateId}`);
     router.push(`/editor?template=${templateId}`);
   };
 
-  const handleDownload = async (templateId: string) => {
+  const handleDownload = async () => {
+    const templateId = templates[selectedSnap].id;
     setIsDownloading(templateId);
-    const printableArea = document.getElementById(`printable-area-${templateId}`);
+    
+    // Create a temporary element to render the component for PDF generation
+    const printableArea = document.createElement('div');
+    printableArea.id = `printable-area-temp-${templateId}`;
+    printableArea.className = "w-[210mm] h-[297mm] bg-white";
+    document.body.appendChild(printableArea);
 
-    if (printableArea) {
-      const canvas = await html2canvas(printableArea, {
+    const tempRoot = (await import('react-dom/client')).createRoot(printableArea);
+    tempRoot.render(<ResumePreview resumeData={resumeData!} templateId={templateId} />);
+    
+    // Allow time for rendering
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const canvas = await html2canvas(printableArea, {
         scale: 2,
         useCORS: true,
         logging: false,
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
+    });
+    
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4',
-      });
+    });
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`resume-${templateId}.pdf`);
-    } else {
-        toast({
-            title: "Download Failed",
-            description: "Could not find the resume content to download.",
-            variant: "destructive",
-        });
-    }
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`resume-${templateId}.pdf`);
+
+    // Cleanup
+    tempRoot.unmount();
+    document.body.removeChild(printableArea);
+    
     setIsDownloading(null);
   };
 
@@ -100,89 +130,87 @@ export default function PreviewTemplatesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8">
-        <header className="text-center mb-8 md:mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground">Choose Your Template</h1>
-            <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
-                Your resume is ready. Select a design you love, expand it for a closer look, then download or edit it to perfection.
+    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center">
+        <header className="text-center mb-8 md:mb-12 max-w-3xl">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground animate-fadeInUp">Choose Your Template</h1>
+            <p className="mt-2 text-muted-foreground animate-fadeInUp animation-delay-300">
+                Your resume is ready. Select a design you love, then download or edit it to perfection.
             </p>
         </header>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {templates.map((template) => (
-              <Dialog key={template.id}>
-                <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300 bg-card">
-                    <CardContent className="p-4 flex-grow relative group bg-zinc-800">
-                       <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white cursor-pointer">
-                          <DialogTrigger asChild>
-                            <div>
-                                <div className="w-full h-full scale-[0.23] sm:scale-[0.28] md:scale-[0.24] lg:scale-[0.28] xl:scale-[0.35] origin-top-left">
-                                <ResumePreview
-                                        resumeData={resumeData}
-                                        templateId={template.id}
-                                    />
-                                </div>
-                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Expand className="h-12 w-12 text-white" />
-                                </div>
-                            </div>
-                          </DialogTrigger>
-                       </div>
-                    </CardContent>
-                    <CardFooter className="bg-card/80 p-3 flex flex-col items-stretch gap-2 border-t">
-                        <h3 className="font-semibold text-center text-card-foreground">{template.name}</h3>
-                        <div className="flex gap-2 w-full">
-                            <Button
-                                variant="outline"
-                                className="w-full"
-                                onClick={() => handleDownload(template.id)}
-                                disabled={!!isDownloading}
-                            >
-                                {isDownloading === template.id ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Download className="mr-2 h-4 w-4" />
-                                )}
-                                Download
-                            </Button>
-                            <Button 
-                                className="w-full"
-                                onClick={() => handleEdit(template.id)}
-                                disabled={!!isDownloading}
-                            >
-                                <PenSquare className="mr-2 h-4 w-4" />
-                                Edit
-                            </Button>
-                        </div>
-                    </CardFooter>
-                </Card>
-                <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
-                  <DialogHeader>
-                    <DialogTitle>{template.name} Template Preview</DialogTitle>
-                  </DialogHeader>
-                  <ScrollArea className="flex-1 -mx-6">
-                    <div className="flex items-start justify-center p-4">
-                      <div className="scale-[0.8] origin-top">
-                        <ResumePreview
-                          resumeData={resumeData}
-                          templateId={template.id}
-                        />
-                      </div>
-                    </div>
-                  </ScrollArea>
-                </DialogContent>
-              </Dialog>
-            ))}
-        </div>
-        
-        {/* Hidden, for PDF generation */}
-        <div className="absolute -left-[9999px] -top-[9999px] opacity-0 pointer-events-none">
-            {templates.map(template => (
-                 <div key={`pdf-${template.id}`} id={`printable-area-${template.id}`} className="w-[210mm] h-[297mm]">
-                    <ResumePreview resumeData={resumeData} templateId={template.id} />
-                 </div>
-            ))}
-        </div>
+        <main className="w-full max-w-5xl flex flex-col items-center gap-8">
+            <Carousel
+                setApi={setCarouselApi}
+                opts={{
+                    align: "center",
+                    loop: true,
+                }}
+                plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
+                className="w-full max-w-lg animate-scaleIn"
+            >
+                <CarouselContent>
+                    {templates.map((template, index) => (
+                        <CarouselItem key={template.id}>
+                             <Card className="border-0 bg-transparent">
+                                <CardContent className="p-0 aspect-[210/297] w-full overflow-hidden rounded-lg shadow-2xl bg-white">
+                                    <div className="transform scale-[0.3] sm:scale-[0.4] md:scale-[0.5] origin-top-left w-[700px] h-[990px]">
+                                        <ResumePreview
+                                            resumeData={resumeData}
+                                            templateId={template.id}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="text-white -left-12"/>
+                <CarouselNext className="text-white -right-12"/>
+            </Carousel>
+
+            <div className="flex flex-col items-center gap-4 w-full animate-fadeInUp animation-delay-500">
+                <h3 className="text-xl font-semibold">{templates[selectedSnap]?.name}</h3>
+                <div className="flex space-x-2">
+                  {templates.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => carouselApi?.scrollTo(index)}
+                      className={cn(
+                        "h-2 w-2 rounded-full transition-all duration-300",
+                        selectedSnap === index ? "bg-primary w-6" : "bg-muted"
+                      )}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex gap-4 mt-4">
+                    <Button
+                        variant="outline"
+                        size="lg"
+                        className="w-40"
+                        onClick={handleDownload}
+                        disabled={!!isDownloading}
+                    >
+                        {isDownloading ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Download className="mr-2 h-4 w-4" />
+                        )}
+                        Download
+                    </Button>
+                    <Button 
+                        size="lg"
+                        className="w-40"
+                        onClick={handleEdit}
+                        disabled={!!isDownloading}
+                    >
+                        <PenSquare className="mr-2 h-4 w-4" />
+                        Edit & Finalize
+                    </Button>
+                </div>
+            </div>
+        </main>
     </div>
   );
 }
