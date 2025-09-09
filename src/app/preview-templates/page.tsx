@@ -16,6 +16,7 @@ import jsPDF from 'jspdf';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 import Autoplay from "embla-carousel-autoplay"
+import { ScalableResumePreview } from '@/components/scalable-resume-preview';
 
 
 export default function PreviewTemplatesPage() {
@@ -151,14 +152,12 @@ export default function PreviewTemplatesPage() {
                 <CarouselContent>
                     {templates.map((template, index) => (
                         <CarouselItem key={template.id}>
-                             <Card className="border-0 bg-transparent">
+                            <Card className="border-0 bg-transparent">
                                 <CardContent className="p-0 aspect-[210/297] w-full overflow-hidden rounded-lg shadow-2xl bg-white">
-                                    <div className="transform scale-[0.3] sm:scale-[0.4] md:scale-[0.5] origin-top-left w-[700px] h-[990px]">
-                                        <ResumePreview
-                                            resumeData={resumeData}
-                                            templateId={template.id}
-                                        />
-                                    </div>
+                                    <ScalableResumePreview
+                                        resumeData={resumeData}
+                                        templateId={template.id}
+                                    />
                                 </CardContent>
                             </Card>
                         </CarouselItem>
