@@ -131,13 +131,13 @@ export default function PreviewTemplatesPage() {
                     animation="animate-fadeInUp"
                     animationOptions={{ delay: 300 + index * 100 }}
                  >
-                    <Card className="flex flex-col bg-card/50 border-white/10 overflow-hidden h-full transition-all duration-300 hover:border-primary/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10">
-                       <Dialog>
-                             <CardHeader className="flex-row items-start justify-between p-4">
-                               <div>
+                    <Dialog>
+                        <Card className="flex flex-col bg-card/50 border-white/10 overflow-hidden h-full transition-all duration-300 hover:border-primary/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10">
+                            <CardHeader className="flex-row items-start justify-between p-4">
+                                <div>
                                 <CardTitle className="text-base">{template.name}</CardTitle>
                                 <p className="text-xs text-muted-foreground">{template.category}</p>
-                               </div>
+                                </div>
                                 <DialogTrigger asChild>
                                     <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
                                         <Expand className="h-4 w-4" />
@@ -152,15 +152,14 @@ export default function PreviewTemplatesPage() {
                                 }}
                             >
                                 <DialogTrigger className="w-full h-full flex items-center justify-center">
-                                    <div className="relative w-full h-full overflow-hidden rounded-md">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent group-hover:from-black/50 transition-all"/>
-                                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[794px] h-[1123px] origin-center transition-transform duration-300 group-hover:scale-[0.27]" style={{ transform: 'scale(0.25)' }}>
-                                             <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                    <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                                        <div className="transform scale-[0.38] origin-top-left w-[789px] h-[1116px]">
+                                            <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
                                     </div>
                                 </DialogTrigger>
                             </CardContent>
-                             <DialogContent className="w-full max-w-[95vw] md:max-w-4xl lg:max-w-5xl h-[95vh] p-4 flex flex-col">
+                            <DialogContent className="w-full max-w-[95vw] md:max-w-4xl lg:max-w-5xl h-[95vh] p-4 flex flex-col">
                                 <DialogHeader>
                                     <DialogTitle>{template.name} Template Preview</DialogTitle>
                                 </DialogHeader>
@@ -174,31 +173,31 @@ export default function PreviewTemplatesPage() {
                                     </ScrollArea>
                                 </div>
                             </DialogContent>
-                       </Dialog>
-                        <CardFooter className="flex gap-2 p-4 mt-auto bg-card">
-                             <Button
-                                variant="outline"
-                                className="w-full"
-                                onClick={() => handleDownload(template.id)}
-                                disabled={isDownloading === template.id}
-                            >
-                                {isDownloading === template.id ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Download className="mr-2 h-4 w-4" />
-                                )}
-                                Download
-                            </Button>
-                            <Button 
-                                className="w-full"
-                                onClick={() => handleEdit(template.id)}
-                                disabled={!!isDownloading}
-                            >
-                                <PenSquare className="mr-2 h-4 w-4" />
-                                Edit
-                            </Button>
-                        </CardFooter>
-                    </Card>
+                            <CardFooter className="flex gap-2 p-4 mt-auto bg-card">
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() => handleDownload(template.id)}
+                                    disabled={isDownloading === template.id}
+                                >
+                                    {isDownloading === template.id ? (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Download className="mr-2 h-4 w-4" />
+                                    )}
+                                    Download
+                                </Button>
+                                <Button 
+                                    className="w-full"
+                                    onClick={() => handleEdit(template.id)}
+                                    disabled={!!isDownloading}
+                                >
+                                    <PenSquare className="mr-2 h-4 w-4" />
+                                    Edit
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    </Dialog>
                  </ScrollAnimation>
             ))}
         </main>
