@@ -18,7 +18,7 @@ import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 
@@ -154,13 +154,16 @@ function EditorPageContent() {
   return (
     <div className="flex h-screen bg-background text-foreground">
         {/* Mobile Sidebar */}
-         <Sheet open={isSidebarOpen && window.innerWidth < 1024} onOpenChange={setIsSidebarOpen}>
+         <Sheet open={isSidebarOpen && typeof window !== 'undefined' && window.innerWidth < 1024} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 lg:hidden bg-background/50 backdrop-blur-sm">
                     <Menu/>
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-80">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Edit Resume</SheetTitle>
+                </SheetHeader>
                 <EditorSidebar form={form} router={router} setIsSidebarOpen={setIsSidebarOpen} />
             </SheetContent>
         </Sheet>
