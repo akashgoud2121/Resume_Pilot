@@ -145,11 +145,11 @@ export default function PreviewTemplatesPage() {
                 plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
                 className="w-full max-w-lg animate-scaleIn"
             >
-                <CarouselContent>
+                <CarouselContent className="-ml-4">
                     {templates.map((template, index) => (
-                        <CarouselItem key={template.id}>
-                           <div className="w-full h-full overflow-hidden rounded-lg shadow-2xl bg-white aspect-[210/297]">
-                                <div className="w-[794px] h-[1123px] origin-top-left bg-white transform scale-[var(--scale-factor)]" style={{ '--scale-factor': 'calc(100% / 794px)' } as React.CSSProperties}>
+                        <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-full group">
+                            <div className="w-full h-full overflow-hidden rounded-lg shadow-2xl bg-white aspect-[210/297]">
+                               <div className="w-[789px] h-[1116px] origin-top-left bg-white transform scale-[0.43]">
                                     <ResumePreview
                                         resumeData={resumeData}
                                         templateId={template.id}
