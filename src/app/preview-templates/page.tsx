@@ -16,6 +16,7 @@ import jsPDF from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ScrollAnimation from '@/components/ui/scroll-animation';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function PreviewTemplatesPage() {
   const router = useRouter();
@@ -144,10 +145,10 @@ export default function PreviewTemplatesPage() {
                                     </Button>
                                 </DialogTrigger>
                             </CardHeader>
-                            <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer min-h-[400px]">
+                            <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer max-h-[450px] overflow-hidden group">
                                <DialogTrigger className="w-full h-full">
-                                    <div className="w-full aspect-[210/297] relative mx-auto">
-                                        <div className="absolute inset-0 transform scale-[0.3] origin-top-left -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                                    <div className="relative w-full h-full overflow-hidden">
+                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[794px] h-[1123px] origin-top transition-transform duration-300 group-hover:scale-[0.43]" style={{ transform: 'scale(0.4)' }}>
                                              <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
                                     </div>
@@ -157,18 +158,14 @@ export default function PreviewTemplatesPage() {
                                 <DialogHeader>
                                     <DialogTitle>{template.name} Template Preview</DialogTitle>
                                 </DialogHeader>
-                                <div className="flex-1 min-h-0 flex items-center justify-center">
-                                    <div className="w-full h-full flex items-center justify-center">
+                                <div className="flex-1 min-h-0 flex items-center justify-center bg-muted/20 rounded-lg">
+                                    <ScrollArea className="w-full h-full">
                                          <div 
-                                            className="w-[794px] h-[1123px] bg-white shadow-lg" 
-                                            style={{ 
-                                                transform: 'scale(min(0.9, calc(85vh / 1123px)))',
-                                                transformOrigin: 'center center' 
-                                            }}
+                                            className="w-[794px] h-[1123px] bg-white shadow-lg mx-auto my-4" 
                                          >
                                             <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
-                                    </div>
+                                    </ScrollArea>
                                 </div>
                             </DialogContent>
                        </Dialog>
