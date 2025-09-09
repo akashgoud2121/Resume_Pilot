@@ -15,7 +15,6 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ScrollAnimation from '@/components/ui/scroll-animation';
-import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function PreviewTemplatesPage() {
@@ -145,14 +144,21 @@ export default function PreviewTemplatesPage() {
                                     </Button>
                                 </DialogTrigger>
                             </CardHeader>
-                            <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer max-h-[450px] overflow-hidden group">
-                               <DialogTrigger className="w-full h-full">
-                                    <div className="relative w-full h-full overflow-hidden">
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[794px] h-[1123px] origin-top transition-transform duration-300 group-hover:scale-[0.43]" style={{ transform: 'scale(0.4)' }}>
+                            <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer min-h-[300px] group"
+                                style={{
+                                    backgroundImage: 'url(https://www.transparenttextures.com/patterns/carbon-fibre.png)',
+                                    backgroundSize: '100px',
+                                    backgroundColor: 'hsl(var(--card))'
+                                }}
+                            >
+                                <DialogTrigger className="w-full h-full flex items-center justify-center">
+                                    <div className="relative w-full h-full overflow-hidden rounded-md">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent group-hover:from-black/50 transition-all"/>
+                                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[794px] h-[1123px] origin-center transition-transform duration-300 group-hover:scale-[0.27]" style={{ transform: 'scale(0.25)' }}>
                                              <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
                                     </div>
-                               </DialogTrigger>
+                                </DialogTrigger>
                             </CardContent>
                              <DialogContent className="w-full max-w-[95vw] md:max-w-4xl lg:max-w-5xl h-[95vh] p-4 flex flex-col">
                                 <DialogHeader>
