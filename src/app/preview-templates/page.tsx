@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,6 +62,7 @@ export default function PreviewTemplatesPage() {
   const handleDownload = async (templateId: string) => {
     setIsDownloading(templateId);
 
+    // Create a hidden element to render the full-size resume for PDF generation
     const printableArea = document.createElement('div');
     printableArea.id = `printable-area-temp-${templateId}`;
     printableArea.style.position = 'absolute';
@@ -76,6 +77,7 @@ export default function PreviewTemplatesPage() {
     const tempRoot = createRoot(printableArea);
     tempRoot.render(<ResumePreview resumeData={resumeData!} templateId={templateId} />);
     
+    // Wait for the render to complete
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const canvas = await html2canvas(printableArea, {
@@ -96,6 +98,7 @@ export default function PreviewTemplatesPage() {
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`resume-${templateId}.pdf`);
 
+    // Clean up the temporary element
     tempRoot.unmount();
     document.body.removeChild(printableArea);
     
@@ -131,37 +134,37 @@ export default function PreviewTemplatesPage() {
                     animation="animate-fadeInUp"
                     animationOptions={{ delay: 300 + index * 100 }}
                  >
-                    <Card className="flex flex-col bg-card/50 border-white/10 overflow-hidden h-full transition-all duration-300 hover:border-primary/50 hover:scale-105 hover:shadow-2xl hover:shadow-primary/10">
-                        <CardHeader className="flex-row items-center justify-between p-4">
-                           <div>
-                            <CardTitle className="text-base">{template.name}</CardTitle>
-                            <p className="text-xs text-muted-foreground">{template.category}</p>
-                           </div>
-                           <Dialog>
+                    <Card className="flex flex-col bg-card/50 border-white/10 overflow-hidden h-full transition-all duration-300 hover:border-primary/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10">
+                       <Dialog>
+                            <CardHeader className="flex-row items-center justify-between p-4">
+                               <div>
+                                <CardTitle className="text-base">{template.name}</CardTitle>
+                                <p className="text-xs text-muted-foreground">{template.category}</p>
+                               </div>
                                 <DialogTrigger asChild>
                                     <Button variant="outline" size="icon">
                                         <Expand className="h-4 w-4" />
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-4xl h-[90vh]">
-                                    <DialogHeader>
-                                        <DialogTitle>{template.name} Template</DialogTitle>
-                                    </DialogHeader>
-                                    <ScrollArea className="h-full mt-4 pr-4">
-                                        <div className="w-[794px] h-[1123px] bg-white shadow-lg mx-auto">
-                                            <ResumePreview resumeData={resumeData} templateId={template.id} />
-                                        </div>
-                                    </ScrollArea>
-                                </DialogContent>
-                           </Dialog>
-                        </CardHeader>
-                        <CardContent className="p-2 bg-muted/30 h-full max-h-[400px] overflow-hidden">
-                           <div className="w-full h-full overflow-hidden border rounded-md">
-                                <div className="w-[794px] h-[1123px] origin-top-left bg-white" style={{ transform: 'scale(0.38) translate(-8px, -8px)' }}>
-                                    <ResumePreview resumeData={resumeData} templateId={template.id} />
-                                </div>
-                           </div>
-                        </CardContent>
+                            </CardHeader>
+                            <CardContent className="p-2 bg-muted/30 h-full max-h-[400px] overflow-hidden">
+                               <div className="w-full h-full overflow-hidden border rounded-md">
+                                    <div className="w-[794px] h-[1123px] origin-top-left bg-white" style={{ transform: 'scale(0.38) translate(-8px, -8px)' }}>
+                                        <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                    </div>
+                               </div>
+                            </CardContent>
+                            <DialogContent className="max-w-4xl h-[90vh]">
+                                <DialogHeader>
+                                    <DialogTitle>{template.name} Template</DialogTitle>
+                                </DialogHeader>
+                                <ScrollArea className="h-full mt-4 pr-4">
+                                    <div className="w-[794px] h-[1123px] bg-white shadow-lg mx-auto">
+                                        <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                    </div>
+                                </ScrollArea>
+                            </DialogContent>
+                       </Dialog>
                         <CardFooter className="flex gap-2 p-4 mt-auto bg-card">
                              <Button
                                 variant="outline"
