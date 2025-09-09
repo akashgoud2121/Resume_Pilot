@@ -9,16 +9,17 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, ArrowLeft, Download, Palette } from 'lucide-react';
+import { Loader2, ArrowLeft, Download, Palette, Menu } from 'lucide-react';
 import { ResumeEditorForm } from '@/components/resume-editor-form';
 import { ResumePreview } from '@/components/resume-preview';
-import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarInset } from '@/components/ui/sidebar';
 import type { ResumeData } from '@/lib/types';
 import { resumeSchema } from '@/lib/types';
 import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 function EditorPageContent() {
   const router = useRouter();
@@ -27,6 +28,7 @@ function EditorPageContent() {
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   useEffect(() => {
     const templateId = searchParams.get('template');
@@ -125,33 +127,60 @@ function EditorPageContent() {
     setIsDownloading(false);
   };
 
-  return (
-    <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground">
-        <Sidebar collapsible="icon">
-          <SidebarHeader>
-             <div className="flex items-center justify-between">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+  const EditorSidebar = () => (
+    <div className="flex flex-col h-full bg-card border-r border-border">
+        <header className="flex items-center justify-between p-4 border-b border-border">
+             <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => router.back()} className="h-8 w-8">
                     <ArrowLeft />
                 </Button>
                 <h2 className="font-semibold text-lg">Editor</h2>
-                <SidebarTrigger />
              </div>
-          </SidebarHeader>
-          <ScrollArea className="flex-1">
-             <SidebarContent>
-                <ResumeEditorForm form={form} />
-             </SidebarContent>
-          </ScrollArea>
-        </Sidebar>
+             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="h-8 w-8 hidden lg:flex">
+                 <ArrowLeft />
+             </Button>
+        </header>
+        <ScrollArea className="flex-1">
+            <ResumeEditorForm form={form} />
+        </ScrollArea>
+    </div>
+  )
+
+  return (
+    <div className="flex h-screen bg-background text-foreground">
+        {/* Mobile Sidebar */}
+         <Sheet>
+            <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 lg:hidden bg-background/50 backdrop-blur-sm">
+                    <Menu/>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-80">
+                <EditorSidebar />
+            </SheetContent>
+        </Sheet>
         
+        {/* Desktop Sidebar */}
+        <aside className={cn(
+            "hidden lg:block transition-all duration-300 ease-in-out",
+            isSidebarOpen ? "w-96" : "w-0"
+        )}>
+           {isSidebarOpen && <EditorSidebar />}
+        </aside>
+
+        {/* Main Content */}
         <FormProvider {...form}>
-            <SidebarInset className="bg-muted/40 p-4 flex flex-col">
-                <header className="bg-background/80 backdrop-blur-sm rounded-lg p-2 mb-4 border flex items-center justify-between shadow-sm">
+            <div className="flex-1 flex flex-col bg-muted/40">
+                <header className="bg-background/80 backdrop-blur-sm rounded-lg p-2 m-4 border flex items-center justify-between shadow-sm">
                     <div className="flex items-center gap-2">
-                        <Palette className="text-primary"/>
+                        {!isSidebarOpen && (
+                             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="h-8 w-8 hidden lg:flex">
+                                 <Menu />
+                             </Button>
+                        )}
+                        <Palette className="text-primary hidden sm:block"/>
                         <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[150px] sm:w-[180px]">
                             <SelectValue placeholder="Select a template" />
                         </SelectTrigger>
                         <SelectContent>
@@ -163,31 +192,30 @@ function EditorPageContent() {
                         </SelectContent>
                         </Select>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="outline"
-                            onClick={handleDownload}
-                            disabled={isDownloading}
-                        >
-                            {isDownloading ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <Download className="mr-2 h-4 w-4" />
-                            )}
-                            Download PDF
-                        </Button>
-                    </div>
+                    <Button
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        className="flex-shrink-0"
+                    >
+                        {isDownloading ? (
+                            <Loader2 className="mr-0 sm:mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Download className="mr-0 sm:mr-2 h-4 w-4" />
+                        )}
+                        <span className="hidden sm:inline">Download PDF</span>
+                    </Button>
                 </header>
 
-                <ScrollArea className="flex-1 rounded-lg">
-                <div className="flex items-start justify-center p-4">
-                    <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
-                </div>
+                <ScrollArea className="flex-1">
+                    <div className="flex items-start justify-center p-4 lg:p-8">
+                       <div id="printable-area" className="w-[210mm] h-[297mm] shadow-2xl">
+                         <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
+                       </div>
+                    </div>
                 </ScrollArea>
-            </SidebarInset>
+            </div>
         </FormProvider>
       </div>
-    </SidebarProvider>
   );
 }
 
