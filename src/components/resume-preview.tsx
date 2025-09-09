@@ -42,11 +42,7 @@ export function ResumePreview({ resumeData, templateId }: ResumePreviewProps) {
   };
 
   return (
-    <div 
-      className={cn(
-        "bg-white shadow-lg w-[210mm] h-[297mm]"
-      )}
-    >
+    <div className="bg-white shadow-lg w-[210mm] h-[297mm]">
       {renderTemplate()}
     </div>
   );
