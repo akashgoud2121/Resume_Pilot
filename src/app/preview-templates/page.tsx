@@ -101,34 +101,36 @@ export default function PreviewTemplatesPage() {
 
   return (
     <div className="min-h-screen bg-muted/40 p-4 sm:p-6 md:p-8">
-        <header className="text-center mb-8">
+        <header className="text-center mb-8 md:mb-12">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Choose Your Template</h1>
             <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
-                Your resume data has been populated into our templates. Select a design you like to download it, edit it, or click the expand icon to get a closer look.
+                Your resume is ready. Select a design you love, expand it for a closer look, then download or edit it to perfection.
             </p>
         </header>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {templates.map((template) => (
               <Dialog key={template.id}>
-                <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300">
+                <Card className="flex flex-col overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300 bg-card">
                     <CardContent className="p-4 flex-grow relative group bg-zinc-800">
                        <div className="aspect-[210/297] w-full overflow-hidden border rounded-lg bg-white cursor-pointer">
                           <DialogTrigger asChild>
-                            <div className="w-full h-full scale-[0.23] sm:scale-[0.28] md:scale-[0.24] lg:scale-[0.28] xl:scale-[0.35] origin-top-left">
-                               <ResumePreview
-                                    resumeData={resumeData}
-                                    templateId={template.id}
-                                />
-                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <Expand className="h-12 w-12 text-white" />
-                              </div>
+                            <div>
+                                <div className="w-full h-full scale-[0.23] sm:scale-[0.28] md:scale-[0.24] lg:scale-[0.28] xl:scale-[0.35] origin-top-left">
+                                <ResumePreview
+                                        resumeData={resumeData}
+                                        templateId={template.id}
+                                    />
+                                </div>
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Expand className="h-12 w-12 text-white" />
+                                </div>
                             </div>
                           </DialogTrigger>
                        </div>
                     </CardContent>
-                    <CardFooter className="bg-background/50 p-3 flex flex-col items-stretch gap-2 border-t">
-                        <h3 className="font-semibold text-center">{template.name}</h3>
+                    <CardFooter className="bg-card/80 p-3 flex flex-col items-stretch gap-2 border-t">
+                        <h3 className="font-semibold text-center text-card-foreground">{template.name}</h3>
                         <div className="flex gap-2 w-full">
                             <Button
                                 variant="outline"
