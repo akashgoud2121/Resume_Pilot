@@ -14,7 +14,6 @@ import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import ScrollAnimation from '@/components/ui/scroll-animation';
 import { cn } from '@/lib/utils';
 
@@ -63,7 +62,6 @@ export default function PreviewTemplatesPage() {
   const handleDownload = async (templateId: string) => {
     setIsDownloading(templateId);
 
-    // Create a hidden element to render the full-size resume for PDF generation
     const printableArea = document.createElement('div');
     printableArea.id = `printable-area-temp-${templateId}`;
     printableArea.style.position = 'absolute';
@@ -78,7 +76,6 @@ export default function PreviewTemplatesPage() {
     const tempRoot = createRoot(printableArea);
     tempRoot.render(<ResumePreview resumeData={resumeData!} templateId={templateId} />);
     
-    // Wait for the render to complete
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const canvas = await html2canvas(printableArea, {
@@ -99,7 +96,6 @@ export default function PreviewTemplatesPage() {
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`resume-${templateId}.pdf`);
 
-    // Clean up the temporary element
     tempRoot.unmount();
     document.body.removeChild(printableArea);
     
@@ -137,40 +133,40 @@ export default function PreviewTemplatesPage() {
                  >
                     <Card className="flex flex-col bg-card/50 border-white/10 overflow-hidden h-full transition-all duration-300 hover:border-primary/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10">
                        <Dialog>
-                            <CardHeader className="flex-row items-center justify-between p-4">
+                             <CardHeader className="flex-row items-start justify-between p-4">
                                <div>
                                 <CardTitle className="text-base">{template.name}</CardTitle>
                                 <p className="text-xs text-muted-foreground">{template.category}</p>
                                </div>
                                 <DialogTrigger asChild>
-                                    <Button variant="outline" size="icon">
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
                                         <Expand className="h-4 w-4" />
                                     </Button>
                                 </DialogTrigger>
                             </CardHeader>
-                            <CardContent className="p-2 bg-muted/30 h-full max-h-[400px] overflow-hidden">
-                               <div className="w-full h-full overflow-hidden border rounded-md">
-                                    <div className="w-[794px] h-[1123px] origin-top-left bg-white" style={{ transform: 'scale(0.38) translate(-8px, -8px)' }}>
-                                        <ResumePreview resumeData={resumeData} templateId={template.id} />
+                            <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer min-h-[400px]">
+                               <DialogTrigger className="w-full h-full">
+                                    <div className="w-full aspect-[210/297] relative mx-auto">
+                                        <div className="absolute inset-0 transform scale-[0.3] origin-top-left -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                                             <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                        </div>
                                     </div>
-                               </div>
+                               </DialogTrigger>
                             </CardContent>
-                             <DialogContent className="w-full max-w-[90vw] md:max-w-4xl lg:max-w-5xl h-[90vh] p-4 flex flex-col">
+                             <DialogContent className="w-full max-w-[95vw] md:max-w-4xl lg:max-w-5xl h-[95vh] p-4 flex flex-col">
                                 <DialogHeader>
-                                    <DialogTitle>{template.name} Template</DialogTitle>
+                                    <DialogTitle>{template.name} Template Preview</DialogTitle>
                                 </DialogHeader>
                                 <div className="flex-1 min-h-0 flex items-center justify-center">
-                                    <div className="w-full h-full relative">
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                             <div 
-                                                className="w-[794px] h-[1123px] bg-white shadow-lg" 
-                                                style={{ 
-                                                    transform: 'scale(calc(min(85vh / 1123, 85vw / 794)))', 
-                                                    transformOrigin: 'center center' 
-                                                }}
-                                             >
-                                                <ResumePreview resumeData={resumeData} templateId={template.id} />
-                                            </div>
+                                    <div className="w-full h-full flex items-center justify-center">
+                                         <div 
+                                            className="w-[794px] h-[1123px] bg-white shadow-lg" 
+                                            style={{ 
+                                                transform: 'scale(min(0.9, calc(85vh / 1123px)))',
+                                                transformOrigin: 'center center' 
+                                            }}
+                                         >
+                                            <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
                                     </div>
                                 </div>
