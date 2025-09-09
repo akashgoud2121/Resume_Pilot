@@ -2,8 +2,8 @@
 'use client';
 
 import { useState, useEffect, useLayoutEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useRouter, useSearchParams, type NextRouter } from 'next/navigation';
+import { useForm, FormProvider, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -20,6 +20,27 @@ import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+
+
+// Moved EditorSidebar outside of EditorPageContent to prevent re-creation on every render
+const EditorSidebar = ({ form, router, setIsSidebarOpen }: { form: UseFormReturn<ResumeData>, router: NextRouter, setIsSidebarOpen: (isOpen: boolean) => void }) => (
+    <div className="flex flex-col h-full bg-card border-r border-border">
+        <header className="flex items-center justify-between p-4 border-b border-border">
+             <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => router.back()} className="h-8 w-8">
+                    <ArrowLeft />
+                </Button>
+                <h2 className="font-semibold text-lg">Editor</h2>
+             </div>
+             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="h-8 w-8 hidden lg:flex">
+                 <ArrowLeft />
+             </Button>
+        </header>
+        <ScrollArea className="flex-1">
+            <ResumeEditorForm form={form} />
+        </ScrollArea>
+    </div>
+);
 
 function EditorPageContent() {
   const router = useRouter();
@@ -94,9 +115,12 @@ function EditorPageContent() {
   }, []);
 
   useEffect(() => {
-    const validatedData = resumeSchema.safeParse(watchedData);
-    if(validatedData.success && Object.keys(validatedData.data).length > 0){
-        sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
+    // Only stringify and set item if watchedData is not empty
+    if (Object.keys(watchedData).length > 0) {
+      const validatedData = resumeSchema.safeParse(watchedData);
+      if(validatedData.success){
+          sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
+      }
     }
   }, [watchedData]);
 
@@ -127,36 +151,17 @@ function EditorPageContent() {
     setIsDownloading(false);
   };
 
-  const EditorSidebar = () => (
-    <div className="flex flex-col h-full bg-card border-r border-border">
-        <header className="flex items-center justify-between p-4 border-b border-border">
-             <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={() => router.back()} className="h-8 w-8">
-                    <ArrowLeft />
-                </Button>
-                <h2 className="font-semibold text-lg">Editor</h2>
-             </div>
-             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="h-8 w-8 hidden lg:flex">
-                 <ArrowLeft />
-             </Button>
-        </header>
-        <ScrollArea className="flex-1">
-            <ResumeEditorForm form={form} />
-        </ScrollArea>
-    </div>
-  )
-
   return (
     <div className="flex h-screen bg-background text-foreground">
         {/* Mobile Sidebar */}
-         <Sheet>
+         <Sheet open={isSidebarOpen && window.innerWidth < 1024} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 lg:hidden bg-background/50 backdrop-blur-sm">
                     <Menu/>
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 w-80">
-                <EditorSidebar />
+                <EditorSidebar form={form} router={router} setIsSidebarOpen={setIsSidebarOpen} />
             </SheetContent>
         </Sheet>
         
@@ -165,7 +170,7 @@ function EditorPageContent() {
             "hidden lg:block transition-all duration-300 ease-in-out",
             isSidebarOpen ? "w-96" : "w-0"
         )}>
-           {isSidebarOpen && <EditorSidebar />}
+           {isSidebarOpen && <EditorSidebar form={form} router={router} setIsSidebarOpen={setIsSidebarOpen} />}
         </aside>
 
         {/* Main Content */}
@@ -208,7 +213,7 @@ function EditorPageContent() {
 
                 <ScrollArea className="flex-1">
                     <div className="flex items-start justify-center p-4 lg:p-8">
-                       <div id="printable-area" className="w-[210mm] h-[297mm] shadow-2xl">
+                       <div id="printable-area" className="w-[210mm] h-[297mm] shadow-2xl bg-white">
                          <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
                        </div>
                     </div>
