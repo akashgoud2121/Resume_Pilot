@@ -16,6 +16,7 @@ import jsPDF from 'jspdf';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ScrollAnimation from '@/components/ui/scroll-animation';
+import { cn } from '@/lib/utils';
 
 export default function PreviewTemplatesPage() {
   const router = useRouter();
@@ -154,15 +155,25 @@ export default function PreviewTemplatesPage() {
                                     </div>
                                </div>
                             </CardContent>
-                            <DialogContent className="max-w-4xl h-[90vh]">
+                             <DialogContent className="w-full max-w-[90vw] md:max-w-4xl lg:max-w-5xl h-[90vh] p-4 flex flex-col">
                                 <DialogHeader>
                                     <DialogTitle>{template.name} Template</DialogTitle>
                                 </DialogHeader>
-                                <ScrollArea className="h-full mt-4 pr-4">
-                                    <div className="w-[794px] h-[1123px] bg-white shadow-lg mx-auto">
-                                        <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                <div className="flex-1 min-h-0 flex items-center justify-center">
+                                    <div className="w-full h-full relative">
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                             <div 
+                                                className="w-[794px] h-[1123px] bg-white shadow-lg" 
+                                                style={{ 
+                                                    transform: 'scale(calc(min(85vh / 1123, 85vw / 794)))', 
+                                                    transformOrigin: 'center center' 
+                                                }}
+                                             >
+                                                <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                            </div>
+                                        </div>
                                     </div>
-                                </ScrollArea>
+                                </div>
                             </DialogContent>
                        </Dialog>
                         <CardFooter className="flex gap-2 p-4 mt-auto bg-card">
