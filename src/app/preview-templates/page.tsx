@@ -100,7 +100,7 @@ export default function PreviewTemplatesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/40 p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8">
         <header className="text-center mb-8 md:mb-12">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">Choose Your Template</h1>
             <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">

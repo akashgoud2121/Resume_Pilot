@@ -43,7 +43,6 @@ export function ResumePreview({ resumeData, templateId }: ResumePreviewProps) {
 
   return (
     <div 
-      id="printable-area"
       className={cn(
         "bg-white shadow-lg w-[210mm] h-[297mm] transform-gpu"
       )}
