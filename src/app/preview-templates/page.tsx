@@ -1,11 +1,11 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Loader2, Download, PenSquare } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, Download, PenSquare, Expand } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { ResumeData } from '@/lib/types';
 import { templates } from '@/lib/templates';
@@ -13,10 +13,8 @@ import { ResumePreview } from '@/components/resume-preview';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { cn } from '@/lib/utils';
-import Autoplay from "embla-carousel-autoplay"
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function PreviewTemplatesPage() {
   const router = useRouter();
@@ -24,8 +22,6 @@ export default function PreviewTemplatesPage() {
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState<string | null>(null);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
-  const [selectedSnap, setSelectedSnap] = useState(0)
 
   useEffect(() => {
     try {
@@ -56,36 +52,25 @@ export default function PreviewTemplatesPage() {
         setIsLoading(false);
     }
   }, [toast]);
-  
-  const onSelect = useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setSelectedSnap(api.selectedScrollSnap())
-  }, [])
 
-  useEffect(() => {
-    if (!carouselApi) return;
-    
-    onSelect(carouselApi);
-    carouselApi.on("select", onSelect);
-
-    return () => {
-      carouselApi.off("select", onSelect);
-    };
-  }, [carouselApi, onSelect]);
-
-  const handleEdit = () => {
-    const templateId = templates[selectedSnap].id;
+  const handleEdit = (templateId: string) => {
     history.pushState({ resumeData }, '', `/editor?template=${templateId}`);
     router.push(`/editor?template=${templateId}`);
   };
 
-  const handleDownload = async () => {
-    const templateId = templates[selectedSnap].id;
+  const handleDownload = async (templateId: string) => {
     setIsDownloading(templateId);
-    
+
     const printableArea = document.createElement('div');
     printableArea.id = `printable-area-temp-${templateId}`;
-    printableArea.className = "w-[210mm] h-[297mm] bg-white absolute -top-[9999px] -left-[9999px]";
+    // Position it off-screen
+    printableArea.style.position = 'absolute';
+    printableArea.style.left = '-9999px';
+    printableArea.style.top = '-9999px';
+    // Set it to the exact A4 dimensions in pixels (at 96 DPI)
+    printableArea.style.width = '794px';
+    printableArea.style.height = '1123px';
+    printableArea.style.background = 'white';
     document.body.appendChild(printableArea);
 
     const tempRoot = (await import('react-dom/client')).createRoot(printableArea);
@@ -94,7 +79,7 @@ export default function PreviewTemplatesPage() {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const canvas = await html2canvas(printableArea, {
-        scale: 2,
+        scale: 2, // Higher scale for better quality
         useCORS: true,
         logging: false,
     });
@@ -111,6 +96,7 @@ export default function PreviewTemplatesPage() {
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`resume-${templateId}.pdf`);
 
+    // Cleanup
     tempRoot.unmount();
     document.body.removeChild(printableArea);
     
@@ -127,84 +113,69 @@ export default function PreviewTemplatesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center">
-        <header className="text-center mb-8 md:mb-12 max-w-3xl">
+    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8">
+        <header className="text-center mb-8 md:mb-12 max-w-3xl mx-auto">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground animate-fadeInUp">Choose Your Template</h1>
             <p className="mt-2 text-muted-foreground animate-fadeInUp animation-delay-300">
                 Your resume is ready. Select a design you love, then download or edit it to perfection.
             </p>
         </header>
         
-        <main className="w-full max-w-5xl flex flex-col items-center gap-8">
-            <Carousel
-                setApi={setCarouselApi}
-                opts={{
-                    align: "center",
-                    loop: true,
-                }}
-                plugins={[Autoplay({ delay: 5000, stopOnInteraction: true })]}
-                className="w-full max-w-lg animate-scaleIn"
-            >
-                <CarouselContent className="-ml-4">
-                    {templates.map((template, index) => (
-                        <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-full group">
-                            <div className="w-full h-full overflow-hidden rounded-lg shadow-2xl bg-white aspect-[210/297]">
-                               <div className="w-[789px] h-[1116px] origin-top-left bg-white transform scale-[0.43]">
-                                    <ResumePreview
-                                        resumeData={resumeData}
-                                        templateId={template.id}
-                                    />
-                                </div>
+        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {templates.map((template) => (
+                <Card key={template.id} className="flex flex-col animate-fadeInUp animation-delay-500 overflow-hidden">
+                    <Dialog>
+                       <DialogTrigger asChild>
+                         <CardContent className="p-4 bg-muted/30 aspect-[210/297] cursor-pointer group relative">
+                            <div className="w-[794px] h-[1123px] origin-top-left bg-white transform scale-[0.3]">
+                                <ResumePreview resumeData={resumeData} templateId={template.id} />
                             </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="text-white -left-12"/>
-                <CarouselNext className="text-white -right-12"/>
-            </Carousel>
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Expand className="text-white h-12 w-12" />
+                            </div>
+                         </CardContent>
+                       </DialogTrigger>
+                       <DialogContent className="max-w-4xl h-[90vh]">
+                          <DialogHeader>
+                            <DialogTitle>{template.name} Template</DialogTitle>
+                          </DialogHeader>
+                          <ScrollArea className="h-full">
+                            <div className="w-[794px] h-[1123px] origin-top-left bg-white transform scale-[0.9] -translate-x-10 -translate-y-10">
+                                <ResumePreview resumeData={resumeData} templateId={template.id} />
+                            </div>
+                          </ScrollArea>
+                       </DialogContent>
+                    </Dialog>
 
-            <div className="flex flex-col items-center gap-4 w-full animate-fadeInUp animation-delay-500">
-                <h3 className="text-xl font-semibold">{templates[selectedSnap]?.name}</h3>
-                <div className="flex space-x-2">
-                  {templates.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => carouselApi?.scrollTo(index)}
-                      className={cn(
-                        "h-2 w-2 rounded-full transition-all duration-300",
-                        selectedSnap === index ? "bg-primary w-6" : "bg-muted"
-                      )}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex gap-4 mt-4">
-                    <Button
-                        variant="outline"
-                        size="lg"
-                        className="w-40"
-                        onClick={handleDownload}
-                        disabled={!!isDownloading}
-                    >
-                        {isDownloading ? (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            <Download className="mr-2 h-4 w-4" />
-                        )}
-                        Download
-                    </Button>
-                    <Button 
-                        size="lg"
-                        className="w-40"
-                        onClick={handleEdit}
-                        disabled={!!isDownloading}
-                    >
-                        <PenSquare className="mr-2 h-4 w-4" />
-                        Edit & Finalize
-                    </Button>
-                </div>
-            </div>
+                    <CardFooter className="flex-col items-start p-4 mt-auto">
+                        <h3 className="font-semibold">{template.name}</h3>
+                        <p className="text-xs text-muted-foreground">{template.category}</p>
+                        <div className="flex gap-2 mt-4 w-full">
+                             <Button
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => handleDownload(template.id)}
+                                disabled={isDownloading === template.id}
+                            >
+                                {isDownloading === template.id ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Download className="mr-2 h-4 w-4" />
+                                )}
+                                Download
+                            </Button>
+                            <Button 
+                                className="w-full"
+                                onClick={() => handleEdit(template.id)}
+                                disabled={!!isDownloading}
+                            >
+                                <PenSquare className="mr-2 h-4 w-4" />
+                                Edit
+                            </Button>
+                        </div>
+                    </CardFooter>
+                </Card>
+            ))}
         </main>
     </div>
   );
