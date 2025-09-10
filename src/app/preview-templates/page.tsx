@@ -62,44 +62,54 @@ export default function PreviewTemplatesPage() {
   const handleDownload = async (templateId: string) => {
     setIsDownloading(templateId);
 
-    const printableArea = document.createElement('div');
-    printableArea.id = `printable-area-temp-${templateId}`;
-    printableArea.style.position = 'absolute';
-    printableArea.style.left = '-9999px';
-    printableArea.style.top = '-9999px';
-    printableArea.style.width = '794px'; 
-    printableArea.style.height = '1123px';
-    printableArea.style.background = 'white';
-    document.body.appendChild(printableArea);
+    const tempPrintableArea = document.createElement('div');
+    tempPrintableArea.style.position = 'absolute';
+    tempPrintableArea.style.left = '-9999px';
+    tempPrintableArea.style.top = '0';
+    tempPrintableArea.style.width = '210mm';
+    tempPrintableArea.style.height = '297mm';
+    tempPrintableArea.style.background = 'white';
+    document.body.appendChild(tempPrintableArea);
 
     const { createRoot } = await import('react-dom/client');
-    const tempRoot = createRoot(printableArea);
+    const tempRoot = createRoot(tempPrintableArea);
     tempRoot.render(<ResumePreview resumeData={resumeData!} templateId={templateId} />);
     
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    const canvas = await html2canvas(printableArea, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-    });
-    
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-    });
+    try {
+        const canvas = await html2canvas(tempPrintableArea, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+        });
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`resume-${templateId}.pdf`);
+        // Use JPEG for compression
+        const imgData = canvas.toDataURL('image/jpeg', 0.9); // 0.9 is quality from 0 to 1
 
-    tempRoot.unmount();
-    document.body.removeChild(printableArea);
-    
-    setIsDownloading(null);
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
+
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`resume-${templateId}.pdf`);
+    } catch (error) {
+        console.error("Error generating PDF:", error);
+        toast({
+            title: "Download Failed",
+            description: "Could not generate the PDF. Please try again.",
+            variant: "destructive",
+        });
+    } finally {
+        tempRoot.unmount();
+        document.body.removeChild(tempPrintableArea);
+        setIsDownloading(null);
+    }
   };
 
   if (isLoading || !resumeData) {
@@ -133,7 +143,7 @@ export default function PreviewTemplatesPage() {
                  >
                     <Dialog>
                         <Card className="flex flex-col bg-card/50 border-white/10 overflow-hidden h-full transition-all duration-300 hover:border-primary/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10">
-                            <CardHeader className="flex-row items-start justify-between p-4">
+                            <CardHeader className="flex-row items-center justify-between p-4">
                                 <div>
                                 <CardTitle className="text-base">{template.name}</CardTitle>
                                 <p className="text-xs text-muted-foreground">{template.category}</p>
@@ -165,10 +175,18 @@ export default function PreviewTemplatesPage() {
                                 </DialogHeader>
                                 <div className="flex-1 min-h-0 flex items-center justify-center bg-muted/20 rounded-lg">
                                     <ScrollArea className="w-full h-full">
-                                         <div 
-                                            className="w-[794px] h-[1123px] bg-white shadow-lg mx-auto my-4" 
-                                         >
-                                            <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                         <div className="w-[calc(90vh*0.707)] h-[90vh] mx-auto my-4 origin-center">
+                                            <div 
+                                                className="bg-white shadow-lg"
+                                                style={{
+                                                    width: '210mm',
+                                                    height: '297mm',
+                                                    transformOrigin: 'top left',
+                                                    transform: 'scale(calc(90vh / 297mm))',
+                                                }}
+                                            >
+                                                <ResumePreview resumeData={resumeData} templateId={template.id} />
+                                            </div>
                                         </div>
                                     </ScrollArea>
                                 </div>
