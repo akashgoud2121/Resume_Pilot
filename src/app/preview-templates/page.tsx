@@ -96,7 +96,7 @@ export default function PreviewTemplatesPage() {
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
 
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight > pdf.internal.pageSize.getHeight() ? pdf.internal.pageSize.getHeight() : pdfHeight);
         pdf.save(`resume-${templateId}.pdf`);
     } catch (error) {
         console.error("Error generating PDF:", error);
