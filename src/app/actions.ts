@@ -18,7 +18,12 @@ export async function extractResumeDataAction(resumeText: string): Promise<Resum
   // Ensure the extracted data matches our schema, providing defaults for missing arrays
   // and mapping simple arrays to object arrays for the form
   const validatedData = resumeSchema.parse({
-    ...extractedData,
+    name: extractedData.name ?? '',
+    email: extractedData.email ?? '',
+    mobileNumber: extractedData.mobileNumber ?? '',
+    githubLink: extractedData.githubLink ?? '',
+    linkedinLink: extractedData.linkedinLink ?? '',
+    professionalSummary: extractedData.professionalSummary ?? '',
     coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })) || [],
     education: extractedData.education?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
     experience: extractedData.experience?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
@@ -33,7 +38,12 @@ export async function generateResumeFromPortfolioAction(documents: PortfolioDocu
     const extractedData = await generateResumeFromPortfolio({ documents });
 
     const validatedData = resumeSchema.parse({
-        ...extractedData,
+        name: extractedData.name ?? '',
+        email: extractedData.email ?? '',
+        mobileNumber: extractedData.mobileNumber ?? '',
+        githubLink: extractedData.githubLink ?? '',
+        linkedinLink: extractedData.linkedinLink ?? '',
+        professionalSummary: extractedData.professionalSummary ?? '',
         coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })) || [],
         education: extractedData.education?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
         experience: extractedData.experience?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],

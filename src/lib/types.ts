@@ -46,54 +46,54 @@ export const ExtractResumeDataOutputSchema = z.object({
 // These are the schemas for the forms, which require a unique `id` for each item in an array.
 const skillSchema = z.object({
   id: z.string(),
-  value: z.string(),
+  value: z.string().default(''),
 });
 
 const educationSchema = z.object({
   id: z.string(),
-  institution: z.string(),
-  degree: z.string(),
-  dates: z.string(),
+  institution: z.string().default(''),
+  degree: z.string().default(''),
+  dates: z.string().default(''),
 });
 
 const experienceSchema = z.object({
   id: z.string(),
-  title: z.string(),
-  company: z.string(),
-  dates: z.string(),
-  description: z.string(),
+  title: z.string().default(''),
+  company: z.string().default(''),
+  dates: z.string().default(''),
+  description: z.string().default(''),
 });
 
 const projectSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  description: z.string(),
+  name: z.string().default(''),
+  description: z.string().default(''),
 });
 
 const achievementSchema = z.object({
   id: z.string(),
-  value: z.string(),
+  value: z.string().default(''),
 });
 
 const certificationSchema = z.object({
     id: z.string(),
-    value: z.string(),
+    value: z.string().default(''),
 });
 
 // This is the final schema for the resume data used throughout the client-side application.
 export const resumeSchema = z.object({
   name: z.string().min(1, 'Name is required').default(''),
   email: z.string().email('Invalid email address').default(''),
-  mobileNumber: z.string().optional().default(''),
-  githubLink: z.string().optional().default(''),
-  linkedinLink: z.string().optional().default(''),
-  professionalSummary: z.string().optional().default(''),
-  coreSkills: z.array(skillSchema).optional().default([]),
-  education: z.array(educationSchema).optional().default([]),
-  experience: z.array(experienceSchema).optional().default([]),
-  projects: z.array(projectSchema).optional().default([]),
-  achievements: z.array(achievementSchema).optional().default([]),
-  certifications: z.array(certificationSchema).optional().default([]),
+  mobileNumber: z.string().default(''),
+  githubLink: z.string().default(''),
+  linkedinLink: z.string().default(''),
+  professionalSummary: z.string().default(''),
+  coreSkills: z.array(skillSchema).default([]),
+  education: z.array(educationSchema).default([]),
+  experience: z.array(experienceSchema).default([]),
+  projects: z.array(projectSchema).default([]),
+  achievements: z.array(achievementSchema).default([]),
+  certifications: z.array(certificationSchema).default([]),
 });
 
 export type ResumeData = z.infer<typeof resumeSchema>;
