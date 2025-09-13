@@ -71,12 +71,12 @@ function EditorPageContent() {
     }
     
     if (initialData) {
-      // Use safeParse to validate and apply defaults, ensuring all fields are defined
-      const validated = resumeSchema.safeParse(initialData);
-      if (validated.success) {
-        form.reset(validated.data);
-      } else {
-        console.error("Validation failed for initial data:", validated.error);
+      try {
+        // Use parse to validate and strictly apply defaults, ensuring all fields are defined
+        const validatedData = resumeSchema.parse(initialData);
+        form.reset(validatedData);
+      } catch (error) {
+        console.error("Validation failed for initial data:", error);
         // Fallback to a known good state
         const defaultValidated = resumeSchema.parse(DUMMY_RESUME_DATA);
         form.reset(defaultValidated);
@@ -91,21 +91,21 @@ function EditorPageContent() {
       return;
     } else {
        // For a new resume, ensure it's a fully defaulted object
-       const defaultValidated = resumeSchema.parse(DUMMY_RESUME_DATA);
+       const defaultValidated = resumeSchema.parse({}); // Pass empty object to get all defaults
        form.reset(defaultValidated);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // Only stringify and set item if watchedData is not empty
+    // Only stringify and set item if watchedData is not empty and valid
     if (Object.keys(watchedData).length > 0) {
       const validatedData = resumeSchema.safeParse(watchedData);
       if(validatedData.success){
           sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
       }
     }
-  }, [watchedData, form]);
+  }, [watchedData]);
 
 
   const handleDownload = async () => {
