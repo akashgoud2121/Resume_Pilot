@@ -82,18 +82,18 @@ const certificationSchema = z.object({
 
 // This is the final schema for the resume data used throughout the client-side application.
 export const resumeSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
-  mobileNumber: z.string().optional(),
-  githubLink: z.string().optional(),
-  linkedinLink: z.string().optional(),
-  professionalSummary: z.string().optional(),
-  coreSkills: z.array(skillSchema).optional(),
-  education: z.array(educationSchema).optional(),
-  experience: z.array(experienceSchema).optional(),
-  projects: z.array(projectSchema).optional(),
-  achievements: z.array(achievementSchema).optional(),
-  certifications: z.array(certificationSchema).optional(),
+  name: z.string().min(1, 'Name is required').default(''),
+  email: z.string().email('Invalid email address').default(''),
+  mobileNumber: z.string().optional().default(''),
+  githubLink: z.string().optional().default(''),
+  linkedinLink: z.string().optional().default(''),
+  professionalSummary: z.string().optional().default(''),
+  coreSkills: z.array(skillSchema).optional().default([]),
+  education: z.array(educationSchema).optional().default([]),
+  experience: z.array(experienceSchema).optional().default([]),
+  projects: z.array(projectSchema).optional().default([]),
+  achievements: z.array(achievementSchema).optional().default([]),
+  certifications: z.array(certificationSchema).optional().default([]),
 });
 
 export type ResumeData = z.infer<typeof resumeSchema>;
