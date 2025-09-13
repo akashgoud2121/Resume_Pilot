@@ -71,14 +71,14 @@ function EditorPageContent() {
     }
     
     if (initialData) {
-      // Use parse to apply defaults and ensure all fields are defined
+      // Use safeParse to validate and apply defaults, ensuring all fields are defined
       const validated = resumeSchema.safeParse(initialData);
       if (validated.success) {
         form.reset(validated.data);
       } else {
         console.error("Validation failed for initial data:", validated.error);
         // Fallback to a known good state
-        const defaultValidated = resumeSchema.parse({});
+        const defaultValidated = resumeSchema.parse(DUMMY_RESUME_DATA);
         form.reset(defaultValidated);
         toast({
           title: "Data Validation Failed",
@@ -105,42 +105,60 @@ function EditorPageContent() {
           sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
       }
     }
-  }, [watchedData]);
+  }, [watchedData, form]);
 
 
   const handleDownload = async () => {
     setIsDownloading(true);
     
-    // Temporarily switch to preview mode to render the component for download
-    setMode('preview');
-    // Allow a moment for the preview to render
-    await new Promise(resolve => setTimeout(resolve, 50)); 
-    
-    const printableArea = document.getElementById('printable-area');
+    const printableArea = document.createElement('div');
+    printableArea.id = 'printable-area-for-download-temp';
+    printableArea.style.position = 'absolute';
+    printableArea.style.left = '-9999px';
+    printableArea.style.top = '0';
+    printableArea.style.width = '210mm';
+    printableArea.style.height = '297mm';
+    printableArea.style.background = 'white';
+    document.body.appendChild(printableArea);
 
-    if (printableArea) {
-      const canvas = await html2canvas(printableArea, {
-        scale: 2, 
-        useCORS: true,
-        logging: false,
-      });
-      
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('resume.pdf');
-    }
+    const { createRoot } = await import('react-dom/client');
+    const tempRoot = createRoot(printableArea);
     
-    // Switch back to edit mode after download
-    setMode('edit');
-    setIsDownloading(false);
+    tempRoot.render(<ResumePreview resumeData={watchedData} templateId={selectedTemplate} />);
+    
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    try {
+        const canvas = await html2canvas(printableArea, {
+            scale: 2, 
+            useCORS: true,
+            logging: false,
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+        });
+        
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight > pdf.internal.pageSize.getHeight() ? pdf.internal.pageSize.getHeight() : pdfHeight);
+        pdf.save('resume.pdf');
+
+    } catch(error) {
+        console.error("Error generating PDF", error);
+        toast({
+            title: "Download Failed",
+            description: "There was an error generating the PDF. Please try again.",
+            variant: "destructive"
+        })
+    } finally {
+        tempRoot.unmount();
+        document.body.removeChild(printableArea);
+        setIsDownloading(false);
+    }
   };
 
 
