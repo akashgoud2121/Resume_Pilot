@@ -82,8 +82,8 @@ const certificationSchema = z.object({
 
 // This is the final schema for the resume data used throughout the client-side application.
 export const resumeSchema = z.object({
-  name: z.string().min(1, 'Name is required').default(''),
-  email: z.string().email('Invalid email address').default(''),
+  name: z.string().default(''),
+  email: z.string().email().or(z.literal('')).default(''),
   mobileNumber: z.string().default(''),
   githubLink: z.string().url().or(z.literal('')).default(''),
   linkedinLink: z.string().url().or(z.literal('')).default(''),
