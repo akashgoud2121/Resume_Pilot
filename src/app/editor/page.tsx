@@ -38,7 +38,7 @@ function EditorPageContent() {
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
-    // The defaultValues are now set in useLayoutEffect, guaranteeing they are fully formed.
+    // The defaultValues are now set in useLayoutEffect to prevent uncontrolled component errors.
   });
 
   const watchedData = form.watch();
@@ -48,16 +48,16 @@ function EditorPageContent() {
     const isNew = searchParams.get('new') === 'true';
 
     if (isNew) {
-      // For a new resume, create a fully defaulted object.
+      // For a new resume, create a fully defaulted object by parsing an empty object.
       initialData = resumeSchema.parse({});
     } else {
         try {
-          // Prioritize data from navigation state
+          // Prioritize data from navigation state first
           const stateFromHistory = history.state as { resumeData?: ResumeData };
-          if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 2) {
+          if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 0) {
              initialData = stateFromHistory.resumeData;
           } else {
-             // Fallback to session storage
+             // Fallback to session storage if history state is empty
              const storedData = sessionStorage.getItem('resumeData');
              if(storedData) {
                 initialData = JSON.parse(storedData);
@@ -73,31 +73,37 @@ function EditorPageContent() {
         }
     }
     
-    // If we have any data (from history, storage, or new), validate and set it.
     if (initialData) {
       try {
+        // Rigorously parse and apply defaults to the loaded data.
         const validatedData = resumeSchema.parse(initialData);
         form.reset(validatedData);
       } catch (error) {
         console.error("Validation failed for initial data:", error);
         toast({
           title: "Data Validation Failed",
-          description: "There was an issue with the resume data format. Loading sample data.",
+          description: "There was an issue with the resume data format. Loading sample data as a fallback.",
           variant: "destructive",
         });
-        // Fallback to a known good, fully defaulted state on error
+        // On validation failure, fall back to a known good, fully defaulted state.
         form.reset(DUMMY_RESUME_DATA);
       }
     } else if (!isNew) {
-      // If not creating a new resume and no data could be found, redirect to home.
+      // If not creating a new resume and no data could be found anywhere, redirect to home.
+      toast({
+        title: "No Resume Data",
+        description: "No resume data found. Redirecting to homepage.",
+        variant: "destructive",
+      });
       router.push('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run only once on mount
 
   useEffect(() => {
-    // Only stringify and set item if watchedData is not empty and valid
+    // Only stringify and set item if watchedData has been initialized.
     if (Object.keys(watchedData).length > 0) {
+      // Use safeParse to avoid throwing errors on intermittent invalid states during editing.
       const validatedData = resumeSchema.safeParse(watchedData);
       if(validatedData.success){
           sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));

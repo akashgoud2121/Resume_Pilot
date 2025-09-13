@@ -15,7 +15,8 @@ export async function extractResumeTextAction(dataUri: string): Promise<string> 
 
 export async function extractResumeDataAction(resumeText: string): Promise<ResumeData> {
   const extractedData = await extractResumeData({ resumeText });
-  // Sanitize the data rigorously to ensure no undefined or null values reach the form.
+  
+  // Rigorously sanitize the data to ensure no undefined or null values reach the form.
   const sanitizedData = {
     name: extractedData.name ?? '',
     email: extractedData.email ?? '',
@@ -46,7 +47,7 @@ export async function extractResumeDataAction(resumeText: string): Promise<Resum
     certifications: (extractedData.certifications ?? []).map((value, index) => ({ id: `${Date.now()}-${index}`, value: value ?? '' })),
   };
 
-  // Validate the sanitized data to ensure it conforms to the schema.
+  // Validate the sanitized data to ensure it conforms to the schema with all defaults applied.
   const validatedData = resumeSchema.parse(sanitizedData);
   return validatedData;
 }
