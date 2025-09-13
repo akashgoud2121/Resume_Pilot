@@ -5,7 +5,6 @@ import { useState, useEffect, useLayoutEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -18,6 +17,7 @@ import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { PdfTemplate } from '@/components/resume-templates/pdf-template';
 
 function EditorPageContent() {
   const router = useRouter();
@@ -115,41 +115,43 @@ function EditorPageContent() {
     setIsDownloading(true);
     
     const printableArea = document.createElement('div');
-    printableArea.id = 'printable-area-for-download-temp';
+    printableArea.id = 'pdf-render-area';
     printableArea.style.position = 'absolute';
     printableArea.style.left = '-9999px';
     printableArea.style.top = '0';
-    printableArea.style.width = '210mm';
-    printableArea.style.height = '297mm';
+    printableArea.style.width = '210mm'; // A4 width
     printableArea.style.background = 'white';
+    printableArea.style.fontFamily = 'Arial, sans-serif';
     document.body.appendChild(printableArea);
 
     const { createRoot } = await import('react-dom/client');
     const tempRoot = createRoot(printableArea);
     
-    tempRoot.render(<ResumePreview resumeData={watchedData} templateId={selectedTemplate} />);
+    tempRoot.render(<PdfTemplate data={watchedData} />);
     
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Allow time for rendering
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
-        const canvas = await html2canvas(printableArea, {
-            scale: 2, 
-            useCORS: true,
-            logging: false,
-        });
-        
-        const imgData = canvas.toDataURL('image/jpeg', 0.9);
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
             format: 'a4',
         });
         
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight > pdf.internal.pageSize.getHeight() ? pdf.internal.pageSize.getHeight() : pdfHeight);
-        pdf.save('resume.pdf');
-
+        await pdf.html(printableArea, {
+            callback: function (doc) {
+                doc.save('resume.pdf');
+            },
+            html2canvas: {
+              scale: 0.5, // Lower scale can reduce file size if images were present
+            },
+            autoPaging: 'text',
+            margin: [15, 15, 15, 15],
+            width: 180, // 210mm A4 width - 15mm left margin - 15mm right margin
+            windowWidth: 794 // Corresponds to 210mm at 96dpi for internal calculations
+        });
+        
     } catch(error) {
         console.error("Error generating PDF", error);
         toast({
@@ -239,5 +241,3 @@ export default function EditorPage() {
         </Suspense>
     )
 }
-
-    
