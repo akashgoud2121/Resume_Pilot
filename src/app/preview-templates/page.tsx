@@ -12,10 +12,10 @@ import { templates } from '@/lib/templates';
 import { ResumePreview } from '@/components/resume-preview';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ScrollAnimation from '@/components/ui/scroll-animation';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { PdfTemplate } from '@/components/resume-templates/pdf-template';
 
 export default function PreviewTemplatesPage() {
   const router = useRouter();
@@ -63,46 +63,51 @@ export default function PreviewTemplatesPage() {
     if (!resumeData) return;
     setIsDownloading(templateId);
 
-    const printableArea = document.createElement('div');
-    printableArea.id = 'pdf-render-area';
-    printableArea.style.position = 'absolute';
-    printableArea.style.left = '-9999px';
-    printableArea.style.top = '0';
-    printableArea.style.width = '210mm'; // A4 width
-    printableArea.style.height = 'auto';
-    printableArea.style.background = 'white';
-    printableArea.style.fontFamily = 'Arial, sans-serif';
-    document.body.appendChild(printableArea);
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '210mm'; 
+    tempContainer.style.height = '297mm';
+    document.body.appendChild(tempContainer);
 
     const { createRoot } = await import('react-dom/client');
-    const tempRoot = createRoot(printableArea);
+    const tempRoot = createRoot(tempContainer);
+
+    tempRoot.render(
+        <div className="bg-white w-full h-full">
+            <ResumePreview resumeData={resumeData} templateId={templateId} />
+        </div>
+    );
     
-    // Always use the dedicated PDF template for downloading
-    tempRoot.render(<PdfTemplate data={resumeData} />);
-    
-    // Allow time for rendering to complete before capturing
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
+        const canvas = await html2canvas(tempContainer, {
+            scale: 2, 
+            useCORS: true,
+            logging: false,
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.9);
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
             format: 'a4',
         });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const ratio = canvasHeight / canvasWidth;
+        const imgHeight = pdfWidth * ratio;
         
-        await pdf.html(printableArea, {
-            callback: function (doc) {
-                doc.save(`resume-${templateId}.pdf`);
-            },
-            html2canvas: {
-              scale: 1, // Use a higher scale for better quality
-              useCORS: true,
-            },
-            autoPaging: 'text',
-            margin: [15, 15, 15, 15],
-            width: 180, // 210mm A4 width - 15mm margin on each side
-            windowWidth: 794 // Corresponds to 210mm at 96dpi
-        });
+        let height = imgHeight;
+        if(height > pdfHeight) height = pdfHeight;
+
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, height);
+        pdf.save(`resume-${templateId}.pdf`);
         
     } catch (error) {
         console.error("Error generating PDF:", error);
@@ -113,9 +118,7 @@ export default function PreviewTemplatesPage() {
         });
     } finally {
         tempRoot.unmount();
-        if (document.body.contains(printableArea)) {
-            document.body.removeChild(printableArea);
-        }
+        document.body.removeChild(tempContainer);
         setIsDownloading(null);
     }
   };

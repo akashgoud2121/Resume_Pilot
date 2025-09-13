@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Download, Eye, Code } from 'lucide-react';
@@ -17,7 +18,6 @@ import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { PdfTemplate } from '@/components/resume-templates/pdf-template';
 
 function EditorPageContent() {
   const router = useRouter();
@@ -37,7 +37,7 @@ function EditorPageContent() {
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
-    // The defaultValues are now set in useLayoutEffect to prevent uncontrolled component errors.
+    // Default values are now set in useLayoutEffect to prevent uncontrolled component errors.
   });
 
   const watchedData = form.watch();
@@ -47,16 +47,13 @@ function EditorPageContent() {
     const isNew = searchParams.get('new') === 'true';
 
     if (isNew) {
-      // For a new resume, create a fully defaulted object by parsing an empty object.
       initialData = resumeSchema.parse({});
     } else {
         try {
-          // Prioritize data from navigation state first
           const stateFromHistory = history.state as { resumeData?: ResumeData };
           if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 0) {
              initialData = stateFromHistory.resumeData;
           } else {
-             // Fallback to session storage if history state is empty
              const storedData = sessionStorage.getItem('resumeData');
              if(storedData) {
                 initialData = JSON.parse(storedData);
@@ -74,7 +71,6 @@ function EditorPageContent() {
     
     if (initialData) {
       try {
-        // Rigorously parse and apply defaults to the loaded data.
         const validatedData = resumeSchema.parse(initialData);
         form.reset(validatedData);
       } catch (error) {
@@ -84,11 +80,9 @@ function EditorPageContent() {
           description: "There was an issue with the resume data format. Loading sample data as a fallback.",
           variant: "destructive",
         });
-        // On validation failure, fall back to a known good, fully defaulted state.
         form.reset(DUMMY_RESUME_DATA);
       }
     } else if (!isNew) {
-      // If not creating a new resume and no data could be found anywhere, redirect to home.
       toast({
         title: "No Resume Data",
         description: "No resume data found. Redirecting to homepage.",
@@ -97,12 +91,10 @@ function EditorPageContent() {
       router.push('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
+  }, []);
 
   useEffect(() => {
-    // Only stringify and set item if watchedData has been initialized.
     if (Object.keys(watchedData).length > 0) {
-      // Use safeParse to avoid throwing errors on intermittent invalid states during editing.
       const validatedData = resumeSchema.safeParse(watchedData);
       if(validatedData.success){
           sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
@@ -113,59 +105,63 @@ function EditorPageContent() {
 
   const handleDownload = async () => {
     setIsDownloading(true);
-    
-    const printableArea = document.createElement('div');
-    printableArea.id = 'pdf-render-area';
-    printableArea.style.position = 'absolute';
-    printableArea.style.left = '-9999px';
-    printableArea.style.top = '0';
-    printableArea.style.width = '210mm'; // A4 width
-    printableArea.style.height = 'auto';
-    printableArea.style.background = 'white';
-    printableArea.style.fontFamily = 'Arial, sans-serif';
-    document.body.appendChild(printableArea);
+
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '210mm'; 
+    tempContainer.style.height = '297mm';
+    document.body.appendChild(tempContainer);
 
     const { createRoot } = await import('react-dom/client');
-    const tempRoot = createRoot(printableArea);
+    const tempRoot = createRoot(tempContainer);
+
+    tempRoot.render(
+        <div className="bg-white w-full h-full">
+            <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
+        </div>
+    );
     
-    tempRoot.render(<PdfTemplate data={watchedData} />);
-    
-    // Allow time for rendering to complete before capturing
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
+        const canvas = await html2canvas(tempContainer, {
+            scale: 2, 
+            useCORS: true,
+            logging: false,
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.9); // Use JPEG for smaller size
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
             format: 'a4',
         });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const ratio = canvasHeight / canvasWidth;
+        const imgHeight = pdfWidth * ratio;
         
-        await pdf.html(printableArea, {
-            callback: function (doc) {
-                doc.save('resume.pdf');
-            },
-            html2canvas: {
-              scale: 1, // Use a higher scale for better quality
-              useCORS: true,
-            },
-            autoPaging: 'text',
-            margin: [15, 15, 15, 15],
-            width: 180, // 210mm A4 width - 15mm left margin - 15mm right margin
-            windowWidth: 794 // Corresponds to 210mm at 96dpi for internal calculations
-        });
-        
-    } catch(error) {
-        console.error("Error generating PDF", error);
+        let height = imgHeight;
+        if(height > pdfHeight) height = pdfHeight; // Don't let image overflow page
+
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, height);
+        pdf.save(`resume-${selectedTemplate}.pdf`);
+
+    } catch (error) {
+        console.error("Error generating PDF:", error);
         toast({
             title: "Download Failed",
             description: "There was an error generating the PDF. Please try again.",
             variant: "destructive"
-        })
+        });
     } finally {
         tempRoot.unmount();
-        if (document.body.contains(printableArea)) {
-            document.body.removeChild(printableArea);
-        }
+        document.body.removeChild(tempContainer);
         setIsDownloading(false);
     }
   };
