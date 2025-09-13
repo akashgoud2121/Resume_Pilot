@@ -27,13 +27,15 @@ export default function PreviewTemplatesPage() {
   useEffect(() => {
     try {
         const stateFromHistory = history.state as { resumeData?: ResumeData };
-        if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 2) {
+        // Check if resumeData exists in history.state and has content.
+        if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 0) {
             setResumeData(stateFromHistory.resumeData);
         } else {
             const storedData = sessionStorage.getItem('resumeData');
             if (storedData) {
                 setResumeData(JSON.parse(storedData));
             } else {
+                // Fallback to simpler dummy data if nothing is found
                 setResumeData(DUMMY_RESUME_DATA);
                 toast({
                     title: "No Resume Data Found",
@@ -43,7 +45,7 @@ export default function PreviewTemplatesPage() {
         }
     } catch (error) {
         console.error("Failed to load resume data:", error);
-        setResumeData(DUMMY_RESUME_DATA); // Fallback
+        setResumeData(DUMMY_RESUME_DATA); // Fallback on error
         toast({
             title: "Error Loading Data",
             description: "Could not load your resume data. Displaying sample data instead.",
@@ -53,6 +55,7 @@ export default function PreviewTemplatesPage() {
         setIsLoading(false);
     }
   }, [toast]);
+
 
   const handleEdit = (templateId: string) => {
     history.pushState({ resumeData }, '', `/editor?template=${templateId}`);
@@ -74,7 +77,7 @@ export default function PreviewTemplatesPage() {
     const tempRoot = createRoot(tempContainer);
 
     tempRoot.render(
-        <div className="bg-white w-full">
+        <div className="bg-white w-full h-full">
             <ResumePreview resumeData={resumeData} templateId={templateId} />
         </div>
     );
