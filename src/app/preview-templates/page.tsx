@@ -83,7 +83,7 @@ export default function PreviewTemplatesPage() {
 
     try {
         const canvas = await html2canvas(tempContainer, {
-            scale: 3, 
+            scale: 3,
             useCORS: true,
             logging: false,
             windowWidth: tempContainer.scrollWidth,
@@ -105,6 +105,8 @@ export default function PreviewTemplatesPage() {
 
         const imgWidth = pdfWidth;
         const imgHeight = imgWidth / ratio;
+        const pageBreakBuffer = 20; // 20mm buffer to avoid cutting text
+        const contentHeightPerPage = pdfHeight - pageBreakBuffer;
         
         let heightLeft = imgHeight;
         let position = 0;
