@@ -179,15 +179,15 @@ export default function PreviewTemplatesPage() {
                                     </Button>
                                 </DialogTrigger>
                             </CardHeader>
-                            <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer min-h-[300px] group"
+                             <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer min-h-[400px] group"
                                 style={{
                                     backgroundImage: 'url(https://www.transparenttextures.com/patterns/carbon-fibre.png)',
                                     backgroundColor: 'hsl(var(--card))'
                                 }}
                             >
                                 <DialogTrigger className="w-full h-full flex items-center justify-center">
-                                    <div className="w-[300px] min-h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
-                                        <div className="transform scale-[0.38] origin-top-left">
+                                     <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                                        <div className="transform scale-[0.38] origin-top-left w-[789px] h-[1116px]">
                                             <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
                                     </div>
