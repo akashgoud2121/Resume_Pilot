@@ -2,14 +2,14 @@
 'use client';
 
 import { useState, useEffect, useLayoutEffect, Suspense } from 'react';
-import { useRouter, useSearchParams, type NextRouter } from 'next/navigation';
-import { useForm, FormProvider, UseFormReturn } from 'react-hook-form';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, ArrowLeft, Download, Palette, Menu } from 'lucide-react';
+import { Loader2, Download, Eye, Code } from 'lucide-react';
 import { ResumeEditorForm } from '@/components/resume-editor-form';
 import { ResumePreview } from '@/components/resume-preview';
 import type { ResumeData } from '@/lib/types';
@@ -18,29 +18,7 @@ import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
-
-
-// Moved EditorSidebar outside of EditorPageContent to prevent re-creation on every render
-const EditorSidebar = ({ form, router, setIsSidebarOpen }: { form: UseFormReturn<ResumeData>, router: NextRouter, setIsSidebarOpen: (isOpen: boolean) => void }) => (
-    <div className="flex flex-col h-full bg-card border-r border-border">
-        <header className="flex items-center justify-between p-4 border-b border-border">
-             <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={() => router.back()} className="h-8 w-8">
-                    <ArrowLeft />
-                </Button>
-                <h2 className="font-semibold text-lg">Editor</h2>
-             </div>
-             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="h-8 w-8 hidden lg:flex">
-                 <ArrowLeft />
-             </Button>
-        </header>
-        <ScrollArea className="flex-1">
-            <ResumeEditorForm form={form} />
-        </ScrollArea>
-    </div>
-);
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 function EditorPageContent() {
   const router = useRouter();
@@ -49,13 +27,8 @@ function EditorPageContent() {
 
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [hasMounted, setHasMounted] = useState(false);
+  const [mode, setMode] = useState<'edit' | 'preview'>('edit');
 
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-  
   useEffect(() => {
     const templateId = searchParams.get('template');
     if (templateId && templates.some(t => t.id === templateId)) {
@@ -132,6 +105,12 @@ function EditorPageContent() {
 
   const handleDownload = async () => {
     setIsDownloading(true);
+    
+    // Temporarily switch to preview mode to render the component for download
+    setMode('preview');
+    // Allow a moment for the preview to render
+    await new Promise(resolve => setTimeout(resolve, 50)); 
+    
     const printableArea = document.getElementById('printable-area');
 
     if (printableArea) {
@@ -153,60 +132,40 @@ function EditorPageContent() {
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('resume.pdf');
     }
+    
+    // Switch back to edit mode after download
+    setMode('edit');
     setIsDownloading(false);
   };
 
-  const isMobileSheetOpen = hasMounted && isSidebarOpen && window.innerWidth < 1024;
 
   return (
-    <div className="flex h-screen bg-background text-foreground">
-        {/* Mobile Sidebar */}
-         <Sheet open={isMobileSheetOpen} onOpenChange={setIsSidebarOpen}>
-            <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 lg:hidden bg-background/50 backdrop-blur-sm">
-                    <Menu/>
-                </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-80">
-                <SheetHeader className="sr-only">
-                  <SheetTitle>Edit Resume</SheetTitle>
-                </SheetHeader>
-                <EditorSidebar form={form} router={router} setIsSidebarOpen={setIsSidebarOpen} />
-            </SheetContent>
-        </Sheet>
-        
-        {/* Desktop Sidebar */}
-        <aside className={cn(
-            "hidden lg:block transition-all duration-300 ease-in-out",
-            isSidebarOpen ? "w-96" : "w-0"
-        )}>
-           {isSidebarOpen && <EditorSidebar form={form} router={router} setIsSidebarOpen={setIsSidebarOpen} />}
-        </aside>
-
-        {/* Main Content */}
-        <FormProvider {...form}>
-            <div className="flex-1 flex flex-col bg-muted/40">
-                <header className="bg-background/80 backdrop-blur-sm rounded-lg p-2 m-4 border flex items-center justify-between shadow-sm">
-                    <div className="flex items-center gap-2">
-                        {!isSidebarOpen && (
-                             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="h-8 w-8 hidden lg:flex">
-                                 <Menu />
-                             </Button>
-                        )}
-                        <Palette className="text-primary hidden sm:block"/>
-                        <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                        <SelectTrigger className="w-[150px] sm:w-[180px]">
-                            <SelectValue placeholder="Select a template" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {templates.map(template => (
-                            <SelectItem key={template.id} value={template.id}>
-                                {template.name}
-                            </SelectItem>
-                            ))}
-                        </SelectContent>
-                        </Select>
-                    </div>
+    <FormProvider {...form}>
+        <div className="flex flex-col h-screen bg-background text-foreground">
+            {/* Header */}
+            <header className="bg-card/80 backdrop-blur-sm border-b p-2 flex items-center justify-between shadow-sm z-10">
+                <div className="flex items-center gap-2">
+                    <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                    <SelectTrigger className="w-[150px] sm:w-[180px]">
+                        <SelectValue placeholder="Select a template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {templates.map(template => (
+                        <SelectItem key={template.id} value={template.id}>
+                            {template.name}
+                        </SelectItem>
+                        ))}
+                    </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
+                    >
+                      {mode === 'edit' ? <Eye className="mr-2" /> : <Code className="mr-2" />}
+                      {mode === 'edit' ? 'Preview' : 'Editor'}
+                    </Button>
                     <Button
                         onClick={handleDownload}
                         disabled={isDownloading}
@@ -219,18 +178,36 @@ function EditorPageContent() {
                         )}
                         <span className="hidden sm:inline">Download PDF</span>
                     </Button>
-                </header>
+                </div>
+            </header>
 
-                <ScrollArea className="flex-1">
-                    <div className="flex items-start justify-center p-4 lg:p-8">
-                       <div id="printable-area" className="w-[210mm] h-[297mm] shadow-2xl bg-white">
-                         <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
-                       </div>
-                    </div>
-                </ScrollArea>
+            {/* Main Content */}
+            <div className="flex-1 overflow-y-auto bg-muted/40">
+                {mode === 'edit' ? (
+                  <ScrollArea className="h-full">
+                      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+                        <ResumeEditorForm form={form} />
+                      </div>
+                  </ScrollArea>
+                ) : (
+                  <div className="flex items-start justify-center p-4 lg:p-8">
+                     <div id="printable-area" className="w-[210mm] h-[297mm] shadow-2xl bg-white">
+                       <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
+                     </div>
+                  </div>
+                )}
             </div>
-        </FormProvider>
-      </div>
+
+            {/* This Dialog is used only for the PDF generation of the hidden preview */}
+            <Dialog open={isDownloading}>
+              <DialogContent className="p-0 border-0 bg-transparent w-auto h-auto shadow-none" onOpenAutoFocus={(e) => e.preventDefault()}>
+                  <div id="printable-area-for-download" className="w-[210mm] h-[297mm] bg-white absolute -left-[9999px] -top-[9999px]">
+                    <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
+                  </div>
+              </DialogContent>
+            </Dialog>
+        </div>
+    </FormProvider>
   );
 }
 
