@@ -50,6 +50,11 @@ function EditorPageContent() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   
   useEffect(() => {
     const templateId = searchParams.get('template');
@@ -151,10 +156,12 @@ function EditorPageContent() {
     setIsDownloading(false);
   };
 
+  const isMobileSheetOpen = hasMounted && isSidebarOpen && window.innerWidth < 1024;
+
   return (
     <div className="flex h-screen bg-background text-foreground">
         {/* Mobile Sidebar */}
-         <Sheet open={isSidebarOpen && typeof window !== 'undefined' && window.innerWidth < 1024} onOpenChange={setIsSidebarOpen}>
+         <Sheet open={isMobileSheetOpen} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 lg:hidden bg-background/50 backdrop-blur-sm">
                     <Menu/>
