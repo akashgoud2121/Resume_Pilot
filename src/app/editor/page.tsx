@@ -111,7 +111,6 @@ function EditorPageContent() {
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
     tempContainer.style.width = '210mm'; 
-    tempContainer.style.height = '297mm';
     document.body.appendChild(tempContainer);
 
     const { createRoot } = await import('react-dom/client');
@@ -130,9 +129,11 @@ function EditorPageContent() {
             scale: 2, 
             useCORS: true,
             logging: false,
+            windowWidth: tempContainer.scrollWidth,
+            windowHeight: tempContainer.scrollHeight,
         });
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.9); // Use JPEG for smaller size
+        const imgData = canvas.toDataURL('image/jpeg', 0.9);
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
@@ -143,13 +144,24 @@ function EditorPageContent() {
         const pdfHeight = pdf.internal.pageSize.getHeight();
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
-        const ratio = canvasHeight / canvasWidth;
-        const imgHeight = pdfWidth * ratio;
-        
-        let height = imgHeight;
-        if(height > pdfHeight) height = pdfHeight; // Don't let image overflow page
+        const ratio = canvasWidth / canvasHeight;
 
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, height);
+        const imgWidth = pdfWidth;
+        const imgHeight = imgWidth / ratio;
+        
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+        }
+
         pdf.save(`resume-${selectedTemplate}.pdf`);
 
     } catch (error) {
@@ -219,7 +231,7 @@ function EditorPageContent() {
                   </ScrollArea>
                 ) : (
                   <div className="flex items-start justify-center p-4 lg:p-8">
-                     <div id="printable-area" className="w-[210mm] h-[297mm] shadow-2xl bg-white">
+                     <div id="printable-area" className="w-[210mm] min-h-[297mm] shadow-2xl bg-white">
                        <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
                      </div>
                   </div>

@@ -68,14 +68,13 @@ export default function PreviewTemplatesPage() {
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
     tempContainer.style.width = '210mm'; 
-    tempContainer.style.height = '297mm';
     document.body.appendChild(tempContainer);
 
     const { createRoot } = await import('react-dom/client');
     const tempRoot = createRoot(tempContainer);
 
     tempRoot.render(
-        <div className="bg-white w-full h-full">
+        <div className="bg-white w-full">
             <ResumePreview resumeData={resumeData} templateId={templateId} />
         </div>
     );
@@ -87,6 +86,8 @@ export default function PreviewTemplatesPage() {
             scale: 2, 
             useCORS: true,
             logging: false,
+            windowWidth: tempContainer.scrollWidth,
+            windowHeight: tempContainer.scrollHeight,
         });
 
         const imgData = canvas.toDataURL('image/jpeg', 0.9);
@@ -100,13 +101,24 @@ export default function PreviewTemplatesPage() {
         const pdfHeight = pdf.internal.pageSize.getHeight();
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
-        const ratio = canvasHeight / canvasWidth;
-        const imgHeight = pdfWidth * ratio;
-        
-        let height = imgHeight;
-        if(height > pdfHeight) height = pdfHeight;
+        const ratio = canvasWidth / canvasHeight;
 
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, height);
+        const imgWidth = pdfWidth;
+        const imgHeight = imgWidth / ratio;
+        
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+        }
+
         pdf.save(`resume-${templateId}.pdf`);
         
     } catch (error) {
@@ -168,13 +180,12 @@ export default function PreviewTemplatesPage() {
                             <CardContent className="p-2 bg-muted/30 flex-1 flex items-center justify-center cursor-pointer min-h-[300px] group"
                                 style={{
                                     backgroundImage: 'url(https://www.transparenttextures.com/patterns/carbon-fibre.png)',
-                                    backgroundSize: '100px',
                                     backgroundColor: 'hsl(var(--card))'
                                 }}
                             >
                                 <DialogTrigger className="w-full h-full flex items-center justify-center">
-                                    <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
-                                        <div className="transform scale-[0.38] origin-top-left w-[789px] h-[1116px]">
+                                    <div className="w-[300px] min-h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                                        <div className="transform scale-[0.38] origin-top-left">
                                             <ResumePreview resumeData={resumeData} templateId={template.id} />
                                         </div>
                                     </div>
@@ -186,12 +197,12 @@ export default function PreviewTemplatesPage() {
                                 </DialogHeader>
                                 <div className="flex-1 min-h-0 flex items-center justify-center bg-muted/20 rounded-lg">
                                     <ScrollArea className="w-full h-full">
-                                         <div className="w-[calc(90vh*0.707)] h-[90vh] mx-auto my-4 origin-center">
+                                         <div className="w-[calc(90vh*0.707)] min-h-[90vh] mx-auto my-4 origin-center">
                                             <div 
                                                 className="bg-white shadow-lg"
                                                 style={{
                                                     width: '210mm',
-                                                    height: '297mm',
+                                                    minHeight: '297mm',
                                                     transformOrigin: 'top left',
                                                     transform: 'scale(calc(90vh / 297mm))',
                                                 }}
