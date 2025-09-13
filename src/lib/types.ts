@@ -51,33 +51,33 @@ const skillSchema = z.object({
 
 const educationSchema = z.object({
   id: z.string(),
-  institution: z.string().default(''),
-  degree: z.string().default(''),
+  institution: z.string().min(1, 'Institution is required').default(''),
+  degree: z.string().min(1, 'Degree is required').default(''),
   dates: z.string().default(''),
 });
 
 const experienceSchema = z.object({
   id: z.string(),
-  title: z.string().default(''),
-  company: z.string().default(''),
+  title: z.string().min(1, 'Job title is required').default(''),
+  company: z.string().min(1, 'Company is required').default(''),
   dates: z.string().default(''),
   description: z.string().default(''),
 });
 
 const projectSchema = z.object({
   id: z.string(),
-  name: z.string().default(''),
+  name: z.string().min(1, 'Project name is required').default(''),
   description: z.string().default(''),
 });
 
 const achievementSchema = z.object({
   id: z.string(),
-  value: z.string().default(''),
+  value: z.string().min(1, 'Achievement is required').default(''),
 });
 
 const certificationSchema = z.object({
     id: z.string(),
-    value: z.string().default(''),
+    value: z.string().min(1, 'Certification is required').default(''),
 });
 
 // This is the final schema for the resume data used throughout the client-side application.
@@ -85,8 +85,8 @@ export const resumeSchema = z.object({
   name: z.string().min(1, 'Name is required').default(''),
   email: z.string().email('Invalid email address').default(''),
   mobileNumber: z.string().default(''),
-  githubLink: z.string().default(''),
-  linkedinLink: z.string().default(''),
+  githubLink: z.string().url().or(z.literal('')).default(''),
+  linkedinLink: z.string().url().or(z.literal('')).default(''),
   professionalSummary: z.string().default(''),
   coreSkills: z.array(skillSchema).default([]),
   education: z.array(educationSchema).default([]),

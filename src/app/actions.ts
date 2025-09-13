@@ -24,12 +24,12 @@ export async function extractResumeDataAction(resumeText: string): Promise<Resum
     githubLink: extractedData.githubLink ?? '',
     linkedinLink: extractedData.linkedinLink ?? '',
     professionalSummary: extractedData.professionalSummary ?? '',
-    coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })) || [],
-    education: extractedData.education?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
-    experience: extractedData.experience?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
-    projects: extractedData.projects?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
-    achievements: extractedData.achievements?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
-    certifications: extractedData.certifications?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
+    coreSkills: (extractedData.coreSkills ?? []).map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })),
+    education: (extractedData.education ?? []).map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })),
+    experience: (extractedData.experience ?? []).map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })),
+    projects: (extractedData.projects ?? []).map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })),
+    achievements: (extractedData.achievements ?? []).map((value, index) => ({ id: `${Date.now()}-${index}`, value })),
+    certifications: (extractedData.certifications ?? []).map((value, index) => ({ id: `${Date.now()}-${index}`, value })),
   });
   return validatedData;
 }
@@ -44,12 +44,12 @@ export async function generateResumeFromPortfolioAction(documents: PortfolioDocu
         githubLink: extractedData.githubLink ?? '',
         linkedinLink: extractedData.linkedinLink ?? '',
         professionalSummary: extractedData.professionalSummary ?? '',
-        coreSkills: extractedData.coreSkills?.map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })) || [],
-        education: extractedData.education?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
-        experience: extractedData.experience?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
-        projects: extractedData.projects?.map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })) || [],
-        achievements: extractedData.achievements?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
-        certifications: extractedData.certifications?.map((value, index) => ({ id: `${Date.now()}-${index}`, value })) || [],
+        coreSkills: (extractedData.coreSkills ?? []).map((skill, index) => ({ id: `${Date.now()}-${index}`, value: skill })),
+        education: (extractedData.education ?? []).map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })),
+        experience: (extractedData.experience ?? []).map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })),
+        projects: (extractedData.projects ?? []).map((item, index) => ({ ...item, id: `${Date.now()}-${index}` })),
+        achievements: (extractedData.achievements ?? []).map((value, index) => ({ id: `${Date.now()}-${index}`, value })),
+        certifications: (extractedData.certifications ?? []).map((value, index) => ({ id: `${Date.now()}-${index}`, value })),
     });
 
     return validatedData;
