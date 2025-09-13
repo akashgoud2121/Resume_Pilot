@@ -71,15 +71,18 @@ function EditorPageContent() {
     }
     
     if (initialData) {
+      // Use parse to apply defaults and ensure all fields are defined
       const validated = resumeSchema.safeParse(initialData);
       if (validated.success) {
         form.reset(validated.data);
       } else {
         console.error("Validation failed for initial data:", validated.error);
-        form.reset(DUMMY_RESUME_DATA);
+        // Fallback to a known good state
+        const defaultValidated = resumeSchema.parse({});
+        form.reset(defaultValidated);
         toast({
           title: "Data Validation Failed",
-          description: "There was an issue with the resume data format. Loading sample data instead.",
+          description: "There was an issue with the resume data format. Loading a blank editor.",
           variant: "destructive",
         });
       }
@@ -87,7 +90,9 @@ function EditorPageContent() {
       router.push('/');
       return;
     } else {
-       form.reset(DUMMY_RESUME_DATA);
+       // For a new resume, ensure it's a fully defaulted object
+       const defaultValidated = resumeSchema.parse(DUMMY_RESUME_DATA);
+       form.reset(defaultValidated);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -222,3 +227,5 @@ export default function EditorPage() {
         </Suspense>
     )
 }
+
+    
