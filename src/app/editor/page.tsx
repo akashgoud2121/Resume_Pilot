@@ -120,6 +120,7 @@ function EditorPageContent() {
     printableArea.style.left = '-9999px';
     printableArea.style.top = '0';
     printableArea.style.width = '210mm'; // A4 width
+    printableArea.style.height = 'auto';
     printableArea.style.background = 'white';
     printableArea.style.fontFamily = 'Arial, sans-serif';
     document.body.appendChild(printableArea);
@@ -129,7 +130,7 @@ function EditorPageContent() {
     
     tempRoot.render(<PdfTemplate data={watchedData} />);
     
-    // Allow time for rendering
+    // Allow time for rendering to complete before capturing
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
@@ -144,7 +145,8 @@ function EditorPageContent() {
                 doc.save('resume.pdf');
             },
             html2canvas: {
-              scale: 0.5, // Lower scale can reduce file size if images were present
+              scale: 1, // Use a higher scale for better quality
+              useCORS: true,
             },
             autoPaging: 'text',
             margin: [15, 15, 15, 15],
@@ -161,7 +163,9 @@ function EditorPageContent() {
         })
     } finally {
         tempRoot.unmount();
-        document.body.removeChild(printableArea);
+        if (document.body.contains(printableArea)) {
+            document.body.removeChild(printableArea);
+        }
         setIsDownloading(false);
     }
   };

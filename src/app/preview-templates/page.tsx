@@ -69,6 +69,7 @@ export default function PreviewTemplatesPage() {
     printableArea.style.left = '-9999px';
     printableArea.style.top = '0';
     printableArea.style.width = '210mm'; // A4 width
+    printableArea.style.height = 'auto';
     printableArea.style.background = 'white';
     printableArea.style.fontFamily = 'Arial, sans-serif';
     document.body.appendChild(printableArea);
@@ -79,7 +80,7 @@ export default function PreviewTemplatesPage() {
     // Always use the dedicated PDF template for downloading
     tempRoot.render(<PdfTemplate data={resumeData} />);
     
-    // Allow time for rendering
+    // Allow time for rendering to complete before capturing
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
@@ -94,7 +95,8 @@ export default function PreviewTemplatesPage() {
                 doc.save(`resume-${templateId}.pdf`);
             },
             html2canvas: {
-              scale: 0.5,
+              scale: 1, // Use a higher scale for better quality
+              useCORS: true,
             },
             autoPaging: 'text',
             margin: [15, 15, 15, 15],
@@ -111,7 +113,9 @@ export default function PreviewTemplatesPage() {
         });
     } finally {
         tempRoot.unmount();
-        document.body.removeChild(printableArea);
+        if (document.body.contains(printableArea)) {
+            document.body.removeChild(printableArea);
+        }
         setIsDownloading(null);
     }
   };
