@@ -83,7 +83,7 @@ export default function PreviewTemplatesPage() {
 
     try {
         const canvas = await html2canvas(tempContainer, {
-            scale: 2, 
+            scale: 3, 
             useCORS: true,
             logging: false,
             windowWidth: tempContainer.scrollWidth,

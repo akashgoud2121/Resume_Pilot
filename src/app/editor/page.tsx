@@ -37,7 +37,7 @@ function EditorPageContent() {
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
-    // Default values are now set in useLayoutEffect to prevent uncontrolled component errors.
+    defaultValues: resumeSchema.parse({}),
   });
 
   const watchedData = form.watch();
@@ -126,7 +126,7 @@ function EditorPageContent() {
 
     try {
         const canvas = await html2canvas(tempContainer, {
-            scale: 2, 
+            scale: 3, 
             useCORS: true,
             logging: false,
             windowWidth: tempContainer.scrollWidth,
