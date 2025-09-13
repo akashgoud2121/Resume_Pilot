@@ -18,7 +18,6 @@ import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 function EditorPageContent() {
   const router = useRouter();
@@ -224,15 +223,6 @@ function EditorPageContent() {
                   </div>
                 )}
             </div>
-
-            {/* This Dialog is used only for the PDF generation of the hidden preview */}
-            <Dialog open={isDownloading}>
-              <DialogContent className="p-0 border-0 bg-transparent w-auto h-auto shadow-none" onOpenAutoFocus={(e) => e.preventDefault()}>
-                  <div id="printable-area-for-download" className="w-[210mm] h-[297mm] bg-white absolute -left-[9999px] -top-[9999px]">
-                    <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
-                  </div>
-              </DialogContent>
-            </Dialog>
         </div>
     </FormProvider>
   );
@@ -249,3 +239,5 @@ export default function EditorPage() {
         </Suspense>
     )
 }
+
+    
