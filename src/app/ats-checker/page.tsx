@@ -5,13 +5,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Sparkles, Wand } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { calculateAtsScoreAction } from '../actions';
+import { calculateAtsScoreAction, extractResumeDataAction, generateAtsFeedbackAction } from '../actions';
 import { ChartConfig, ChartContainer } from '@/components/ui/chart';
 import { Pie, PieChart } from 'recharts';
 import { Textarea } from '@/components/ui/textarea';
-import type { AtsScoreData } from '@/lib/types';
+import type { AtsScoreData, ResumeData } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const chartConfig = {
@@ -24,6 +24,7 @@ export default function AtsCheckerPage() {
     const { toast } = useToast();
     const [resumeText, setResumeText] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
+    const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
     const [atsData, setAtsData] = useState<AtsScoreData | null>(null);
 
     useEffect(() => {
@@ -90,6 +91,31 @@ export default function AtsCheckerPage() {
         }
     };
     
+    const handleGetFeedback = async () => {
+        if (!resumeText || !atsData) return;
+
+        setIsGeneratingFeedback(true);
+        try {
+            const feedback = await generateAtsFeedbackAction(resumeText, atsData.atsScore);
+            const resumeData: ResumeData = await extractResumeDataAction(resumeText);
+            
+            const dataString = btoa(encodeURIComponent(JSON.stringify(resumeData)));
+            const feedbackString = btoa(encodeURIComponent(JSON.stringify(feedback)));
+            
+            router.push(`/editor?data=${dataString}&feedback=${feedbackString}`);
+
+        } catch (e: any) {
+             console.error("Failed to generate feedback:", e);
+            toast({
+                title: 'Feedback Generation Failed',
+                description: e.message || "We couldn't generate feedback for your resume. Please try again.",
+                variant: 'destructive',
+            });
+        } finally {
+            setIsGeneratingFeedback(false);
+        }
+    };
+
     const chartData = atsData ? [
         { name: 'score', value: atsData.atsScore, fill: 'var(--color-score)' },
         { name: 'rest', value: 100 - atsData.atsScore, fill: 'hsl(var(--primary) / 0.1)' },
@@ -135,12 +161,16 @@ export default function AtsCheckerPage() {
                                     </PieChart>
                                 </ChartContainer>
                                 <p className="mt-4 text-muted-foreground text-sm max-w-xs">This score represents how well your resume is likely to be parsed and ranked by automated systems.</p>
+                                <Button onClick={handleGetFeedback} disabled={isGeneratingFeedback} className="mt-6">
+                                    {isGeneratingFeedback ? <Loader2 className="animate-spin" /> : <Wand />}
+                                    {isGeneratingFeedback ? 'Generating...' : 'Get AI Improvement Plan'}
+                                </Button>
                             </div>
 
                             <div className="md:col-span-8">
                                 <div className="grid grid-rows-2 gap-4 h-full">
                                     <div className="space-y-2">
-                                        <h3 className="font-semibold text-lg text-foreground">AI Feedback for Improvement</h3>
+                                        <h3 className="font-semibold text-lg text-foreground flex items-center gap-2"><Sparkles className="text-primary" /> AI Feedback for Improvement</h3>
                                         <Card className="bg-muted/50 h-full">
                                              <ScrollArea className="h-[200px] p-4">
                                                 <p className="text-sm text-muted-foreground whitespace-pre-wrap">{atsData.feedback}</p>

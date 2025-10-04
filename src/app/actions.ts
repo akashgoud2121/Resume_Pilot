@@ -6,6 +6,7 @@ import { extractResumeData } from '@/ai/flows/extract-resume-data';
 import { extractResumeText } from '@/ai/flows/extract-resume-text';
 import { generateResumeFromPortfolio } from '@/ai/flows/generate-resume-from-portfolio';
 import { synthesizePortfolioText } from '@/ai/flows/synthesize-portfolio-text';
+import { generateAtsFeedback } from '@/ai/flows/generate-ats-feedback';
 import type { ResumeData, PortfolioDocument, AtsScoreData } from '@/lib/types';
 import { resumeSchema } from '@/lib/types';
 
@@ -20,6 +21,11 @@ export async function calculateAtsScoreAction(resumeText: string): Promise<AtsSc
         atsScore: atsScore ?? 0,
         feedback: feedback ?? 'Could not generate feedback.',
     };
+}
+
+export async function generateAtsFeedbackAction(resumeText: string, atsScore: number): Promise<string> {
+    const { feedback } = await generateAtsFeedback({ resumeText, atsScore });
+    return feedback;
 }
 
 

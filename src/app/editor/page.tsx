@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useLayoutEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +9,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Download, Eye, Code } from 'lucide-react';
+import { Loader2, Download, Eye, Code, X, Sparkles, Lightbulb } from 'lucide-react';
 import { ResumeEditorForm } from '@/components/resume-editor-form';
 import { ResumePreview } from '@/components/resume-preview';
 import type { ResumeData } from '@/lib/types';
@@ -17,6 +17,10 @@ import { resumeSchema } from '@/lib/types';
 import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useAiFeedback } from '@/hooks/use-ai-feedback';
+import { cn } from '@/lib/utils';
+
 
 function EditorPageContent() {
   const router = useRouter();
@@ -27,13 +31,15 @@ function EditorPageContent() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
+  
+  const { feedback, setFeedback, isFeedbackVisible, setIsFeedbackVisible } = useAiFeedback();
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
     defaultValues: resumeSchema.parse({}), // Start with a valid empty object
   });
 
-  useEffect(() => {
+ useEffect(() => {
     // Case 1: User clicked "Start from Scratch"
     if (searchParams.get('new') === 'true') {
       form.reset(resumeSchema.parse({})); // Ensure a valid empty form state
@@ -44,6 +50,20 @@ function EditorPageContent() {
 
     let initialData: ResumeData | null = null;
     let dataLoaded = false;
+    
+    // Attempt to load AI feedback
+    const feedbackParam = searchParams.get('feedback');
+    if (feedbackParam) {
+        try {
+            const decodedFeedback = decodeURIComponent(atob(feedbackParam));
+            const parsedFeedback = JSON.parse(decodedFeedback);
+            setFeedback(parsedFeedback);
+            setIsFeedbackVisible(true);
+        } catch (error) {
+            console.error("Failed to parse feedback from URL:", error);
+        }
+    }
+
 
     // Case 2: Data is passed via URL parameter (most reliable)
     const dataParam = searchParams.get('data');
@@ -100,7 +120,7 @@ function EditorPageContent() {
 
     setIsLoading(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchParams, router, toast, form, setFeedback, setIsFeedbackVisible]);
 
   const watchedData = form.watch();
 
@@ -206,7 +226,6 @@ function EditorPageContent() {
     );
   }
 
-
   return (
     <FormProvider {...form}>
         <div className="flex flex-col h-screen bg-background text-foreground">
@@ -225,13 +244,18 @@ function EditorPageContent() {
                         ))}
                     </SelectContent>
                     </Select>
+                    {feedback && (
+                        <Button variant="outline" size="sm" onClick={() => setIsFeedbackVisible(true)} className={cn(isFeedbackVisible && 'hidden')}>
+                           <Lightbulb className="mr-2 h-4 w-4" /> Show AI Suggestions
+                        </Button>
+                    )}
                 </div>
                 <div className="flex items-center gap-2">
                     <Button
                       variant="outline"
                       onClick={() => setMode(mode === 'edit' ? 'preview' : 'edit')}
                     >
-                      {mode === 'edit' ? <Eye className="mr-2" /> : <Code className="mr-2" />}
+                      {mode === 'edit' ? <Eye className="mr-2 h-4 w-4" /> : <Code className="mr-2 h-4 w-4" />}
                       {mode === 'edit' ? 'Preview' : 'Editor'}
                     </Button>
                     <Button
@@ -254,6 +278,27 @@ function EditorPageContent() {
                 {mode === 'edit' ? (
                   <ScrollArea className="h-full">
                       <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+                         {isFeedbackVisible && feedback && (
+                            <Alert className="mb-6 border-primary/50 relative">
+                                <Sparkles className="h-4 w-4 text-primary" />
+                                <AlertTitle className="font-bold flex items-center">
+                                    AI-Powered Suggestions
+                                </AlertTitle>
+                                <AlertDescription>
+                                    <ScrollArea className="max-h-48 pr-4">
+                                        <p className="whitespace-pre-wrap text-xs">{feedback}</p>
+                                    </ScrollArea>
+                                </AlertDescription>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute top-2 right-2 h-6 w-6"
+                                    onClick={() => setIsFeedbackVisible(false)}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </Alert>
+                         )}
                         <ResumeEditorForm form={form} />
                       </div>
                   </ScrollArea>
@@ -272,12 +317,12 @@ function EditorPageContent() {
 
 export default function EditorPage() {
     return (
-        <Suspense fallback={
-            <div className="flex h-screen items-center justify-center bg-muted/40">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-        }>
-            <EditorPageContent />
-        </Suspense>
+      <Suspense fallback={
+          <div className="flex h-screen items-center justify-center bg-muted/40">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+      }>
+          <EditorPageContent />
+      </Suspense>
     )
 }

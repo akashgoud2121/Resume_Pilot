@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -23,7 +24,7 @@ const GenerateAtsFeedbackOutputSchema = z.object({
   feedback: z
     .string()
     .describe(
-      'AI-generated feedback on how to improve the resume to achieve a higher ATS score.'
+      'AI-generated feedback on how to improve the resume to achieve a higher ATS score. The feedback should be well-structured, easy to read, and use bullet points or numbered lists for suggestions.'
     ),
 });
 export type GenerateAtsFeedbackOutput = z.infer<typeof GenerateAtsFeedbackOutputSchema>;
@@ -36,16 +37,22 @@ const prompt = ai.definePrompt({
   name: 'generateAtsFeedbackPrompt',
   input: {schema: GenerateAtsFeedbackInputSchema},
   output: {schema: GenerateAtsFeedbackOutputSchema},
-  prompt: `You are an expert resume optimization consultant.
+  prompt: `You are an expert resume optimization consultant providing feedback on a resume.
 
-You are evaluating a resume to provide actionable feedback that will improve its ATS score.
-
-Here is the resume text:
+The resume text is as follows:
 {{{resumeText}}}
 
-The current ATS score is: {{{atsScore}}}
+The current ATS score is: {{{atsScore}}}/100.
 
-Provide a detailed, step-by-step improvement plan. Suggest relevant keywords, formatting adjustments, and structural improvements. Be direct, critical, and encouraging. Focus on creating a clear, impactful, and ATS-friendly resume.
+Your task is to provide a detailed, step-by-step improvement plan that is clear, actionable, and formatted for excellent readability.
+
+Instructions:
+1.  Start with a brief, encouraging opening statement.
+2.  Organize your feedback into logical sections (e.g., "Keyword Optimization," "Formatting and Structure," "Impactful Language").
+3.  Under each section, use bullet points (using the '-' character) or a numbered list to provide specific, actionable suggestions.
+4.  For keyword suggestions, provide examples relevant to the user's field if possible.
+5.  Keep the tone professional, direct, and helpful.
+6.  Ensure the final output is a single string with proper line breaks for formatting.
 `,
 });
 
@@ -57,6 +64,9 @@ const generateAtsFeedbackFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('AI failed to generate feedback.');
+    }
+    return output;
   }
 );
