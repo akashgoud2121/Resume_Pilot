@@ -16,7 +16,6 @@ import type { ResumeData } from '@/lib/types';
 import { resumeSchema } from '@/lib/types';
 import { templates } from '@/lib/templates';
 import { useToast } from '@/hooks/use-toast';
-import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 function EditorPageContent() {
@@ -94,24 +93,25 @@ function EditorPageContent() {
       toast({
         title: "No Resume Data",
         description: "No resume data was found. Please start over.",
+        variant: "destructive",
       });
       router.push('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]); // Only run this on initial load and if router changes
+  }, []); // Only run this on initial load
 
   const watchedData = form.watch();
 
   // This effect saves changes to sessionStorage
   useEffect(() => {
-    // Don't save data if the form hasn't been populated yet.
-    if (Object.keys(form.formState.dirtyFields).length > 0 || searchParams.get('new') !== 'true') {
-      const validatedData = resumeSchema.safeParse(watchedData);
-      if (validatedData.success) {
-        sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
-      }
+    // Only save if the form is valid and dirty, or if it's a new resume being created
+     if (form.formState.isDirty || searchParams.get('new') === 'true') {
+        const validatedData = resumeSchema.safeParse(watchedData);
+        if (validatedData.success) {
+            sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
+        }
     }
-  }, [watchedData, form.formState.dirtyFields, searchParams]);
+  }, [watchedData, form.formState.isDirty, searchParams]);
 
   useEffect(() => {
     const templateId = searchParams.get('template');
