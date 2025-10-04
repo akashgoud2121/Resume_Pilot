@@ -161,7 +161,7 @@ function EditorPageContent() {
 
     try {
         const canvas = await html2canvas(tempContainer.firstChild as HTMLElement, {
-            scale: 4, // Increased scale for higher resolution
+            scale: 2, // Reduced scale for smaller file size
             useCORS: true,
             logging: false,
             width: tempContainer.scrollWidth,
@@ -170,7 +170,7 @@ function EditorPageContent() {
             windowHeight: tempContainer.scrollHeight,
         });
 
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpeg', 0.95); // Use JPEG compression
         const pdf = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
@@ -188,13 +188,13 @@ function EditorPageContent() {
         let heightLeft = imgHeight;
         let position = 0;
 
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
         heightLeft -= pdfHeight;
 
         while (heightLeft > 0) {
             position = heightLeft - imgHeight;
             pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
             heightLeft -= pdfHeight;
         }
 
