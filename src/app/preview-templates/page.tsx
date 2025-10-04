@@ -63,9 +63,9 @@ export default function PreviewTemplatesPage() {
 
 
   const handleEdit = (templateId: string) => {
-    // sessionStorage is already set by the effect hook.
-    // We just need to navigate.
-    router.push(`/editor?template=${templateId}`);
+    if (!resumeData) return;
+    const dataString = btoa(encodeURIComponent(JSON.stringify(resumeData)));
+    router.push(`/editor?template=${templateId}&data=${dataString}`);
   };
 
   const handleDownload = async (templateId: string) => {
@@ -253,3 +253,5 @@ export default function PreviewTemplatesPage() {
     </div>
   );
 }
+
+    

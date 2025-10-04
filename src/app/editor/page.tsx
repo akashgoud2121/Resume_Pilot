@@ -51,12 +51,18 @@ function EditorPageContent() {
 
     let initialData: ResumeData | null = null;
     try {
-      const storedData = sessionStorage.getItem('resumeData');
-      if (storedData) {
-        initialData = JSON.parse(storedData);
-      }
+        const dataParam = searchParams.get('data');
+        if (dataParam) {
+            const decodedData = decodeURIComponent(atob(dataParam));
+            initialData = JSON.parse(decodedData);
+        } else {
+            const storedData = sessionStorage.getItem('resumeData');
+            if (storedData) {
+                initialData = JSON.parse(storedData);
+            }
+        }
     } catch (error) {
-      console.error("Failed to parse resume data from sessionStorage:", error);
+      console.error("Failed to parse resume data from URL or sessionStorage:", error);
       toast({
         title: "Error Loading Data",
         description: "Could not load your resume data. Please try again.",
@@ -249,3 +255,5 @@ export default function EditorPage() {
         </Suspense>
     )
 }
+
+    
