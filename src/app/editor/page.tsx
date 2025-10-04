@@ -23,6 +23,7 @@ function EditorPageContent() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
@@ -32,12 +33,12 @@ function EditorPageContent() {
     defaultValues: resumeSchema.parse({}), // Start with a valid empty object
   });
 
-  // This effect runs only once on mount to initialize the form data.
-  useLayoutEffect(() => {
+  useEffect(() => {
     // Case 1: User clicked "Start from Scratch"
     if (searchParams.get('new') === 'true') {
       form.reset(resumeSchema.parse({})); // Ensure a valid empty form state
       sessionStorage.removeItem('resumeData'); // Clear any previous session data
+      setIsLoading(false);
       return;
     }
 
@@ -73,10 +74,8 @@ function EditorPageContent() {
       }
     }
 
-    // Now, validate and load the data, or handle failure
     if (initialData) {
       try {
-        // This ensures the data conforms to the schema before loading into the form
         const validatedData = resumeSchema.parse(initialData);
         form.reset(validatedData);
       } catch (validationError) {
@@ -87,31 +86,33 @@ function EditorPageContent() {
           variant: "destructive",
         });
         router.push('/');
+        return;
       }
     } else {
-      // If no data is found by any method, it's an invalid state, so redirect.
       toast({
         title: "No Resume Data",
         description: "No resume data was found. Please start over.",
         variant: "destructive",
       });
       router.push('/');
+      return;
     }
+
+    setIsLoading(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run this on initial load
+  }, [searchParams]);
 
   const watchedData = form.watch();
 
   // This effect saves changes to sessionStorage
   useEffect(() => {
-    // Only save if the form is valid and dirty, or if it's a new resume being created
-     if (form.formState.isDirty || searchParams.get('new') === 'true') {
+     if (!isLoading && (form.formState.isDirty || searchParams.get('new') === 'true')) {
         const validatedData = resumeSchema.safeParse(watchedData);
         if (validatedData.success) {
             sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
         }
     }
-  }, [watchedData, form.formState.isDirty, searchParams]);
+  }, [watchedData, form.formState.isDirty, searchParams, isLoading]);
 
   useEffect(() => {
     const templateId = searchParams.get('template');
@@ -122,7 +123,6 @@ function EditorPageContent() {
 
   const handleDownload = async () => {
     setIsDownloading(true);
-    // Use a timeout to allow the UI to update before the heavy task
     setTimeout(async () => {
       const tempContainer = document.createElement('div');
       tempContainer.style.position = 'absolute';
@@ -140,7 +140,6 @@ function EditorPageContent() {
           </div>
       );
       
-      // Allow the off-screen component to render
       await new Promise(resolve => setTimeout(resolve, 0));
 
       try {
@@ -195,8 +194,17 @@ function EditorPageContent() {
           document.body.removeChild(tempContainer);
           setIsDownloading(false);
       }
-    }, 50); // A small delay to ensure UI responsiveness
+    }, 50);
   };
+  
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-muted/40">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="ml-4 text-lg">Loading Editor...</p>
+      </div>
+    );
+  }
 
 
   return (
@@ -273,5 +281,3 @@ export default function EditorPage() {
         </Suspense>
     )
 }
-
-    
