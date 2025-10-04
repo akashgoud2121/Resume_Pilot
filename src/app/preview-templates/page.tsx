@@ -85,9 +85,9 @@ export default function PreviewTemplatesPage() {
         tempRoot.render(
             <div className="bg-white w-full h-auto">
                 <ResumePreview resumeData={resumeData} templateId={templateId} />
-            </div>,
-            () => setTimeout(resolve, 100)
+            </div>
         );
+        setTimeout(resolve, 100);
     });
 
     try {

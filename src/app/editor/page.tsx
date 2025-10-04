@@ -154,9 +154,9 @@ function EditorPageContent() {
         tempRoot.render(
             <div className="bg-white w-full h-auto">
                 <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
-            </div>,
-            () => setTimeout(resolve, 100) // Small delay to ensure content is painted
+            </div>
         );
+        setTimeout(resolve, 100); // Small delay to ensure content is painted
     });
 
     try {
