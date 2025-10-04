@@ -182,11 +182,15 @@ function EditorPageContent() {
           const pdfHeight = pdf.internal.pageSize.getHeight();
           const canvasWidth = canvas.width;
           const canvasHeight = canvas.height;
-          const ratio = canvasWidth / canvasHeight;
+          const ratio = canvasWidth > 0 ? canvasWidth / canvasHeight : 1;
 
-          const imgWidth = pdfWidth;
-          const imgHeight = imgWidth / ratio;
+          let imgWidth = pdfWidth;
+          let imgHeight = imgWidth / ratio;
           
+          if (!imgWidth || !imgHeight) {
+            throw new Error("Invalid image dimensions for PDF generation.");
+          }
+
           let heightLeft = imgHeight;
           let position = 0;
 
