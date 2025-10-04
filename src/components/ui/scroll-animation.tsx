@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
 type Animation = 
@@ -31,30 +32,36 @@ const ScrollAnimation: React.FC<ScrollAnimationProps> = ({
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (triggerOnce && ref.current) {
-            observer.unobserve(ref.current);
+          if (triggerOnce) {
+            observer.unobserve(element);
           }
         }
       },
       { threshold }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    observer.observe(element);
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      observer.unobserve(element);
     };
   }, [threshold, triggerOnce]);
 
-  const animationClass = isVisible ? animation : 'initial-hidden';
+  const animationClass = useMemo(() => {
+    if (isVisible) {
+      return animation;
+    }
+    // Only apply initial-hidden if not visible. Once visible, it stays that way.
+    return 'initial-hidden';
+  }, [isVisible, animation]);
+  
   const style = isVisible && delay > 0 ? { animationDelay: `${delay}ms` } : {};
 
   return (
