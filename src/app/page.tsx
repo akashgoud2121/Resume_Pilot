@@ -52,6 +52,7 @@ import { DETAILED_DUMMY_RESUME_DATA, DUMMY_RESUME_DATA } from '@/lib/dummy-data'
 import Footer from '@/components/footer';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import ScrollAnimation from '@/components/ui/scroll-animation';
 
 
 const initialTestimonials = [
@@ -310,14 +311,16 @@ export default function Home() {
         <Header3d />
         <section className="py-20 md:py-28 px-4 bg-gray-900/50">
             <div className="container mx-auto max-w-6xl">
-                <div className="text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white">Unlock Your Career Potential</h2>
-                    <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
-                        Don't just build a resume—build your future. Resume Pilot combines cutting-edge AI with professional design to give you the ultimate advantage in today's competitive job market.
-                    </p>
-                </div>
+                <ScrollAnimation animation="animate-fadeInUp">
+                    <div className="text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Unlock Your Career Potential</h2>
+                        <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
+                            Don't just build a resume—build your future. Resume Pilot combines cutting-edge AI with professional design to give you the ultimate advantage in today's competitive job market.
+                        </p>
+                    </div>
+                </ScrollAnimation>
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div>
+                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-blue-400/50">
                             <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-500/10 text-blue-400 mb-6 mx-auto">
@@ -327,8 +330,8 @@ export default function Home() {
                                 <p className="mt-2 text-muted-foreground">Let our intelligent tools parse, score, and optimize your resume content for maximum impact.</p>
                             </CardContent>
                         </Card>
-                    </div>
-                    <div>
+                    </ScrollAnimation>
+                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-teal-400/50">
                              <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-teal-500/10 text-teal-400 mb-6 mx-auto">
@@ -338,8 +341,8 @@ export default function Home() {
                                 <p className="mt-2 text-muted-foreground">Choose from a library of ATS-friendly templates designed by professionals.</p>
                             </CardContent>
                         </Card>
-                    </div>
-                    <div>
+                    </ScrollAnimation>
+                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 400 }}>
                          <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-violet-400/50">
                             <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-violet-500/10 text-violet-400 mb-6 mx-auto">
@@ -349,14 +352,14 @@ export default function Home() {
                                 <p className="mt-2 text-muted-foreground">Get the insights you need to beat automated filters and land more interviews.</p>
                             </CardContent>
                         </Card>
-                    </div>
+                    </ScrollAnimation>
                 </div>
             </div>
         </section>
 
         <section id="ai-parsing" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <ScrollAnimation animation="animate-slideInFromLeft">
                 <div className="pr-8">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -382,8 +385,8 @@ export default function Home() {
                     </li>
                   </ul>
                 </div>
-            </div>
-            <div>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-slideInFromRight">
               <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-primary/20">
                 <CardContent className="p-6 grid grid-cols-2 gap-6 items-start">
                   <div className="col-span-1">
@@ -418,25 +421,27 @@ export default function Home() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </ScrollAnimation>
           </div>
         </section>
 
         <section id="templates" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
-            <div className="text-center">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
-                        <LayoutTemplate className="h-6 w-6" />
+            <ScrollAnimation animation="animate-fadeInUp">
+                <div className="text-center">
+                    <div className="flex items-center justify-center gap-4 mb-4">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
+                            <LayoutTemplate className="h-6 w-6" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">ATS-Friendly Templates</h2>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white">ATS-Friendly Templates</h2>
+                    <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                        Beat the bots with professionally designed templates. Browse our library of templates designed for various industries and roles, all optimized to be parsed correctly by applicant tracking systems.
+                    </p>
                 </div>
-                <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                    Beat the bots with professionally designed templates. Browse our library of templates designed for various industries and roles, all optimized to be parsed correctly by applicant tracking systems.
-                </p>
-            </div>
+            </ScrollAnimation>
 
-            <div>
+            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
               <div className="mt-12 flex justify-center flex-wrap gap-2">
                 {categories.map((category) => (
                   <Button
@@ -452,53 +457,55 @@ export default function Home() {
                   </Button>
                 ))}
               </div>
-            </div>
+            </ScrollAnimation>
             
-            <div className="relative mt-16">
-               <div className="absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-gray-900/50 to-transparent pointer-events-none" />
-                <div className="absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-gray-900/50 to-transparent pointer-events-none" />
-              <Carousel 
-                 plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
-                opts={{ align: "center", loop: true }}
-                setApi={setCarouselApi}
-                className="w-full"
-              >
-                <CarouselContent className="-ml-4">
-                  {filteredTemplates.map((template, index) => (
-                     <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
-                      <div className="flex flex-col gap-4 items-center">
-                        <div className={cn(
-                          "transition-all duration-500 ease-in-out flex items-center justify-center",
-                          selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85'
-                        )}>
-                          <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
-                           <div className="transform scale-[0.38] origin-top-left w-[789px] h-[1116px]">
-                               <ResumePreview
-                                    resumeData={sampleResumeData}
-                                    templateId={template.id}
-                                />
-                           </div>
-                           </div>
-                        </div>
-                        <div className="text-center">
-                          <h3 className="font-bold text-white">{template.name}</h3>
-                          <p className="text-sm text-muted-foreground">{template.category}</p>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="text-white hidden md:flex left-8"/>
-                <CarouselNext className="text-white hidden md:flex right-8"/>
-              </Carousel>
-            </div>
+            <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: 300 }}>
+                <div className="relative mt-16">
+                   <div className="absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-gray-900/50 to-transparent pointer-events-none" />
+                    <div className="absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-gray-900/50 to-transparent pointer-events-none" />
+                  <Carousel 
+                     plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
+                    opts={{ align: "center", loop: true }}
+                    setApi={setCarouselApi}
+                    className="w-full"
+                  >
+                    <CarouselContent className="-ml-4">
+                      {filteredTemplates.map((template, index) => (
+                         <CarouselItem key={template.id} className="pl-4 md:basis-1/2 lg:basis-1/3 group">
+                          <div className="flex flex-col gap-4 items-center">
+                            <div className={cn(
+                              "transition-all duration-500 ease-in-out flex items-center justify-center",
+                              selectedSnap === index ? 'opacity-100 scale-100' : 'opacity-50 scale-85'
+                            )}>
+                              <div className="w-[300px] h-[424px] overflow-hidden rounded-lg shadow-2xl bg-white">
+                               <div className="transform scale-[0.38] origin-top-left w-[789px] h-[1116px]">
+                                   <ResumePreview
+                                        resumeData={sampleResumeData}
+                                        templateId={template.id}
+                                    />
+                               </div>
+                               </div>
+                            </div>
+                            <div className="text-center">
+                              <h3 className="font-bold text-white">{template.name}</h3>
+                              <p className="text-sm text-muted-foreground">{template.category}</p>
+                            </div>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="text-white hidden md:flex left-8"/>
+                    <CarouselNext className="text-white hidden md:flex right-8"/>
+                  </Carousel>
+                </div>
+            </ScrollAnimation>
 
           </div>
         </section>
         
         <section id="instant-download" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <ScrollAnimation animation="animate-slideInFromLeft">
               <div className="pr-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -524,8 +531,8 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-            </div>
-            <div>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-slideInFromRight">
               <div
                 className="relative w-full max-w-md mx-auto group"
                 style={{ perspective: '1000px' }}
@@ -551,13 +558,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </div>
+            </ScrollAnimation>
           </div>
         </section>
 
         <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <ScrollAnimation animation="animate-slideInFromLeft">
               <a href="#templates" className="block group">
                 <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:shadow-primary/20">
                   <CardHeader>
@@ -617,8 +624,8 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </a>
-            </div>
-            <div>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-slideInFromRight">
               <div className="pl-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -644,18 +651,20 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-            </div>
+            </ScrollAnimation>
           </div>
         </section>
 
         <section id="how-it-works" className="py-20 md:py-28 px-4">
           <div className="container mx-auto">
-            <div className="text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume Ready in Minutes</h2>
-              <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                Follow these simple steps to craft your perfect resume.
-              </p>
-            </div>
+            <ScrollAnimation animation="animate-fadeInUp">
+              <div className="text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume Ready in Minutes</h2>
+                <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                  Follow these simple steps to craft your perfect resume.
+                </p>
+              </div>
+            </ScrollAnimation>
             <div className="relative mt-16 max-w-4xl mx-auto">
               <div className="absolute top-8 left-0 w-full h-0.5 bg-border hidden md:block"
                 style={{
@@ -664,36 +673,42 @@ export default function Home() {
                 aria-hidden="true"
               ></div>
               <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div className="text-center flex flex-col items-center">
-                  <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
-                      <Upload className="h-8 w-8" />
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
+                    <div className="text-center flex flex-col items-center">
+                      <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
+                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
+                          <Upload className="h-8 w-8" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-white">1. Provide Your Data</h3>
+                        <p className="mt-2 text-muted-foreground">Start from scratch or upload an existing resume. Our AI will do the heavy lifting.</p>
+                      </Card>
                     </div>
-                    <h3 className="text-xl font-semibold text-white">1. Provide Your Data</h3>
-                    <p className="mt-2 text-muted-foreground">Start from scratch or upload an existing resume. Our AI will do the heavy lifting.</p>
-                  </Card>
-                </div>
-                <div className="text-center flex flex-col items-center">
-                  <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
-                      <LayoutTemplate className="h-8 w-8" />
+                </ScrollAnimation>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+                    <div className="text-center flex flex-col items-center">
+                      <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
+                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
+                          <LayoutTemplate className="h-8 w-8" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-white">2. Choose a Template</h3>
+                        <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
+                      </Card>
                     </div>
-                    <h3 className="text-xl font-semibold text-white">2. Choose a Template</h3>
-                    <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
-                  </Card>
-                </div>
-                <div className="text-center flex flex-col items-center">
-                   <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
-                      <Download className="h-8 w-8" />
+                </ScrollAnimation>
+                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 400 }}>
+                    <div className="text-center flex flex-col items-center">
+                       <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
+                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
+                          <Download className="h-8 w-8" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-white">3. Download & Apply</h3>
+                        <p className="mt-2 text-muted-foreground">Instantly download your new resume in PDF format and start applying with confidence.</p>
+                      </Card>
                     </div>
-                    <h3 className="text-xl font-semibold text-white">3. Download & Apply</h3>
-                    <p className="mt-2 text-muted-foreground">Instantly download your new resume in PDF format and start applying with confidence.</p>
-                  </Card>
-                </div>
+                </ScrollAnimation>
               </div>
             </div>
-             <div>
+             <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 500 }}>
               <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg" onClick={handleUploadClick} disabled={isLoading}>
                   {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileInput className="mr-2" />}
@@ -709,19 +724,21 @@ export default function Home() {
                   <BriefcaseIcon className="mr-2" /> Build from Portfolio
                 </Button>
               </div>
-            </div>
+            </ScrollAnimation>
           </div>
         </section>
 
         <section id="testimonials" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
-            <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-white">Loved by Professionals</h2>
-                <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                Don't just take our word for it. Here's what our users are saying.
-                </p>
-            </div>
-            <div>
+            <ScrollAnimation animation="animate-fadeInUp">
+                <div className="text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white">Loved by Professionals</h2>
+                    <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                    Don't just take our word for it. Here's what our users are saying.
+                    </p>
+                </div>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
                 <Carousel
                 opts={{
                     align: "start",
@@ -754,8 +771,8 @@ export default function Home() {
                 <CarouselPrevious className="text-white"/>
                 <CarouselNext className="text-white"/>
                 </Carousel>
-            </div>
-            <div>
+            </ScrollAnimation>
+            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
                 <Card className="max-w-2xl mx-auto mt-16 bg-card/50 border-white/10">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
@@ -779,19 +796,21 @@ export default function Home() {
                         </form>
                     </CardContent>
                 </Card>
-            </div>
+            </ScrollAnimation>
           </div>
         </section>
         
         <section id="faq" className="py-20 md:py-28 px-4">
           <div className="container mx-auto max-w-3xl">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-white">Frequently Asked Questions</h2>
-                <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                    Have questions? We've got answers.
-                </p>
-              </div>
-              <div>
+              <ScrollAnimation animation="animate-fadeInUp">
+                <div className="text-center">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white">Frequently Asked Questions</h2>
+                  <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
+                      Have questions? We've got answers.
+                  </p>
+                </div>
+              </ScrollAnimation>
+              <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
                 <Accordion type="single" collapsible className="w-full mt-12">
                     {faqItems.map((item, index) => (
                     <AccordionItem key={index} value={`item-${index}`} className="border-white/10">
@@ -804,7 +823,7 @@ export default function Home() {
                     </AccordionItem>
                     ))}
                 </Accordion>
-              </div>
+              </ScrollAnimation>
           </div>
         </section>
         <Footer />
@@ -812,3 +831,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

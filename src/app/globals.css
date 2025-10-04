@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,12 +41,6 @@
 }
 
 @layer utilities {
-  /* Initial state for animations (hidden) */
-  .initial-hidden {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
   /* Keyframes for animations */
   @keyframes fadeInUp {
     from {
@@ -125,19 +120,23 @@
 
   /* Animation classes to be applied when element is visible */
   .animate-fadeInUp {
-    animation: fadeInUp 0.8s ease-out forwards;
+    animation: fadeInUp var(--animation-duration, 0.8s) ease-out forwards;
+    animation-delay: var(--animation-delay, 0s);
   }
   
   .animate-slideInFromLeft {
-    animation: slideInFromLeft 0.8s ease-out forwards;
+    animation: slideInFromLeft var(--animation-duration, 0.8s) ease-out forwards;
+     animation-delay: var(--animation-delay, 0s);
   }
 
   .animate-slideInFromRight {
-    animation: slideInFromRight 0.8s ease-out forwards;
+    animation: slideInFromRight var(--animation-duration, 0.8s) ease-out forwards;
+     animation-delay: var(--animation-delay, 0s);
   }
   
   .animate-scaleIn {
-    animation: scaleIn 0.8s ease-out forwards;
+    animation: scaleIn var(--animation-duration, 0.8s) ease-out forwards;
+     animation-delay: var(--animation-delay, 0s);
   }
 
   .animate-gradient-xy {
@@ -149,14 +148,9 @@
   }
 
   .animate-dropIn {
-    animation: dropIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: dropIn var(--animation-duration, 1s) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+     animation-delay: var(--animation-delay, 0s);
   }
-  
-  /* Animation delays */
-  .animation-delay-200 { animation-delay: 200ms; }
-  .animation-delay-300 { animation-delay: 300ms; }
-  .animation-delay-400 { animation-delay: 400ms; }
-  .animation-delay-500 { animation-delay: 500ms; }
-  .animation-delay-600 { animation-delay: 600ms; }
-  .animation-delay-700 { animation-delay: 700ms; }
 }
+
+    
