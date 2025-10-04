@@ -311,7 +311,7 @@ export default function Home() {
         <Header3d />
         <section className="py-20 md:py-28 px-4 bg-gray-900/50">
             <div className="container mx-auto max-w-6xl">
-                <ScrollAnimation animation="animate-fadeInUp">
+                <ScrollAnimation animation="scroll-reveal-up">
                     <div className="text-center">
                         <h2 className="text-3xl md:text-4xl font-bold text-white">Unlock Your Career Potential</h2>
                         <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
@@ -320,7 +320,7 @@ export default function Home() {
                     </div>
                 </ScrollAnimation>
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
+                    <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-blue-400/50">
                             <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-blue-500/10 text-blue-400 mb-6 mx-auto">
@@ -331,7 +331,7 @@ export default function Home() {
                             </CardContent>
                         </Card>
                     </ScrollAnimation>
-                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+                    <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 300 }}>
                         <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-teal-400/50">
                              <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-teal-500/10 text-teal-400 mb-6 mx-auto">
@@ -342,7 +342,7 @@ export default function Home() {
                             </CardContent>
                         </Card>
                     </ScrollAnimation>
-                    <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 400 }}>
+                    <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 400 }}>
                          <Card className="bg-card/50 border-white/10 h-full transition-all duration-300 hover:scale-105 hover:border-violet-400/50">
                             <CardContent className="p-8">
                                 <div className="flex items-center justify-center h-16 w-16 rounded-full bg-violet-500/10 text-violet-400 mb-6 mx-auto">
@@ -359,7 +359,7 @@ export default function Home() {
 
         <section id="ai-parsing" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <ScrollAnimation animation="animate-slideInFromLeft">
+            <ScrollAnimation animation="scroll-reveal-left">
                 <div className="pr-8">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -386,7 +386,7 @@ export default function Home() {
                   </ul>
                 </div>
             </ScrollAnimation>
-            <ScrollAnimation animation="animate-slideInFromRight">
+            <ScrollAnimation animation="scroll-reveal-right">
               <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 hover:scale-105 hover:shadow-primary/20">
                 <CardContent className="p-6 grid grid-cols-2 gap-6 items-start">
                   <div className="col-span-1">
@@ -427,7 +427,7 @@ export default function Home() {
 
         <section id="templates" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
-            <ScrollAnimation animation="animate-fadeInUp">
+            <ScrollAnimation animation="scroll-reveal-up">
                 <div className="text-center">
                     <div className="flex items-center justify-center gap-4 mb-4">
                         <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -441,7 +441,7 @@ export default function Home() {
                 </div>
             </ScrollAnimation>
 
-            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
+            <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
               <div className="mt-12 flex justify-center flex-wrap gap-2">
                 {categories.map((category) => (
                   <Button
@@ -459,7 +459,7 @@ export default function Home() {
               </div>
             </ScrollAnimation>
             
-            <ScrollAnimation animation="animate-scaleIn" animationOptions={{ delay: 300 }}>
+            <ScrollAnimation animation="scroll-reveal-scale" animationOptions={{ delay: 300 }}>
                 <div className="relative mt-16">
                    <div className="absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-gray-900/50 to-transparent pointer-events-none" />
                     <div className="absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-gray-900/50 to-transparent pointer-events-none" />
@@ -505,7 +505,7 @@ export default function Home() {
         
         <section id="instant-download" className="py-20 md:py-28 px-4">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <ScrollAnimation animation="animate-slideInFromLeft">
+            <ScrollAnimation animation="scroll-reveal-left">
               <div className="pr-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -532,7 +532,7 @@ export default function Home() {
                 </ul>
               </div>
             </ScrollAnimation>
-            <ScrollAnimation animation="animate-slideInFromRight">
+            <ScrollAnimation animation="scroll-reveal-right">
               <div
                 className="relative w-full max-w-md mx-auto group"
                 style={{ perspective: '1000px' }}
@@ -564,7 +564,7 @@ export default function Home() {
 
         <section id="ats-score" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <ScrollAnimation animation="animate-slideInFromLeft">
+            <ScrollAnimation animation="scroll-reveal-left">
               <a href="#templates" className="block group">
                 <Card className="bg-card/70 border-white/10 backdrop-blur-sm shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:shadow-primary/20">
                   <CardHeader>
@@ -625,7 +625,7 @@ export default function Home() {
                 </Card>
               </a>
             </ScrollAnimation>
-            <ScrollAnimation animation="animate-slideInFromRight">
+            <ScrollAnimation animation="scroll-reveal-right">
               <div className="pl-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary">
@@ -657,7 +657,7 @@ export default function Home() {
 
         <section id="how-it-works" className="py-20 md:py-28 px-4">
           <div className="container mx-auto">
-            <ScrollAnimation animation="animate-fadeInUp">
+            <ScrollAnimation animation="scroll-reveal-up">
               <div className="text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume Ready in Minutes</h2>
                 <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
@@ -673,7 +673,7 @@ export default function Home() {
                 aria-hidden="true"
               ></div>
               <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
-                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
+                <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
                     <div className="text-center flex flex-col items-center">
                       <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
                         <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
@@ -684,7 +684,7 @@ export default function Home() {
                       </Card>
                     </div>
                 </ScrollAnimation>
-                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+                <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 300 }}>
                     <div className="text-center flex flex-col items-center">
                       <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
                         <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
@@ -695,7 +695,7 @@ export default function Home() {
                       </Card>
                     </div>
                 </ScrollAnimation>
-                <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 400 }}>
+                <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 400 }}>
                     <div className="text-center flex flex-col items-center">
                        <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
                         <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
@@ -708,7 +708,7 @@ export default function Home() {
                 </ScrollAnimation>
               </div>
             </div>
-             <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 500 }}>
+             <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 500 }}>
               <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg" onClick={handleUploadClick} disabled={isLoading}>
                   {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileInput className="mr-2" />}
@@ -730,7 +730,7 @@ export default function Home() {
 
         <section id="testimonials" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
-            <ScrollAnimation animation="animate-fadeInUp">
+            <ScrollAnimation animation="scroll-reveal-up">
                 <div className="text-center">
                     <h2 className="text-3xl md:text-4xl font-bold text-white">Loved by Professionals</h2>
                     <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
@@ -738,7 +738,7 @@ export default function Home() {
                     </p>
                 </div>
             </ScrollAnimation>
-            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
+            <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
                 <Carousel
                 opts={{
                     align: "start",
@@ -772,7 +772,7 @@ export default function Home() {
                 <CarouselNext className="text-white"/>
                 </Carousel>
             </ScrollAnimation>
-            <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 300 }}>
+            <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 300 }}>
                 <Card className="max-w-2xl mx-auto mt-16 bg-card/50 border-white/10">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-3">
@@ -802,7 +802,7 @@ export default function Home() {
         
         <section id="faq" className="py-20 md:py-28 px-4">
           <div className="container mx-auto max-w-3xl">
-              <ScrollAnimation animation="animate-fadeInUp">
+              <ScrollAnimation animation="scroll-reveal-up">
                 <div className="text-center">
                   <h2 className="text-3xl md:text-4xl font-bold text-white">Frequently Asked Questions</h2>
                   <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
@@ -810,7 +810,7 @@ export default function Home() {
                   </p>
                 </div>
               </ScrollAnimation>
-              <ScrollAnimation animation="animate-fadeInUp" animationOptions={{ delay: 200 }}>
+              <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
                 <Accordion type="single" collapsible className="w-full mt-12">
                     {faqItems.map((item, index) => (
                     <AccordionItem key={index} value={`item-${index}`} className="border-white/10">

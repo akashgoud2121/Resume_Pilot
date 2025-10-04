@@ -6,16 +6,14 @@ import { cn } from '@/lib/utils';
 import { useClientIntersection } from '@/hooks/use-client-intersection';
 
 type Animation =
-  | 'animate-fadeInUp'
-  | 'animate-slideInFromLeft'
-  | 'animate-slideInFromRight'
-  | 'animate-scaleIn'
-  | 'animate-dropIn';
+  | 'scroll-reveal-up'
+  | 'scroll-reveal-left'
+  | 'scroll-reveal-right'
+  | 'scroll-reveal-scale';
 
 interface AnimationOptions {
   delay?: number;
   duration?: number;
-  triggerOnce?: boolean;
 }
 
 interface ScrollAnimationProps {
@@ -40,16 +38,17 @@ export default function ScrollAnimation({
   });
 
   const style = {
-    '--animation-delay': delay ? `${delay}ms` : '0ms',
-    '--animation-duration': duration ? `${duration}ms` : '800ms',
+    '--reveal-delay': delay ? `${delay}ms` : '0ms',
+    '--reveal-duration': duration ? `${duration}ms` : '800ms',
   } as React.CSSProperties;
 
   return (
     <div
       ref={ref}
       className={cn(
-        'transition-opacity duration-1000',
-        isVisible ? animation : 'opacity-0',
+        'scroll-reveal',
+        animation,
+        !isVisible && 'initial-hidden',
         className
       )}
       style={style}
@@ -58,5 +57,3 @@ export default function ScrollAnimation({
     </div>
   );
 }
-
-    
