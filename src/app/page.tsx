@@ -296,6 +296,56 @@ export default function Home() {
     }
     event.target.value = '';
   };
+  
+  const JourneyCard = ({ icon, title, description, onClick, ctaText, delay = 200 }: { icon: React.ReactNode; title: string; description: string; onClick: () => void; ctaText: string; delay?: number }) => {
+    const [mousePos, setMousePos] = useState({ x: -1, y: -1 });
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    };
+
+    const handleMouseLeave = () => {
+        setMousePos({ x: -1, y: -1 });
+    };
+    
+    return (
+        <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay }}>
+            <div 
+                className="relative group w-full h-full"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-teal-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                <Card className="relative bg-card/80 backdrop-blur-md border-white/10 h-full flex flex-col p-6 transition-all duration-300 hover:scale-[1.02]">
+                    <ShineEffect x={mousePos.x} y={mousePos.y} />
+                    <CardHeader className="p-0 items-center text-center">
+                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-4 ring-8 ring-primary/5 transition-transform group-hover:scale-110">
+                            {icon}
+                        </div>
+                        <CardTitle className="text-xl text-white">{title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 flex-1 flex flex-col items-center text-center mt-4">
+                        <p className="text-muted-foreground text-sm flex-1">{description}</p>
+                        <Button 
+                            onClick={onClick}
+                            className="w-full mt-6 bg-primary/90 text-primary-foreground hover:bg-primary transition-transform group-hover:scale-105 shadow-lg shadow-primary/20"
+                            disabled={isLoading}
+                        >
+                            {isLoading && title === 'Upload Existing Resume' ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <ArrowRight className="mr-2 h-4 w-4" />
+                            )}
+                            {isLoading && title === 'Upload Existing Resume' ? 'Processing...' : ctaText}
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        </ScrollAnimation>
+    );
+  };
+
 
   return (
     <div className="dark bg-background text-foreground min-h-screen">
@@ -656,77 +706,52 @@ export default function Home() {
         </section>
 
         <section id="how-it-works" className="py-20 md:py-28 px-4">
-          <div className="container mx-auto">
-            <ScrollAnimation animation="scroll-reveal-up">
-              <div className="text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-white">Get Your Resume Ready in Minutes</h2>
-                <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-                  Follow these simple steps to craft your perfect resume.
-                </p>
-              </div>
-            </ScrollAnimation>
-            <div className="relative mt-16 max-w-4xl mx-auto">
-              <div className="absolute top-8 left-0 w-full h-0.5 bg-border hidden md:block"
-                style={{
-                  background: 'repeating-linear-gradient(90deg, hsl(var(--border)), hsl(var(--border)) 10px, transparent 10px, transparent 20px)'
-                }}
-                aria-hidden="true"
-              ></div>
-              <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
-                <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
-                    <div className="text-center flex flex-col items-center">
-                      <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
-                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
-                          <Upload className="h-8 w-8" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-white">1. Provide Your Data</h3>
-                        <p className="mt-2 text-muted-foreground">Start from scratch or upload an existing resume. Our AI will do the heavy lifting.</p>
-                      </Card>
+            <div className="container mx-auto">
+                <ScrollAnimation animation="scroll-reveal-up">
+                    <div className="text-center">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white">Your Journey Starts Here</h2>
+                        <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+                            How do you want to create your masterpiece? We offer multiple paths to fit your needs, whether you're updating an old resume or crafting a new one from scratch.
+                        </p>
                     </div>
                 </ScrollAnimation>
-                <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 300 }}>
-                    <div className="text-center flex flex-col items-center">
-                      <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
-                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
-                          <LayoutTemplate className="h-8 w-8" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-white">2. Choose a Template</h3>
-                        <p className="mt-2 text-muted-foreground">Select from our library of professionally designed and ATS-friendly templates.</p>
-                      </Card>
-                    </div>
-                </ScrollAnimation>
-                <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 400 }}>
-                    <div className="text-center flex flex-col items-center">
-                       <Card className="p-6 bg-card/50 rounded-lg border border-white/10 w-full hover:border-primary/50 transition-colors">
-                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-6 ring-8 ring-background mx-auto">
-                          <Download className="h-8 w-8" />
-                        </div>
-                        <h3 className="text-xl font-semibold text-white">3. Download & Apply</h3>
-                        <p className="mt-2 text-muted-foreground">Instantly download your new resume in PDF format and start applying with confidence.</p>
-                      </Card>
-                    </div>
-                </ScrollAnimation>
-              </div>
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
+                    <JourneyCard 
+                        icon={<FileInput className="w-10 h-10" />}
+                        title="Upload Existing Resume"
+                        description="Have a resume already? Let our AI parse it and do the heavy lifting for you."
+                        onClick={handleUploadClick}
+                        ctaText="Upload & Parse"
+                        delay={200}
+                    />
+                    <JourneyCard 
+                        icon={<PenSquare className="w-10 h-10" />}
+                        title="Start From Scratch"
+                        description="A blank canvas for your career story. Build your resume section by section with our guided editor."
+                        onClick={handleStartFromScratch}
+                        ctaText="Start Editing"
+                        delay={300}
+                    />
+                    <JourneyCard 
+                        icon={<Files className="w-10 h-10" />}
+                        title="Test with Detailed Data"
+                        description="Want to see the full power of our templates? Use our pre-filled, detailed sample data to explore."
+                        onClick={handleUseTestData}
+                        ctaText="Use Sample Data"
+                        delay={400}
+                    />
+                    <JourneyCard 
+                        icon={<BriefcaseIcon className="w-10 h-10" />}
+                        title="Build from Portfolio"
+                        description="Have project reports or certificates? Our AI can synthesize them into a complete resume."
+                        onClick={handlePortfolioBuilder}
+                        ctaText="Build from Docs"
+                        delay={500}
+                    />
+                </div>
             </div>
-             <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 500 }}>
-              <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button size="lg" className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105 shadow-lg" onClick={handleUploadClick} disabled={isLoading}>
-                  {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FileInput className="mr-2" />}
-                  {isLoading ? 'Processing...' : 'Upload Existing Resume'}
-                </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handleStartFromScratch} disabled={isLoading}>
-                  <PenSquare className="mr-2" /> Start from Scratch
-                </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handleUseTestData} disabled={isLoading}>
-                   <Files className="mr-2" /> Test with Detailed Data
-                </Button>
-                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-white border-white/20 hover:bg-white/10 hover:text-white transition-transform hover:scale-105" onClick={handlePortfolioBuilder} disabled={isLoading}>
-                  <BriefcaseIcon className="mr-2" /> Build from Portfolio
-                </Button>
-              </div>
-            </ScrollAnimation>
-          </div>
         </section>
+
 
         <section id="testimonials" className="py-20 md:py-28 px-4 bg-gray-900/50">
           <div className="container mx-auto">
@@ -831,5 +856,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
