@@ -43,33 +43,33 @@ function EditorPageContent() {
   const watchedData = form.watch();
 
   useLayoutEffect(() => {
-    let initialData: ResumeData | null = null;
     const isNew = searchParams.get('new') === 'true';
-
     if (isNew) {
-      initialData = resumeSchema.parse({});
-    } else {
-        try {
-          const storedData = sessionStorage.getItem('resumeData');
-          if(storedData) {
-             initialData = JSON.parse(storedData);
-          }
-        } catch (error) {
-          console.error("Failed to load or parse resume data from sessionStorage:", error);
-          toast({
-            title: "Error Loading Data",
-            description: "Could not load your resume data. Please try again.",
-            variant: "destructive",
-          });
-        }
+      form.reset(resumeSchema.parse({}));
+      return;
     }
-    
+
+    let initialData: ResumeData | null = null;
+    try {
+      const storedData = sessionStorage.getItem('resumeData');
+      if (storedData) {
+        initialData = JSON.parse(storedData);
+      }
+    } catch (error) {
+      console.error("Failed to parse resume data from sessionStorage:", error);
+      toast({
+        title: "Error Loading Data",
+        description: "Could not load your resume data. Please try again.",
+        variant: "destructive",
+      });
+    }
+
     if (initialData) {
       try {
         const validatedData = resumeSchema.parse(initialData);
         form.reset(validatedData);
-      } catch (error) {
-        console.error("Validation failed for initial data:", error);
+      } catch (validationError) {
+        console.error("Validation failed for stored data:", validationError);
         toast({
           title: "Data Validation Failed",
           description: "There was an issue with the resume data format. Loading sample data as a fallback.",
@@ -77,15 +77,15 @@ function EditorPageContent() {
         });
         form.reset(DUMMY_RESUME_DATA);
       }
-    } else if (!isNew) {
+    } else {
       toast({
         title: "No Resume Data",
         description: "No resume data found. Redirecting to homepage.",
       });
       router.push('/');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router, searchParams]);
 
   useEffect(() => {
     if (Object.keys(watchedData).length > 0) {
