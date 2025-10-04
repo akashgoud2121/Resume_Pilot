@@ -297,7 +297,7 @@ export default function Home() {
     event.target.value = '';
   };
   
-  const JourneyCard = ({ icon, title, description, onClick, ctaText, delay = 200 }: { icon: React.ReactNode; title: string; description: string; onClick: () => void; ctaText: string; delay?: number }) => {
+  const JourneyCard = ({ icon, title, description, onClick, ctaText }: { icon: React.ReactNode; title: string; description: string; onClick: () => void; ctaText: string; }) => {
     const [mousePos, setMousePos] = useState({ x: -1, y: -1 });
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -311,8 +311,7 @@ export default function Home() {
     
     return (
         <div 
-            className="relative group w-full h-full initial-hidden animate-dropIn"
-            style={{ '--animation-delay': `${delay}ms` } as React.CSSProperties}
+            className="relative group w-full h-full"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
@@ -715,38 +714,42 @@ export default function Home() {
                     </div>
                 </ScrollAnimation>
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
-                    <JourneyCard 
-                        icon={<FileInput className="w-10 h-10" />}
-                        title="Upload Existing Resume"
-                        description="Have a resume already? Let our AI parse it and do the heavy lifting for you."
-                        onClick={handleUploadClick}
-                        ctaText="Upload & Parse"
-                        delay={200}
-                    />
-                    <JourneyCard 
-                        icon={<PenSquare className="w-10 h-10" />}
-                        title="Start From Scratch"
-                        description="A blank canvas for your career story. Build your resume section by section with our guided editor."
-                        onClick={handleStartFromScratch}
-                        ctaText="Start Editing"
-                        delay={300}
-                    />
-                    <JourneyCard 
-                        icon={<Files className="w-10 h-10" />}
-                        title="Test with Detailed Data"
-                        description="Want to see the full power of our templates? Use our pre-filled, detailed sample data to explore."
-                        onClick={handleUseTestData}
-                        ctaText="Use Sample Data"
-                        delay={400}
-                    />
-                    <JourneyCard 
-                        icon={<BriefcaseIcon className="w-10 h-10" />}
-                        title="Build from Portfolio"
-                        description="Have project reports or certificates? Our AI can synthesize them into a complete resume."
-                        onClick={handlePortfolioBuilder}
-                        ctaText="Build from Docs"
-                        delay={500}
-                    />
+                    <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
+                        <JourneyCard 
+                            icon={<FileInput className="w-10 h-10" />}
+                            title="Upload Existing Resume"
+                            description="Have a resume already? Let our AI parse it and do the heavy lifting for you."
+                            onClick={handleUploadClick}
+                            ctaText="Upload & Parse"
+                        />
+                    </ScrollAnimation>
+                     <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 300 }}>
+                        <JourneyCard 
+                            icon={<PenSquare className="w-10 h-10" />}
+                            title="Start From Scratch"
+                            description="A blank canvas for your career story. Build your resume section by section with our guided editor."
+                            onClick={handleStartFromScratch}
+                            ctaText="Start Editing"
+                        />
+                    </ScrollAnimation>
+                     <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 400 }}>
+                        <JourneyCard 
+                            icon={<Files className="w-10 h-10" />}
+                            title="Test with Detailed Data"
+                            description="Want to see the full power of our templates? Use our pre-filled, detailed sample data to explore."
+                            onClick={handleUseTestData}
+                            ctaText="Use Sample Data"
+                        />
+                    </ScrollAnimation>
+                     <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 500 }}>
+                        <JourneyCard 
+                            icon={<BriefcaseIcon className="w-10 h-10" />}
+                            title="Build from Portfolio"
+                            description="Have project reports or certificates? Our AI can synthesize them into a complete resume."
+                            onClick={handlePortfolioBuilder}
+                            ctaText="Build from Docs"
+                        />
+                    </ScrollAnimation>
                 </div>
             </div>
         </section>
