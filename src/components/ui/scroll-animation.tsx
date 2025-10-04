@@ -1,14 +1,16 @@
 
 "use client";
 
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 type Animation = 
   | 'animate-fadeInUp' 
   | 'animate-slideInFromLeft' 
   | 'animate-slideInFromRight' 
-  | 'animate-scaleIn';
+  | 'animate-scaleIn'
+  | 'animate-dropIn';
+
 
 interface ScrollAnimationProps {
   children: React.ReactNode;
@@ -54,21 +56,11 @@ const ScrollAnimation: React.FC<ScrollAnimationProps> = ({
     };
   }, [threshold, triggerOnce]);
 
-  const animationClass = useMemo(() => {
-    if (isVisible) {
-      return animation;
-    }
-    // Only apply initial-hidden if not visible. Once visible, it stays that way.
-    return 'initial-hidden';
-  }, [isVisible, animation]);
-  
-  const style = isVisible && delay > 0 ? { animationDelay: `${delay}ms` } : {};
-
   return (
     <div
       ref={ref}
-      className={cn(className, animationClass)}
-      style={style}
+      className={cn(className, isVisible ? animation : 'initial-hidden')}
+      style={isVisible && delay > 0 ? { animationDelay: `${delay}ms` } : {}}
     >
       {children}
     </div>
