@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useLayoutEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,78 +36,74 @@ function EditorPageContent() {
 
   const form = useForm<ResumeData>({
     resolver: zodResolver(resumeSchema),
-    defaultValues: resumeSchema.parse({}), // Start with a valid empty object
+    defaultValues: resumeSchema.parse({}),
   });
 
- useEffect(() => {
-    // Case 1: User clicked "Start from Scratch"
-    if (searchParams.get('new') === 'true') {
-      form.reset(resumeSchema.parse({})); // Ensure a valid empty form state
-      sessionStorage.removeItem('resumeData'); // Clear any previous session data
-      sessionStorage.removeItem('feedback');
-      setIsLoading(false);
-      return;
-    }
-
+  useLayoutEffect(() => {
     let initialData: ResumeData | null = null;
     let dataLoaded = false;
     
-    // Attempt to load AI feedback from sessionStorage
+    const newParam = searchParams.get('new');
+    if (newParam === 'true') {
+        form.reset(resumeSchema.parse({}));
+        sessionStorage.removeItem('resumeData');
+        sessionStorage.removeItem('feedback');
+        setIsLoading(false);
+        return;
+    }
+    
     try {
         const storedFeedback = sessionStorage.getItem('feedback');
         if (storedFeedback) {
             setFeedback(storedFeedback);
             setIsFeedbackVisible(true);
-            // Clean up so it doesn't persist on refresh
             sessionStorage.removeItem('feedback');
         }
     } catch (error) {
         console.error("Failed to parse feedback from sessionStorage:", error);
     }
-
-    // Case 2: Data is passed via URL parameter (less reliable for large data)
+    
     const dataParam = searchParams.get('data');
     if (dataParam) {
-      try {
-        const decodedData = decodeURIComponent(atob(dataParam));
-        initialData = JSON.parse(decodedData);
-        dataLoaded = true;
-      } catch (error) {
-        console.error("Failed to parse resume data from URL:", error);
-        toast({
-          title: "Error Loading Data",
-          description: "The data in the URL seems to be corrupted.",
-          variant: "destructive",
-        });
-      }
-    }
-
-    // Case 3: Fallback to sessionStorage if URL param is not present (more reliable for large data)
-    if (!dataLoaded) {
-      try {
-        const storedData = sessionStorage.getItem('resumeData');
-        if (storedData) {
-          initialData = JSON.parse(storedData);
+        try {
+            const decodedData = decodeURIComponent(atob(dataParam));
+            initialData = JSON.parse(decodedData);
+            dataLoaded = true;
+        } catch (error) {
+            console.error("Failed to parse resume data from URL:", error);
+            toast({
+                title: "Error Loading Data",
+                description: "The data in the URL seems to be corrupted.",
+                variant: "destructive",
+            });
         }
-      } catch (error) {
-        console.error("Failed to parse resume data from sessionStorage:", error);
-      }
+    }
+    
+    if (!dataLoaded) {
+        try {
+            const storedData = sessionStorage.getItem('resumeData');
+            if (storedData) {
+                initialData = JSON.parse(storedData);
+            }
+        } catch (error) {
+            console.error("Failed to parse resume data from sessionStorage:", error);
+        }
     }
 
     if (initialData) {
-      try {
-        const validatedData = resumeSchema.parse(initialData);
-        form.reset(validatedData);
-      } catch (validationError) {
-        console.error("Data validation failed:", validationError);
-        toast({
-          title: "Data Format Error",
-          description: "There was an issue with the resume data format. Redirecting home.",
-          variant: "destructive",
-        });
-        router.push('/');
-        return;
-      }
+        try {
+            const validatedData = resumeSchema.parse(initialData);
+            form.reset(validatedData);
+        } catch (validationError) {
+            console.error("Data validation failed:", validationError);
+            toast({
+                title: "Data Format Error",
+                description: "There was an issue with the resume data format. Redirecting home.",
+                variant: "destructive",
+            });
+            router.push('/');
+            return;
+        }
     } else {
       toast({
         title: "No Resume Data",
@@ -120,11 +116,10 @@ function EditorPageContent() {
 
     setIsLoading(false);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, router, toast, form, setFeedback, setIsFeedbackVisible]);
+  }, [searchParams, router, toast, form]);
 
   const watchedData = form.watch();
 
-  // This effect saves changes to sessionStorage
   useEffect(() => {
      if (!isLoading && (form.formState.isDirty || searchParams.get('new') === 'true')) {
         const validatedData = resumeSchema.safeParse(watchedData);
@@ -180,27 +175,21 @@ function EditorPageContent() {
 
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = pdf.internal.pageSize.getHeight();
-          const canvasWidth = canvas.width;
-          const canvasHeight = canvas.height;
-          const ratio = canvasWidth > 0 ? canvasWidth / canvasHeight : 1;
+          const ratio = pdfWidth / pdfHeight;
 
-          let imgWidth = pdfWidth;
+          let imgWidth = canvas.width;
           let imgHeight = imgWidth / ratio;
           
-          if (!imgWidth || !imgHeight) {
-            throw new Error("Invalid image dimensions for PDF generation.");
-          }
-
           let heightLeft = imgHeight;
           let position = 0;
 
-          pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+          pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
           heightLeft -= pdfHeight;
 
           while (heightLeft > 0) {
               position = heightLeft - imgHeight;
               pdf.addPage();
-              pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+              pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
               heightLeft -= pdfHeight;
           }
 

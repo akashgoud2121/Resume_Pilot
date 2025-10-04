@@ -39,7 +39,6 @@ export default function PreviewTemplatesPage() {
         
         if (dataToLoad) {
             setResumeData(dataToLoad);
-            // Ensure sessionStorage is also up-to-date
             sessionStorage.setItem('resumeData', JSON.stringify(dataToLoad));
         } else {
             setResumeData(DUMMY_RESUME_DATA);
@@ -108,27 +107,21 @@ export default function PreviewTemplatesPage() {
 
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        const ratio = canvasWidth > 0 ? canvasWidth / canvasHeight : 1;
+        const ratio = pdfWidth / pdfHeight;
 
-        let imgWidth = pdfWidth;
+        let imgWidth = canvas.width;
         let imgHeight = imgWidth / ratio;
-        
-        if (!imgWidth || !imgHeight) {
-          throw new Error("Invalid image dimensions for PDF generation.");
-        }
         
         let heightLeft = imgHeight;
         let position = 0;
 
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
         heightLeft -= pdfHeight;
 
         while (heightLeft > 0) {
             position = heightLeft - imgHeight;
             pdf.addPage();
-            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
             heightLeft -= pdfHeight;
         }
 
