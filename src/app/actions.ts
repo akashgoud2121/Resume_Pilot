@@ -1,17 +1,27 @@
 
 'use server';
 
+import { calculateAtsScore } from '@/ai/flows/calculate-ats-score';
 import { extractResumeData } from '@/ai/flows/extract-resume-data';
 import { extractResumeText } from '@/ai/flows/extract-resume-text';
 import { generateResumeFromPortfolio } from '@/ai/flows/generate-resume-from-portfolio';
 import { synthesizePortfolioText } from '@/ai/flows/synthesize-portfolio-text';
-import type { ResumeData, PortfolioDocument } from '@/lib/types';
+import type { ResumeData, PortfolioDocument, AtsScoreData } from '@/lib/types';
 import { resumeSchema } from '@/lib/types';
 
 export async function extractResumeTextAction(dataUri: string): Promise<string> {
     const { resumeText } = await extractResumeText({ resumeDataUri: dataUri });
     return resumeText;
 }
+
+export async function calculateAtsScoreAction(resumeText: string): Promise<AtsScoreData> {
+    const { atsScore, feedback } = await calculateAtsScore({ resumeText });
+    return {
+        atsScore: atsScore ?? 0,
+        feedback: feedback ?? 'Could not generate feedback.',
+    };
+}
+
 
 export async function extractResumeDataAction(resumeText: string): Promise<ResumeData> {
   const extractedData = await extractResumeData({ resumeText });

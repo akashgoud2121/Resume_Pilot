@@ -130,6 +130,7 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadAction, setUploadAction] = useState<'generate' | 'check-score'>('generate');
 
   const [filter, setFilter] = useState('All');
   const categories = ['All', 'Professional', 'Modern & Clean', 'Structured', 'Elegant & Stylish', 'Simple & To-the-point', 'Bold & Visual', 'Experience-focused', 'Fresh & Contemporary'];
@@ -228,7 +229,8 @@ export default function Home() {
     { name: 'rest', value: 100 - score, fill: 'hsl(var(--primary) / 0.1)' },
   ];
 
-  const handleUploadClick = () => {
+  const handleUploadClick = (action: 'generate' | 'check-score') => {
+    setUploadAction(action);
     fileInputRef.current?.click();
   };
 
@@ -262,8 +264,14 @@ export default function Home() {
         try {
           const resumeText = await extractResumeTextAction(dataUri);
           sessionStorage.setItem('resumeText', resumeText);
-          history.pushState({ resumeText }, '', '/generate');
-          router.push('/generate');
+          
+          if (uploadAction === 'generate') {
+            history.pushState({ resumeText }, '', '/generate');
+            router.push('/generate');
+          } else {
+             history.pushState({ resumeText }, '', '/ats-checker');
+            router.push('/ats-checker');
+          }
 
         } catch (e: any) {
           setError('Failed to process resume. Please try a different file.');
@@ -297,7 +305,7 @@ export default function Home() {
     event.target.value = '';
   };
   
-  const JourneyCard = ({ icon, title, description, onClick, ctaText }: { icon: React.ReactNode; title: string; description: string; onClick: () => void; ctaText: string; }) => {
+  const JourneyCard = ({ icon, title, description, onClick, ctaText, 'data-testid': dataTestId }: { icon: React.ReactNode; title: string; description: string; onClick: () => void; ctaText: string; 'data-testid'?: string }) => {
     const [mousePos, setMousePos] = useState({ x: -1, y: -1 });
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -314,6 +322,7 @@ export default function Home() {
             className="relative group w-full h-full"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            data-testid={dataTestId}
         >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-teal-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
             <Card className="relative bg-card/80 backdrop-blur-md border-white/10 h-full flex flex-col p-6 transition-all duration-300 hover:scale-[1.02]">
@@ -331,12 +340,12 @@ export default function Home() {
                         className="w-full mt-6 bg-primary/90 text-primary-foreground hover:bg-primary transition-transform group-hover:scale-105 shadow-lg shadow-primary/20"
                         disabled={isLoading}
                     >
-                        {isLoading && title === 'Upload Existing Resume' ? (
+                        {isLoading && (title === 'Upload Existing Resume' || title === 'Check Resume Score') ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : (
                             <ArrowRight className="mr-2 h-4 w-4" />
                         )}
-                        {isLoading && title === 'Upload Existing Resume' ? 'Processing...' : ctaText}
+                        {isLoading && (title === 'Upload Existing Resume' || title === 'Check Resume Score') ? 'Processing...' : ctaText}
                     </Button>
                 </CardContent>
             </Card>
@@ -713,43 +722,47 @@ export default function Home() {
                         </p>
                     </div>
                 </ScrollAnimation>
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
-                    <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 200 }}>
-                        <JourneyCard 
-                            icon={<FileInput className="w-10 h-10" />}
-                            title="Upload Existing Resume"
-                            description="Have a resume already? Let our AI parse it and do the heavy lifting for you."
-                            onClick={handleUploadClick}
-                            ctaText="Upload & Parse"
-                        />
-                    </ScrollAnimation>
-                     <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 300 }}>
-                        <JourneyCard 
-                            icon={<PenSquare className="w-10 h-10" />}
-                            title="Start From Scratch"
-                            description="A blank canvas for your career story. Build your resume section by section with our guided editor."
-                            onClick={handleStartFromScratch}
-                            ctaText="Start Editing"
-                        />
-                    </ScrollAnimation>
-                     <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 400 }}>
-                        <JourneyCard 
-                            icon={<Files className="w-10 h-10" />}
-                            title="Test with Detailed Data"
-                            description="Want to see the full power of our templates? Use our pre-filled, detailed sample data to explore."
-                            onClick={handleUseTestData}
-                            ctaText="Use Sample Data"
-                        />
-                    </ScrollAnimation>
-                     <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay: 500 }}>
-                        <JourneyCard 
-                            icon={<BriefcaseIcon className="w-10 h-10" />}
-                            title="Build from Portfolio"
-                            description="Have project reports or certificates? Our AI can synthesize them into a complete resume."
-                            onClick={handlePortfolioBuilder}
-                            ctaText="Build from Docs"
-                        />
-                    </ScrollAnimation>
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
+                    <JourneyCard 
+                        icon={<FileInput className="w-10 h-10" />}
+                        title="Upload Existing Resume"
+                        description="Have a resume already? Let our AI parse it and do the heavy lifting for you."
+                        onClick={() => handleUploadClick('generate')}
+                        ctaText="Upload & Parse"
+                        data-testid="upload-resume-card"
+                    />
+                    <JourneyCard 
+                        icon={<PenSquare className="w-10 h-10" />}
+                        title="Start From Scratch"
+                        description="A blank canvas for your career story. Build your resume section by section with our guided editor."
+                        onClick={handleStartFromScratch}
+                        ctaText="Start Editing"
+                        data-testid="start-from-scratch-card"
+                    />
+                    <JourneyCard 
+                        icon={<Files className="w-10 h-10" />}
+                        title="Test with Detailed Data"
+                        description="Want to see the full power of our templates? Use our pre-filled, detailed sample data to explore."
+                        onClick={handleUseTestData}
+                        ctaText="Use Sample Data"
+                        data-testid="test-with-data-card"
+                    />
+                    <JourneyCard 
+                        icon={<BriefcaseIcon className="w-10 h-10" />}
+                        title="Build from Portfolio"
+                        description="Have project reports or certificates? Our AI can synthesize them into a complete resume."
+                        onClick={handlePortfolioBuilder}
+                        ctaText="Build from Docs"
+                        data-testid="build-from-portfolio-card"
+                    />
+                     <JourneyCard 
+                        icon={<Gauge className="w-10 h-10" />}
+                        title="Check Resume Score"
+                        description="Upload your resume to get an instant ATS score and feedback to improve it."
+                        onClick={() => handleUploadClick('check-score')}
+                        ctaText="Check Score"
+                        data-testid="check-score-card"
+                    />
                 </div>
             </div>
         </section>
@@ -858,9 +871,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
-
-    

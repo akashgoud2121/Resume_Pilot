@@ -113,3 +113,8 @@ const PortfolioDocumentSchema = z.object({
 export const GenerateResumeFromPortfolioInputSchema = z.object({
     documents: z.array(PortfolioDocumentSchema).describe('An array of portfolio documents.'),
 });
+
+export type AtsScoreData = {
+    atsScore: number;
+    feedback: string;
+};
