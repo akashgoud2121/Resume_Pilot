@@ -99,10 +99,10 @@ export default function AtsCheckerPage() {
             const feedback = await generateAtsFeedbackAction(resumeText, atsData.atsScore);
             const resumeData: ResumeData = await extractResumeDataAction(resumeText);
             
-            const dataString = btoa(encodeURIComponent(JSON.stringify(resumeData)));
-            const feedbackString = btoa(encodeURIComponent(JSON.stringify(feedback)));
-            
-            router.push(`/editor?data=${dataString}&feedback=${feedbackString}`);
+            sessionStorage.setItem('resumeData', JSON.stringify(resumeData));
+            sessionStorage.setItem('feedback', feedback);
+
+            router.push(`/editor`);
 
         } catch (e: any) {
              console.error("Failed to generate feedback:", e);

@@ -44,6 +44,7 @@ function EditorPageContent() {
     if (searchParams.get('new') === 'true') {
       form.reset(resumeSchema.parse({})); // Ensure a valid empty form state
       sessionStorage.removeItem('resumeData'); // Clear any previous session data
+      sessionStorage.removeItem('feedback');
       setIsLoading(false);
       return;
     }
@@ -51,21 +52,20 @@ function EditorPageContent() {
     let initialData: ResumeData | null = null;
     let dataLoaded = false;
     
-    // Attempt to load AI feedback
-    const feedbackParam = searchParams.get('feedback');
-    if (feedbackParam) {
-        try {
-            const decodedFeedback = decodeURIComponent(atob(feedbackParam));
-            const parsedFeedback = JSON.parse(decodedFeedback);
-            setFeedback(parsedFeedback);
+    // Attempt to load AI feedback from sessionStorage
+    try {
+        const storedFeedback = sessionStorage.getItem('feedback');
+        if (storedFeedback) {
+            setFeedback(storedFeedback);
             setIsFeedbackVisible(true);
-        } catch (error) {
-            console.error("Failed to parse feedback from URL:", error);
+            // Clean up so it doesn't persist on refresh
+            sessionStorage.removeItem('feedback');
         }
+    } catch (error) {
+        console.error("Failed to parse feedback from sessionStorage:", error);
     }
 
-
-    // Case 2: Data is passed via URL parameter (most reliable)
+    // Case 2: Data is passed via URL parameter (less reliable for large data)
     const dataParam = searchParams.get('data');
     if (dataParam) {
       try {
@@ -82,7 +82,7 @@ function EditorPageContent() {
       }
     }
 
-    // Case 3: Fallback to sessionStorage if URL param is not present
+    // Case 3: Fallback to sessionStorage if URL param is not present (more reliable for large data)
     if (!dataLoaded) {
       try {
         const storedData = sessionStorage.getItem('resumeData');
