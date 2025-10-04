@@ -50,17 +50,12 @@ function EditorPageContent() {
       initialData = resumeSchema.parse({});
     } else {
         try {
-          const stateFromHistory = history.state as { resumeData?: ResumeData };
-          if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 0) {
-             initialData = stateFromHistory.resumeData;
-          } else {
-             const storedData = sessionStorage.getItem('resumeData');
-             if(storedData) {
-                initialData = JSON.parse(storedData);
-             }
+          const storedData = sessionStorage.getItem('resumeData');
+          if(storedData) {
+             initialData = JSON.parse(storedData);
           }
         } catch (error) {
-          console.error("Failed to load or parse resume data:", error);
+          console.error("Failed to load or parse resume data from sessionStorage:", error);
           toast({
             title: "Error Loading Data",
             description: "Could not load your resume data. Please try again.",
@@ -86,7 +81,6 @@ function EditorPageContent() {
       toast({
         title: "No Resume Data",
         description: "No resume data found. Redirecting to homepage.",
-        variant: "destructive",
       });
       router.push('/');
     }
@@ -123,7 +117,7 @@ function EditorPageContent() {
           </div>
       );
       
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 0));
 
       try {
           const canvas = await html2canvas(tempContainer, {

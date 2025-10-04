@@ -26,22 +26,27 @@ export default function PreviewTemplatesPage() {
 
   useEffect(() => {
     try {
+        let dataToLoad: ResumeData | null = null;
         const stateFromHistory = history.state as { resumeData?: ResumeData };
-        // Check if resumeData exists in history.state and has content.
         if (stateFromHistory?.resumeData && Object.keys(stateFromHistory.resumeData).length > 0) {
-            setResumeData(stateFromHistory.resumeData);
+            dataToLoad = stateFromHistory.resumeData;
         } else {
             const storedData = sessionStorage.getItem('resumeData');
             if (storedData) {
-                setResumeData(JSON.parse(storedData));
-            } else {
-                // Fallback to simpler dummy data if nothing is found
-                setResumeData(DUMMY_RESUME_DATA);
-                toast({
-                    title: "No Resume Data Found",
-                    description: "Displaying sample data. Please upload your resume to see personalized previews.",
-                });
+                dataToLoad = JSON.parse(storedData);
             }
+        }
+        
+        if (dataToLoad) {
+            setResumeData(dataToLoad);
+            // Ensure sessionStorage is also up-to-date
+            sessionStorage.setItem('resumeData', JSON.stringify(dataToLoad));
+        } else {
+            setResumeData(DUMMY_RESUME_DATA);
+            toast({
+                title: "No Resume Data Found",
+                description: "Displaying sample data. Please upload your resume to see personalized previews.",
+            });
         }
     } catch (error) {
         console.error("Failed to load resume data:", error);
@@ -58,7 +63,8 @@ export default function PreviewTemplatesPage() {
 
 
   const handleEdit = (templateId: string) => {
-    history.pushState({ resumeData }, '', `/editor?template=${templateId}`);
+    // sessionStorage is already set by the effect hook.
+    // We just need to navigate.
     router.push(`/editor?template=${templateId}`);
   };
 
@@ -82,7 +88,7 @@ export default function PreviewTemplatesPage() {
         </div>
     );
     
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     try {
         const canvas = await html2canvas(tempContainer, {
@@ -108,8 +114,6 @@ export default function PreviewTemplatesPage() {
 
         const imgWidth = pdfWidth;
         const imgHeight = imgWidth / ratio;
-        const pageBreakBuffer = 20; // 20mm buffer to avoid cutting text
-        const contentHeightPerPage = pdfHeight - pageBreakBuffer;
         
         let heightLeft = imgHeight;
         let position = 0;
@@ -152,10 +156,10 @@ export default function PreviewTemplatesPage() {
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8">
         <header className="text-center mb-8 md:mb-12 max-w-3xl mx-auto">
-             <ScrollAnimation animation="animate-fadeInUp">
+             <ScrollAnimation animation="animate-dropIn">
                 <h1 className="text-3xl md:text-4xl font-bold text-foreground">Choose Your Template</h1>
             </ScrollAnimation>
-             <ScrollAnimation animation="animate-fadeInUp" animationOptions={{delay: 200}}>
+             <ScrollAnimation animation="animate-dropIn" animationOptions={{delay: 200}}>
                 <p className="mt-2 text-muted-foreground">
                     Your resume data is ready. Select a design you love, then download it or continue to the editor to make final adjustments.
                 </p>
@@ -166,7 +170,7 @@ export default function PreviewTemplatesPage() {
             {templates.map((template, index) => (
                  <ScrollAnimation 
                     key={template.id}
-                    animation="animate-fadeInUp"
+                    animation="animate-dropIn"
                     animationOptions={{ delay: 300 + index * 100 }}
                  >
                     <Dialog>
