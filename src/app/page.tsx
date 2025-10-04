@@ -310,39 +310,38 @@ export default function Home() {
     };
     
     return (
-        <ScrollAnimation animation="scroll-reveal-up" animationOptions={{ delay }}>
-            <div 
-                className="relative group w-full h-full"
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-            >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-teal-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
-                <Card className="relative bg-card/80 backdrop-blur-md border-white/10 h-full flex flex-col p-6 transition-all duration-300 hover:scale-[1.02]">
-                    <ShineEffect x={mousePos.x} y={mousePos.y} />
-                    <CardHeader className="p-0 items-center text-center">
-                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-4 ring-8 ring-primary/5 transition-transform group-hover:scale-110">
-                            {icon}
-                        </div>
-                        <CardTitle className="text-xl text-white">{title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0 flex-1 flex flex-col items-center text-center mt-4">
-                        <p className="text-muted-foreground text-sm flex-1">{description}</p>
-                        <Button 
-                            onClick={onClick}
-                            className="w-full mt-6 bg-primary/90 text-primary-foreground hover:bg-primary transition-transform group-hover:scale-105 shadow-lg shadow-primary/20"
-                            disabled={isLoading}
-                        >
-                            {isLoading && title === 'Upload Existing Resume' ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <ArrowRight className="mr-2 h-4 w-4" />
-                            )}
-                            {isLoading && title === 'Upload Existing Resume' ? 'Processing...' : ctaText}
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
-        </ScrollAnimation>
+        <div 
+            className="relative group w-full h-full initial-hidden animate-dropIn"
+            style={{ '--animation-delay': `${delay}ms` } as React.CSSProperties}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-teal-500 rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+            <Card className="relative bg-card/80 backdrop-blur-md border-white/10 h-full flex flex-col p-6 transition-all duration-300 hover:scale-[1.02]">
+                <ShineEffect x={mousePos.x} y={mousePos.y} />
+                <CardHeader className="p-0 items-center text-center">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-primary/10 text-primary mb-4 ring-8 ring-primary/5 transition-transform group-hover:scale-110">
+                        {icon}
+                    </div>
+                    <CardTitle className="text-xl text-white">{title}</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 flex-1 flex flex-col items-center text-center mt-4">
+                    <p className="text-muted-foreground text-sm flex-1">{description}</p>
+                    <Button 
+                        onClick={onClick}
+                        className="w-full mt-6 bg-primary/90 text-primary-foreground hover:bg-primary transition-transform group-hover:scale-105 shadow-lg shadow-primary/20"
+                        disabled={isLoading}
+                    >
+                        {isLoading && title === 'Upload Existing Resume' ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <ArrowRight className="mr-2 h-4 w-4" />
+                        )}
+                        {isLoading && title === 'Upload Existing Resume' ? 'Processing...' : ctaText}
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
     );
   };
 
@@ -856,6 +855,8 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
 
