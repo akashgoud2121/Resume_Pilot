@@ -28,6 +28,91 @@ function EditorPageContent() {
   const [selectedTemplate, setSelectedTemplate] = useState<string>(templates[0].id);
   const [mode, setMode] = useState<'edit' | 'preview'>('edit');
 
+  const form = useForm<ResumeData>({
+    resolver: zodResolver(resumeSchema),
+    defaultValues: resumeSchema.parse({}), // Start with a valid empty object
+  });
+
+  // This effect runs only once on mount to initialize the form data.
+  useLayoutEffect(() => {
+    // Case 1: User clicked "Start from Scratch"
+    if (searchParams.get('new') === 'true') {
+      form.reset(resumeSchema.parse({})); // Ensure a valid empty form state
+      sessionStorage.removeItem('resumeData'); // Clear any previous session data
+      return;
+    }
+
+    let initialData: ResumeData | null = null;
+    let dataLoaded = false;
+
+    // Case 2: Data is passed via URL parameter (most reliable)
+    const dataParam = searchParams.get('data');
+    if (dataParam) {
+      try {
+        const decodedData = decodeURIComponent(atob(dataParam));
+        initialData = JSON.parse(decodedData);
+        dataLoaded = true;
+      } catch (error) {
+        console.error("Failed to parse resume data from URL:", error);
+        toast({
+          title: "Error Loading Data",
+          description: "The data in the URL seems to be corrupted.",
+          variant: "destructive",
+        });
+      }
+    }
+
+    // Case 3: Fallback to sessionStorage if URL param is not present
+    if (!dataLoaded) {
+      try {
+        const storedData = sessionStorage.getItem('resumeData');
+        if (storedData) {
+          initialData = JSON.parse(storedData);
+        }
+      } catch (error) {
+        console.error("Failed to parse resume data from sessionStorage:", error);
+      }
+    }
+
+    // Now, validate and load the data, or handle failure
+    if (initialData) {
+      try {
+        // This ensures the data conforms to the schema before loading into the form
+        const validatedData = resumeSchema.parse(initialData);
+        form.reset(validatedData);
+      } catch (validationError) {
+        console.error("Data validation failed:", validationError);
+        toast({
+          title: "Data Format Error",
+          description: "There was an issue with the resume data format. Redirecting home.",
+          variant: "destructive",
+        });
+        router.push('/');
+      }
+    } else {
+      // If no data is found by any method, it's an invalid state, so redirect.
+      toast({
+        title: "No Resume Data",
+        description: "No resume data was found. Please start over.",
+      });
+      router.push('/');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]); // Only run this on initial load and if router changes
+
+  const watchedData = form.watch();
+
+  // This effect saves changes to sessionStorage
+  useEffect(() => {
+    // Don't save data if the form hasn't been populated yet.
+    if (Object.keys(form.formState.dirtyFields).length > 0 || searchParams.get('new') !== 'true') {
+      const validatedData = resumeSchema.safeParse(watchedData);
+      if (validatedData.success) {
+        sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
+      }
+    }
+  }, [watchedData, form.formState.dirtyFields, searchParams]);
+
   useEffect(() => {
     const templateId = searchParams.get('template');
     if (templateId && templates.some(t => t.id === templateId)) {
@@ -35,77 +120,9 @@ function EditorPageContent() {
     }
   }, [searchParams]);
 
-  const form = useForm<ResumeData>({
-    resolver: zodResolver(resumeSchema),
-    defaultValues: resumeSchema.parse({}),
-  });
-
-  const watchedData = form.watch();
-
-  useLayoutEffect(() => {
-    const isNew = searchParams.get('new') === 'true';
-    if (isNew) {
-      form.reset(resumeSchema.parse({}));
-      return;
-    }
-
-    let initialData: ResumeData | null = null;
-    try {
-        const dataParam = searchParams.get('data');
-        if (dataParam) {
-            const decodedData = decodeURIComponent(atob(dataParam));
-            initialData = JSON.parse(decodedData);
-        } else {
-            const storedData = sessionStorage.getItem('resumeData');
-            if (storedData) {
-                initialData = JSON.parse(storedData);
-            }
-        }
-    } catch (error) {
-      console.error("Failed to parse resume data from URL or sessionStorage:", error);
-      toast({
-        title: "Error Loading Data",
-        description: "Could not load your resume data. Please try again.",
-        variant: "destructive",
-      });
-    }
-
-    if (initialData) {
-      try {
-        const validatedData = resumeSchema.parse(initialData);
-        form.reset(validatedData);
-      } catch (validationError) {
-        console.error("Validation failed for stored data:", validationError);
-        toast({
-          title: "Data Validation Failed",
-          description: "There was an issue with the resume data format. Loading sample data as a fallback.",
-          variant: "destructive",
-        });
-        form.reset(DUMMY_RESUME_DATA);
-      }
-    } else {
-      toast({
-        title: "No Resume Data",
-        description: "No resume data found. Redirecting to homepage.",
-      });
-      router.push('/');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, searchParams]);
-
-  useEffect(() => {
-    if (Object.keys(watchedData).length > 0) {
-      const validatedData = resumeSchema.safeParse(watchedData);
-      if(validatedData.success){
-          sessionStorage.setItem('resumeData', JSON.stringify(validatedData.data));
-      }
-    }
-  }, [watchedData]);
-
-
   const handleDownload = async () => {
     setIsDownloading(true);
-
+    // Use a timeout to allow the UI to update before the heavy task
     setTimeout(async () => {
       const tempContainer = document.createElement('div');
       tempContainer.style.position = 'absolute';
@@ -123,6 +140,7 @@ function EditorPageContent() {
           </div>
       );
       
+      // Allow the off-screen component to render
       await new Promise(resolve => setTimeout(resolve, 0));
 
       try {
@@ -177,7 +195,7 @@ function EditorPageContent() {
           document.body.removeChild(tempContainer);
           setIsDownloading(false);
       }
-    }, 0);
+    }, 50); // A small delay to ensure UI responsiveness
   };
 
 
