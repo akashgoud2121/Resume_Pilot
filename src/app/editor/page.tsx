@@ -106,78 +106,78 @@ function EditorPageContent() {
   const handleDownload = async () => {
     setIsDownloading(true);
 
-    const tempContainer = document.createElement('div');
-    tempContainer.style.position = 'absolute';
-    tempContainer.style.left = '-9999px';
-    tempContainer.style.top = '0';
-    tempContainer.style.width = '210mm'; 
-    document.body.appendChild(tempContainer);
+    setTimeout(async () => {
+      const tempContainer = document.createElement('div');
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      tempContainer.style.width = '210mm';
+      document.body.appendChild(tempContainer);
 
-    const { createRoot } = await import('react-dom/client');
-    const tempRoot = createRoot(tempContainer);
+      const { createRoot } = await import('react-dom/client');
+      const tempRoot = createRoot(tempContainer);
 
-    tempRoot.render(
-        <div className="bg-white w-full h-full">
-            <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
-        </div>
-    );
-    
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      tempRoot.render(
+          <div className="bg-white w-full h-full">
+              <ResumePreview resumeData={watchedData} templateId={selectedTemplate} />
+          </div>
+      );
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-    try {
-        const canvas = await html2canvas(tempContainer, {
-            scale: 3,
-            useCORS: true,
-            logging: false,
-            windowWidth: tempContainer.scrollWidth,
-            windowHeight: tempContainer.scrollHeight,
-        });
+      try {
+          const canvas = await html2canvas(tempContainer, {
+              scale: 3,
+              useCORS: true,
+              logging: false,
+              windowWidth: tempContainer.scrollWidth,
+              windowHeight: tempContainer.scrollHeight,
+          });
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.9);
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4',
-        });
+          const imgData = canvas.toDataURL('image/jpeg', 0.9);
+          const pdf = new jsPDF({
+              orientation: 'portrait',
+              unit: 'mm',
+              format: 'a4',
+          });
 
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        const ratio = canvasWidth / canvasHeight;
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          const canvasWidth = canvas.width;
+          const canvasHeight = canvas.height;
+          const ratio = canvasWidth / canvasHeight;
 
-        const imgWidth = pdfWidth;
-        const imgHeight = imgWidth / ratio;
-        const pageBreakBuffer = 20; // 20mm buffer to avoid cutting text
-        const contentHeightPerPage = pdfHeight - pageBreakBuffer;
-        
-        let heightLeft = imgHeight;
-        let position = 0;
+          const imgWidth = pdfWidth;
+          const imgHeight = imgWidth / ratio;
+          
+          let heightLeft = imgHeight;
+          let position = 0;
 
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
+          pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
 
-        while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pdfHeight;
-        }
+          while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              pdf.addPage();
+              pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+              heightLeft -= pdfHeight;
+          }
 
-        pdf.save(`resume-${selectedTemplate}.pdf`);
+          pdf.save(`resume-${selectedTemplate}.pdf`);
 
-    } catch (error) {
-        console.error("Error generating PDF:", error);
-        toast({
-            title: "Download Failed",
-            description: "There was an error generating the PDF. Please try again.",
-            variant: "destructive"
-        });
-    } finally {
-        tempRoot.unmount();
-        document.body.removeChild(tempContainer);
-        setIsDownloading(false);
-    }
+      } catch (error) {
+          console.error("Error generating PDF:", error);
+          toast({
+              title: "Download Failed",
+              description: "There was an error generating the PDF. Please try again.",
+              variant: "destructive"
+          });
+      } finally {
+          tempRoot.unmount();
+          document.body.removeChild(tempContainer);
+          setIsDownloading(false);
+      }
+    }, 0);
   };
 
 
