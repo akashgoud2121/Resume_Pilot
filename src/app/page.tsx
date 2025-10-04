@@ -28,7 +28,6 @@ import {
   FileInput,
   PenSquare,
   Loader2,
-  Files,
   Briefcase as BriefcaseIcon,
   MessageSquare,
 } from 'lucide-react';
@@ -48,7 +47,7 @@ import { Pie, PieChart } from 'recharts';
 import { extractResumeTextAction } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import Autoplay from "embla-carousel-autoplay"
-import { DETAILED_DUMMY_RESUME_DATA, DUMMY_RESUME_DATA } from '@/lib/dummy-data';
+import { DUMMY_RESUME_DATA } from '@/lib/dummy-data';
 import Footer from '@/components/footer';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -236,13 +235,6 @@ export default function Home() {
 
   const handleStartFromScratch = () => {
     router.push('/editor?new=true');
-  };
-  
-  const handleUseTestData = () => {
-    const testData = DETAILED_DUMMY_RESUME_DATA;
-    sessionStorage.setItem('resumeData', JSON.stringify(testData));
-    history.pushState({ resumeData: testData }, '', '/preview-templates');
-    router.push('/preview-templates');
   };
   
   const handlePortfolioBuilder = () => {
@@ -714,15 +706,13 @@ export default function Home() {
 
         <section id="how-it-works" className="py-20 md:py-28 px-4">
             <div className="container mx-auto">
-                <ScrollAnimation animation="scroll-reveal-up">
-                    <div className="text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white">Your Journey Starts Here</h2>
-                        <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-                            How do you want to create your masterpiece? We offer multiple paths to fit your needs, whether you're updating an old resume or crafting a new one from scratch.
-                        </p>
-                    </div>
-                </ScrollAnimation>
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
+                <div className="text-center">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white">Your Journey Starts Here</h2>
+                    <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+                        How do you want to create your masterpiece? We offer multiple paths to fit your needs, whether you're updating an old resume or crafting a new one from scratch.
+                    </p>
+                </div>
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch max-w-6xl mx-auto">
                     <JourneyCard 
                         icon={<FileInput className="w-10 h-10" />}
                         title="Upload Existing Resume"
@@ -739,15 +729,7 @@ export default function Home() {
                         ctaText="Start Editing"
                         data-testid="start-from-scratch-card"
                     />
-                    <JourneyCard 
-                        icon={<Files className="w-10 h-10" />}
-                        title="Test with Detailed Data"
-                        description="Want to see the full power of our templates? Use our pre-filled, detailed sample data to explore."
-                        onClick={handleUseTestData}
-                        ctaText="Use Sample Data"
-                        data-testid="test-with-data-card"
-                    />
-                    <JourneyCard 
+                     <JourneyCard 
                         icon={<BriefcaseIcon className="w-10 h-10" />}
                         title="Build from Portfolio"
                         description="Have project reports or certificates? Our AI can synthesize them into a complete resume."
